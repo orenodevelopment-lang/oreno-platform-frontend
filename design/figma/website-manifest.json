@@ -1,0 +1,71 @@
+{
+  "productName": "Oreno",
+  "figmaFileName": "Softcruit",
+  "fileKey": "eXcW1SL1x7ixOZRZH5o9uj",
+  "sourceUrl": "https://www.figma.com/design/eXcW1SL1x7ixOZRZH5o9uj/Softcruit?node-id=27-56",
+  "websiteCanvas": {
+    "nodeId": "27:56",
+    "name": "The Website"
+  },
+  "frames": {
+    "desktop": {
+      "nodeId": "27:61",
+      "name": "Oreno Homepage",
+      "width": 1440,
+      "height": 7168,
+      "coverage": "complete homepage"
+    },
+    "mobile": {
+      "nodeId": "111:1182",
+      "name": "Oreno Homepage - Mobile",
+      "width": 390,
+      "height": 844,
+      "coverage": "hero only"
+    },
+    "colours": {
+      "nodeId": "85:3183",
+      "name": "Colours 1",
+      "width": 1080,
+      "height": 800
+    }
+  },
+  "desktopSections": [
+    { "nodeId": "37:238", "name": "Navbar", "y": 0, "height": 120 },
+    { "nodeId": "44:2417", "name": "Hero grid", "y": 277, "height": 550 },
+    { "nodeId": "42:2410", "name": "Hero start-hiring button", "y": 707, "height": 50 },
+    { "nodeId": "45:2893", "name": "Hiring Simplified heading", "y": 1204, "height": 224 },
+    { "nodeId": "45:2894", "name": "Hiring Simplified image", "y": 1179, "height": 630 },
+    { "nodeId": "864:28", "name": "Section navigation", "y": 1024, "height": 120 },
+    { "nodeId": "68:3044", "name": "Hire African talent heading", "y": 2148, "height": 132 },
+    { "nodeId": "68:3048", "name": "Hiring step one", "y": 2436, "height": 460 },
+    { "nodeId": "76:3149", "name": "Hiring step two", "y": 2436, "height": 460 },
+    { "nodeId": "76:3165", "name": "Hiring step three", "y": 2436, "height": 460 },
+    { "nodeId": "68:3057", "name": "Showcase section one", "y": 3168, "height": 720 },
+    { "nodeId": "68:3043", "name": "Showcase section two", "y": 4038, "height": 720 },
+    { "nodeId": "71:3088", "name": "Showcase section three", "y": 4908, "height": 720 },
+    { "nodeId": "110:18", "name": "Closing CTA", "y": 5778, "height": 520 },
+    { "nodeId": "95:3282", "name": "Footer background", "y": 6298, "height": 575 }
+  ],
+  "heroCopy": {
+    "headlineLines": ["Hiring skilled", "Developers just became", "very easy"],
+    "body": "Select your next staff from a pool of carefully vetted and curated developers, AI people and designers across Africa, fast and on a budget.",
+    "primaryAction": "Start hiring"
+  },
+  "desktopCopy": {
+    "problemHeading": "Hiring Simplified",
+    "problemBody": "An average of at least 1000 job applicants interacts with a job adverts. We take away the hassle of sieving through numerous candidates for the best one.",
+    "processHeading": "Hire the best talents from Africa; Save time & resources",
+    "processSubheading": "It’s as easy as browsing an e-commerce store",
+    "newsletterHeading": "Let’s be pen pals",
+    "newsletterAction": "Subscribe"
+  },
+  "footerColumns": {
+    "Company": ["About us", "Careers", "Hey AI, learn about us", "Help & learning", "Partnership", "Press & media", "Contact"],
+    "Community": ["Blog", "Tutorials", "AI - Assisted coding", "Events"],
+    "Important links": ["Reviews", "Rate calculation", "FAQ for companies", "FAQ for talents"]
+  },
+  "assetDirectory": "public/assets/figma",
+  "assetExportStatus": "pending-figma-mcp-quota",
+  "capturedAt": "2026-09-21"
+}
+
