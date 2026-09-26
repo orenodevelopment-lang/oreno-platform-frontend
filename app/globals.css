@@ -1364,11 +1364,11 @@ a {
   .hiring-simplified h2 { margin-bottom: 20px; font-size: 52px; line-height: 1.06; }
   .hiring-simplified p { font-size: 24px; line-height: 1.5; }
   .hiring-simplified__image { position: static; width: 100%; height: min(126vw, 580px); }
-  .hiring-process { height: 780px; }
-  .hiring-process__heading { padding: 68px 24px 0; }
+  .hiring-process { height: auto; padding: 68px 0 66px; }
+  .hiring-process__heading { padding: 0 24px; }
   .hiring-process__heading h2 { font-size: 31px; line-height: 1.22; }
   .hiring-process__heading p { margin-top: 22px; font-size: 20px; line-height: 1.45; }
-  .talent-carousel-shell { top: 195px; left: 0; }
+  .talent-carousel-shell { position: relative; top: auto; right: auto; left: auto; margin-top: 38px; padding-bottom: 24px; }
   .talent-carousel__controls { height: 45px; padding: 0 24px; }
   .talent-carousel__controls button { width: 39px; height: 39px; }
   .talent-carousel { height: 450px; margin-top: 10px; padding-left: 24px; }
