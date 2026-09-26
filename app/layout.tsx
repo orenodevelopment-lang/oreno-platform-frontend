@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import "./platform.css";
+import "./product.css";
+import "./motion.css";
+import { MotionProvider } from "@/components/motion/MotionProvider";
 
 const raleway = localFont({
   src: [
@@ -29,12 +33,16 @@ const poppins = localFont({
 export const metadata: Metadata = {
   title: "Oreno — Hiring skilled talent made easy",
   description: "Hire carefully vetted developers, AI people and designers across Africa.",
+  icons: {
+    icon: [{ url: "/assets/figma/oreno-mark.svg", type: "image/svg+xml" }],
+    shortcut: "/assets/figma/oreno-mark.svg",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${raleway.variable} ${poppins.variable}`}>
-      <body>{children}</body>
+    <html lang="en" data-scroll-behavior="smooth" className={`${raleway.variable} ${poppins.variable}`}>
+      <body suppressHydrationWarning><MotionProvider>{children}</MotionProvider></body>
     </html>
   );
 }

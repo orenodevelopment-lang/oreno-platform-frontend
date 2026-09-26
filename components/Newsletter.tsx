@@ -1,6 +1,8 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { AnimatePresence, m } from "motion/react";
+import { CheckCircle2 } from "lucide-react";
 
 export function Newsletter() {
   const [message, setMessage] = useState("");
@@ -21,7 +23,9 @@ export function Newsletter() {
         <input id="newsletter-email" type="email" name="email" placeholder="Email address" required />
         <button type="submit">Subscribe</button>
       </form>
-      <span className="newsletter__message" role="status" aria-live="polite">{message}</span>
+      <AnimatePresence>
+        {message && <m.span className="newsletter__message" role="status" aria-live="polite" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}><CheckCircle2 aria-hidden="true" />{message}</m.span>}
+      </AnimatePresence>
     </div>
   );
 }

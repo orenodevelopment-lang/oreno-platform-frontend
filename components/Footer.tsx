@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { Newsletter } from "@/components/Newsletter";
 import { footerColumns } from "@/data/site-content";
+import { Reveal } from "@/components/motion/Reveal";
 
 const socialLinks = [
   { label: "Instagram", text: "◎" },
@@ -13,9 +14,9 @@ const socialLinks = [
 export function Footer() {
   return (
     <footer id="footer" className="footer">
-      <div className="footer__inner">
+      <Reveal className="footer__inner">
         <div className="footer__brand-column">
-          <Link href="#top" aria-label="Back to the top"><Logo dark className="footer__logo" /></Link>
+          <Link href="/" aria-label="Oreno home"><Logo dark className="footer__logo" /></Link>
           <Newsletter />
           <div className="footer__socials" aria-label="Social media links">
             {socialLinks.map((social, index) => (
@@ -31,13 +32,13 @@ export function Footer() {
               <h2>{column.heading}</h2>
               <ul>
                 {column.links.map((label) => (
-                  <li key={label}><a href="#footer">{label}</a></li>
+                  <li key={label}>{label === "Contact" ? <Link href="/contact">{label}</Link> : <a href="#footer">{label}</a>}</li>
                 ))}
               </ul>
             </section>
           ))}
         </div>
-      </div>
+      </Reveal>
     </footer>
   );
 }

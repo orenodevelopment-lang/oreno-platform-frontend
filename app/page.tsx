@@ -5,10 +5,12 @@ import { HiringProcess } from "@/components/HiringProcess";
 import { HiringSimplified } from "@/components/HiringSimplified";
 import { Navbar } from "@/components/Navbar";
 import { TalentShowcase } from "@/components/TalentShowcase";
+import { HomepageScrollProgress } from "@/components/motion/HomepageScrollProgress";
 
 export default function HomePage() {
   return (
     <main>
+      <HomepageScrollProgress />
       <Hero />
       <Navbar compact />
       <HiringSimplified />
@@ -16,7 +18,6 @@ export default function HomePage() {
       <TalentShowcase />
       <FinalCta />
       <Footer />
-      <div className="artboard-tail" aria-hidden="true" />
     </main>
   );
 }

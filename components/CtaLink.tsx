@@ -10,7 +10,7 @@ type CtaLinkProps = {
 };
 
 export function CtaLink({
-  href = "#hiring-process",
+  href = "/company/signup",
   children = "Start hiring",
   dark = false,
   withArrow = false,

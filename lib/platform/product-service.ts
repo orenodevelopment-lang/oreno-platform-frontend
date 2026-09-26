@@ -1,0 +1,45 @@
+import {
+  applications,
+  companyJobs,
+  interviews,
+  notifications,
+  offers,
+  paymentRecords,
+  publicJobs,
+  publicTalents,
+  shortlists,
+  talentProfile,
+  taskDetails,
+  timeEntries,
+} from "@/data/platform-product-fixtures";
+import type { ApplicationCreateInput, ContactRequestInput, DemoRequestInput, InvitationAcceptanceInput, OfferDecisionInput, ReplacementRequestInput, TimeEntryDecisionInput } from "./contracts";
+
+// TODO(api): replace this development adapter with authenticated /api/v1 requests.
+export const productService = {
+  listPublicTalents: () => publicTalents,
+  getPublicTalent: (id: string) => publicTalents.find((item) => item.id === id) ?? publicTalents[0],
+  listPublicJobs: () => publicJobs,
+  getPublicJob: (id: string) => publicJobs.find((item) => item.id === id) ?? publicJobs[0],
+  listCompanyJobs: () => companyJobs,
+  getCompanyJob: (id: string) => companyJobs.find((item) => item.id === id) ?? companyJobs[0],
+  listApplications: () => applications,
+  getApplication: (id: string) => applications.find((item) => item.id === id) ?? applications[0],
+  listShortlists: () => shortlists,
+  listInterviews: () => interviews,
+  getInterview: (id: string) => interviews.find((item) => item.id === id) ?? interviews[0],
+  listOffers: () => offers,
+  getOffer: (id: string) => offers.find((item) => item.id === id) ?? offers[0],
+  listNotifications: () => notifications,
+  listTimeEntries: () => timeEntries,
+  listPaymentRecords: () => paymentRecords,
+  getTalentProfile: () => talentProfile,
+  getTaskDetail: (id: string) => taskDetails.find((item) => item.id === id) ?? taskDetails[0],
+  submitDemoRequest: (input: DemoRequestInput) => ({ id: "demo-local", ...input, status: "received" as const }),
+  submitContactRequest: (input: ContactRequestInput) => ({ id: "contact-local", ...input, status: "received" as const }),
+  acceptInvitation: (input: InvitationAcceptanceInput) => ({ invitationId: input.token, status: "accepted" as const }),
+  createApplication: (input: ApplicationCreateInput) => ({ id: "application-local", ...input, status: "Submitted" as const }),
+  decideOffer: (input: OfferDecisionInput) => ({ ...input, status: input.decision === "accept" ? "Accepted" as const : "Rejected" as const }),
+  requestReplacement: (input: ReplacementRequestInput) => ({ id: "replacement-local", ...input, status: "Submitted" as const }),
+  decideTimeEntry: (input: TimeEntryDecisionInput) => ({ ...input, status: input.decision === "approve" ? "Approved" as const : "Rejected" as const }),
+};
+

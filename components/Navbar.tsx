@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { navigationLinks } from "@/data/site-content";
+import { m, useReducedMotion } from "motion/react";
+import { motionDurations, motionEasings } from "@/lib/motion/tokens";
 
 type NavbarProps = {
   compact?: boolean;
@@ -11,6 +13,7 @@ type NavbarProps = {
 
 export function Navbar({ compact = false }: NavbarProps) {
   const [open, setOpen] = useState(false);
+  const reduce = useReducedMotion();
 
   useEffect(() => {
     if (!open) return;
@@ -22,9 +25,16 @@ export function Navbar({ compact = false }: NavbarProps) {
   }, [open]);
 
   return (
-    <nav className={`navbar ${compact ? "navbar--compact" : ""}`} aria-label="Primary navigation">
+    <m.nav
+      className={`navbar ${compact ? "navbar--compact" : ""}`}
+      aria-label="Primary navigation"
+      initial={compact && !reduce ? { opacity: 0, y: -22 } : false}
+      whileInView={compact ? { opacity: 1, y: 0 } : undefined}
+      viewport={{ once: true, amount: .6 }}
+      transition={{ duration: motionDurations.reveal, ease: motionEasings.emphasized }}
+    >
       <div className="navbar__inner">
-        <Link href="#top" aria-label="Oreno home" className="navbar__brand">
+        <Link href="/" aria-label="Oreno home" className="navbar__brand">
           <Logo />
         </Link>
         {!compact ? (
@@ -62,6 +72,6 @@ export function Navbar({ compact = false }: NavbarProps) {
           })}
         </div>
       </div>
-    </nav>
+    </m.nav>
   );
 }

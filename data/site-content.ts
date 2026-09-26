@@ -1,7 +1,7 @@
 export const navigationLinks = [
-  { label: "Apply", href: "#footer" },
-  { label: "Start hiring", href: "#hiring-process" },
-  { label: "Request a demo", href: "#newsletter", featured: true },
+  { label: "Apply", href: "/jobs" },
+  { label: "Start hiring", href: "/company/signup" },
+  { label: "Request a demo", href: "/request-demo", featured: true },
 ] as const;
 
 export const talentSlides = [

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 type HiringStepCardProps = {
   role: string;
   engagement: string;
@@ -32,7 +34,7 @@ export function HiringStepCard({
           <small>{location}</small>
         </div>
         {!partial ? (
-          <a href="#newsletter" className="talent-card__button">Hire talent</a>
+          <Link href="/talent-catalogue" className="talent-card__button">Hire talent</Link>
         ) : null}
       </div>
     </article>

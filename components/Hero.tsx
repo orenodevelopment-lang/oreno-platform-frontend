@@ -1,16 +1,18 @@
 import { CtaLink } from "@/components/CtaLink";
 import { Navbar } from "@/components/Navbar";
+import { AnimatedGrid } from "@/components/motion/AnimatedGrid";
+import { HeroRoleRotator } from "@/components/motion/HeroRoleRotator";
 
 export function Hero() {
   return (
     <section id="top" className="hero" aria-labelledby="hero-title">
       <Navbar />
-      <div className="hero__canvas" aria-hidden="true" />
+      <AnimatedGrid />
       <div className="hero__content">
         <h1 id="hero-title" className="hero__title">
           <span>Hiring skilled</span>
           <span>
-            <em>Developers</em> just became
+            <HeroRoleRotator /><span className="sr-only">Developers, designers and AI specialists</span> just became
           </span>
           <strong>very easy</strong>
         </h1>
@@ -21,6 +23,7 @@ export function Hero() {
           </p>
         </div>
         <span className="hero__quote-mark" aria-hidden="true">”</span>
+        <a className="hero__scroll-cue" href="#hiring-simplified"><span aria-hidden="true" />Explore Oreno</a>
       </div>
     </section>
   );
