@@ -56,3 +56,27 @@ This inventory is derived from the local exports in `design/figma/the app design
 - Typed domain models and mock service boundary: `lib/platform/`
 - Stable extracted raster assets: `public/assets/figma/app/`
 
+## Platform administration integration
+
+The administration surface was integrated from the separately supplied
+`oreno-platform-dashboard` Figma Make export and the approved parent-folder
+integration brief. It is not classified as one of the original company/talent
+SVG frames above. The export supplied visual structure; the current product
+contracts, Oreno account boundaries, and backend architecture determine
+behaviour and terminology.
+
+| Area | Routes | Implementation |
+| --- | --- | --- |
+| Secure entry | `/platform-admin/login`, `/two-factor`, `/session-expired`, `/access-denied` | Mandatory two-step admin entry and explicit security states |
+| Overview | `/platform-admin` | Metrics, attention queues, audit activity, system posture |
+| Organisations | `/platform-admin/companies`, `/companies/:slug` | Company directory, details, and reason-gated access status |
+| Users and roles | `/platform-admin/users`, `/users/:slug`, `/access/roles` | Separate account domains, security controls, six admin roles |
+| Talent and hiring | `/platform-admin/talent-review`, `/talent-review/:slug`, `/jobs`, `/applications`, `/placements`, `/replacements` | Human vetting, moderation, and linked hiring records |
+| Operations | `/platform-admin/support`, `/support/:case`, `/payments`, `/communications` | SLA cases, masked/read-only finance, announcements and deliveries |
+| Configuration and insight | `/platform-admin/content`, `/analytics`, `/exports` | Version-ready settings, aggregate charts, asynchronous exports |
+| Governance and system | `/platform-admin/audit`, `/system`, `/account` | Immutable audit projection, redacted operations, personal security |
+
+Admin implementation files are under `components/platform-admin/`,
+`lib/platform-admin/`, `data/platform-admin-fixtures.ts`, and `app/admin.css`.
+The catch-all route is `app/platform-admin/[[...screen]]/page.tsx`.
+

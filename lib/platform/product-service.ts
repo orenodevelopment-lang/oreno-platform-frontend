@@ -1,5 +1,6 @@
 import {
   applications,
+  companyTeamMembers,
   companyJobs,
   interviews,
   notifications,
@@ -9,10 +10,11 @@ import {
   publicTalents,
   shortlists,
   talentProfile,
+  talentAccount,
   taskDetails,
   timeEntries,
 } from "@/data/platform-product-fixtures";
-import type { ApplicationCreateInput, ContactRequestInput, DemoRequestInput, InvitationAcceptanceInput, OfferDecisionInput, ReplacementRequestInput, TimeEntryDecisionInput } from "./contracts";
+import type { ApplicationCreateInput, ContactRequestInput, DemoRequestInput, InvitationAcceptanceInput, OfferDecisionInput, ReplacementRequestInput, TalentAccountCreateInput, TalentAccountUpdateInput, TalentProfileUpdateInput, TimeEntryDecisionInput } from "./contracts";
 
 // TODO(api): replace this development adapter with authenticated /api/v1 requests.
 export const productService = {
@@ -33,6 +35,22 @@ export const productService = {
   listTimeEntries: () => timeEntries,
   listPaymentRecords: () => paymentRecords,
   getTalentProfile: () => talentProfile,
+  updateTalentProfile: (input: TalentProfileUpdateInput) => ({ ...talentProfile, ...input }),
+  getTalentAccount: () => talentAccount,
+  createTalentAccount: (input: TalentAccountCreateInput) => ({
+    id: "talent-account-local",
+    profileId: "talent-profile-local",
+    email: input.email,
+    emailVerified: false,
+    status: "Pending verification" as const,
+  }),
+  updateTalentAccount: (input: TalentAccountUpdateInput) => ({
+    ...talentAccount,
+    ...input,
+    preferences: { ...talentAccount.preferences, ...input.preferences },
+  }),
+  verifyTalentEmail: (code: string) => ({ accountId: talentAccount.id, code, status: "Active" as const }),
+  getCompanyTeamMember: (talentProfileId: string) => companyTeamMembers.find((item) => item.talentProfileId === talentProfileId) ?? companyTeamMembers[0],
   getTaskDetail: (id: string) => taskDetails.find((item) => item.id === id) ?? taskDetails[0],
   submitDemoRequest: (input: DemoRequestInput) => ({ id: "demo-local", ...input, status: "received" as const }),
   submitContactRequest: (input: ContactRequestInput) => ({ id: "contact-local", ...input, status: "received" as const }),

@@ -11,7 +11,7 @@ import {
   WalletCards,
 } from "lucide-react";
 import { m, useReducedMotion } from "motion/react";
-import { motionDurations, motionEasings, motionStagger } from "@/lib/motion/tokens";
+import { marketingMotion, motionEasings } from "@/lib/motion/tokens";
 
 const candidates = [
   { initials: "AA", name: "Ada A.", role: "Data", score: "94%" },
@@ -28,14 +28,14 @@ function CurateScene({ reduce }: { reduce: boolean }) {
         initial={reduce ? false : "hidden"}
         whileInView="visible"
         viewport={{ once: true, amount: 0.35 }}
-        variants={{ hidden: {}, visible: { transition: { staggerChildren: motionStagger.standard + 0.04 } } }}
+        variants={{ hidden: {}, visible: { transition: { staggerChildren: marketingMotion.stagger } } }}
       >
         {candidates.map((candidate) => (
           <m.div
             className="scene-candidate"
             key={candidate.name}
             variants={{ hidden: { opacity: 0, x: -32 }, visible: { opacity: 1, x: 0 } }}
-            transition={{ duration: motionDurations.reveal, ease: motionEasings.standard }}
+            transition={{ duration: marketingMotion.reveal, ease: motionEasings.standard }}
           >
             <i>{candidate.initials}</i>
             <span><strong>{candidate.name}</strong><small>{candidate.role}</small></span>
@@ -49,7 +49,7 @@ function CurateScene({ reduce }: { reduce: boolean }) {
         initial={reduce ? false : { opacity: 0, scale: .82, y: 16 }}
         whileInView={{ opacity: 1, scale: 1, y: 0 }}
         viewport={{ once: true, amount: 0.4 }}
-        transition={{ delay: reduce ? 0 : .46, duration: motionDurations.reveal, ease: motionEasings.emphasized }}
+        transition={{ delay: reduce ? 0 : .58, duration: marketingMotion.reveal, ease: motionEasings.emphasized }}
       >
         <Sparkles aria-hidden="true" /> Shortlist ready <span>24 vetted</span>
       </m.div>
@@ -61,14 +61,14 @@ function SelectScene({ reduce }: { reduce: boolean }) {
   return (
     <div className="showcase-scene showcase-scene--select">
       <div className="scene-profile-stack" aria-hidden="true">
-        <m.div className="scene-profile-card scene-profile-card--back" animate={reduce ? undefined : { rotate: [-7, -4, -7], x: [-4, 2, -4] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }} />
-        <m.div className="scene-profile-card scene-profile-card--middle" animate={reduce ? undefined : { rotate: [6, 3, 6], x: [4, -2, 4] }} transition={{ duration: 5.6, repeat: Infinity, ease: "easeInOut" }} />
+        <m.div className="scene-profile-card scene-profile-card--back" animate={reduce ? undefined : { rotate: [-7, -3, -7], x: [-4, 5, -4], y: [0, -5, 0] }} transition={{ duration: 7.4, repeat: Infinity, ease: "easeInOut" }} />
+        <m.div className="scene-profile-card scene-profile-card--middle" animate={reduce ? undefined : { rotate: [6, 2, 6], x: [4, -5, 4], y: [0, 5, 0] }} transition={{ duration: 8.2, repeat: Infinity, ease: "easeInOut" }} />
         <m.div
           className="scene-profile-card scene-profile-card--front"
           initial={reduce ? false : { opacity: 0, y: 28, scale: .94 }}
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: true, amount: .4 }}
-          transition={{ duration: motionDurations.reveal, ease: motionEasings.emphasized }}
+          transition={{ duration: marketingMotion.reveal, ease: motionEasings.emphasized }}
         >
           <span className="scene-profile-card__avatar">JD</span>
           <strong>John Doe</strong>
@@ -77,10 +77,10 @@ function SelectScene({ reduce }: { reduce: boolean }) {
           <b><Check /> Best fit</b>
         </m.div>
       </div>
-      <m.div className="scene-interview-chip" initial={reduce ? false : { opacity: 0, x: 28 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: reduce ? 0 : .38, duration: motionDurations.reveal, ease: motionEasings.standard }}>
+      <m.div className="scene-interview-chip" initial={reduce ? false : { opacity: 0, x: 34 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: reduce ? 0 : .52, duration: marketingMotion.reveal, ease: motionEasings.standard }}>
         <CalendarDays /><span><strong>Interview booked</strong><small>Tuesday · 10:30 AM</small></span><Video />
       </m.div>
-      <m.span className="scene-selection-ring" animate={reduce ? undefined : { scale: [1, 1.13, 1], opacity: [.5, 0, .5] }} transition={{ duration: 2.4, repeat: Infinity, ease: "easeOut" }} aria-hidden="true" />
+      <m.span className="scene-selection-ring" animate={reduce ? undefined : { scale: [1, 1.22, 1], opacity: [.65, 0, .65] }} transition={{ duration: 3.8, repeat: Infinity, ease: "easeOut" }} aria-hidden="true" />
     </div>
   );
 }
@@ -103,14 +103,14 @@ function OnboardScene({ reduce }: { reduce: boolean }) {
         variants={{ hidden: {}, visible: { transition: { staggerChildren: .16 } } }}
       >
         {onboardingItems.map(({ label, icon: Icon }, index) => (
-          <m.div key={label} variants={{ hidden: { opacity: 0, x: 26 }, visible: { opacity: 1, x: 0 } }} transition={{ duration: motionDurations.reveal, ease: motionEasings.standard }}>
+          <m.div key={label} variants={{ hidden: { opacity: 0, x: 32 }, visible: { opacity: 1, x: 0 } }} transition={{ duration: marketingMotion.reveal, ease: motionEasings.standard }}>
             <i><Icon /></i><span>{label}<small>{index < 2 ? "Completed" : "In progress"}</small></span>
             {index < 2 ? <b><Check /></b> : <em><span /></em>}
           </m.div>
         ))}
       </m.div>
       <div className="scene-team-orbit" aria-hidden="true">
-        <m.span animate={reduce ? undefined : { rotate: 360 }} transition={{ duration: 18, repeat: Infinity, ease: "linear" }}><i>PM</i><i>EN</i><i>HR</i></m.span>
+        <m.span animate={reduce ? undefined : { rotate: 360 }} transition={{ duration: 24, repeat: Infinity, ease: "linear" }}><i>PM</i><i>EN</i><i>HR</i></m.span>
         <strong><UsersRound /></strong>
       </div>
     </div>

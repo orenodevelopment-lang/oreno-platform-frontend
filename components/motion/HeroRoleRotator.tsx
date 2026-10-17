@@ -2,7 +2,7 @@
 
 import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import { useEffect, useState } from "react";
-import { motionDurations, motionEasings } from "@/lib/motion/tokens";
+import { marketingMotion, motionEasings } from "@/lib/motion/tokens";
 
 const roles = ["Developers", "Designers", "AI specialists"] as const;
 
@@ -12,7 +12,7 @@ export function HeroRoleRotator() {
 
   useEffect(() => {
     if (reduce) return;
-    const interval = window.setInterval(() => setActive((current) => (current + 1) % roles.length), 2800);
+    const interval = window.setInterval(() => setActive((current) => (current + 1) % roles.length), marketingMotion.roleHoldMs);
     return () => window.clearInterval(interval);
   }, [reduce]);
 
@@ -25,7 +25,7 @@ export function HeroRoleRotator() {
           initial={reduce ? false : { opacity: 0, y: 18, filter: "blur(6px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           exit={reduce ? undefined : { opacity: 0, y: -14, filter: "blur(5px)" }}
-          transition={{ duration: motionDurations.reveal, ease: motionEasings.emphasized }}
+          transition={{ duration: marketingMotion.reveal, ease: motionEasings.emphasized }}
         >
           {roles[active]}
         </m.em>

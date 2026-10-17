@@ -33,10 +33,15 @@ import { ManagerGrid, MessagesView, TaskBoard } from "./SharedViews";
 import { CompanyOnboardingComplete, CompanyProductScreen, PerformanceFoundation, companyProductTitles } from "@/components/product/CompanyProductScreens";
 import { CountUp } from "@/components/motion/CountUp";
 import { motionDurations, motionEasings } from "@/lib/motion/tokens";
+import { productService } from "@/lib/platform/product-service";
 
 const companyTitles: Record<string, string> = {
   "": "Dashboard",
   talents: "Talents",
+  "team-members": "Team members",
+  "team-members/john-doe": "Team member",
+  "team-members/john-doe/tasks": "Team member",
+  "team-members/john-doe/performance": "Team member",
   "talents/john-doe": "Talent profile",
   "talents/john-doe/tasks": "Talent profile",
   "talents/john-doe/performance": "Talent profile",
@@ -61,7 +66,7 @@ export function CompanyApp({ segments }: { segments: string[] }) {
   if (route === "onboarding/complete") return <CompanyOnboardingComplete />;
   if (segments[0] === "onboarding") return <OnboardingScreen step={segments[1] ?? "personal"} />;
 
-  const actionLabel = route === "talents/john-doe/tasks" ? "Add task" : "Hire a talent";
+  const actionLabel = route === "talents/john-doe/tasks" || route === "team-members/john-doe/tasks" ? "Add task" : "Hire a talent";
   const inferredTitle = companyProductTitles[route] ?? (route.startsWith("jobs/") ? "Job detail" : route.startsWith("applications/") ? "Application detail" : route.startsWith("interviews/") ? "Interview detail" : route.startsWith("offers/") ? "Offer detail" : route.startsWith("placements/") ? "Placement" : route.startsWith("replacements/") ? "Replacement request" : route.startsWith("tasks/") ? "Task" : route.startsWith("compensation/") ? "Compensation" : undefined);
   return (
     <PlatformShell kind="company" title={companyTitles[route] ?? inferredTitle ?? "Dashboard"} actionLabel={actionLabel}>
@@ -74,9 +79,13 @@ function CompanyRoute({ route }: { route: string }) {
   switch (route) {
     case "": return <DashboardView />;
     case "talents": return <TalentsTable />;
+    case "team-members": return <TalentsTable />;
     case "talents/john-doe": return <TalentProfile tab="profile" />;
+    case "team-members/john-doe": return <TalentProfile tab="profile" />;
     case "talents/john-doe/tasks": return <TalentProfile tab="tasks" />;
+    case "team-members/john-doe/tasks": return <TalentProfile tab="tasks" />;
     case "talents/john-doe/performance": return <TalentProfile tab="performance" />;
+    case "team-members/john-doe/performance": return <TalentProfile tab="performance" />;
     case "departments": return <DepartmentBoard />;
     case "roles": return <RolesList />;
     case "roles/new": return <RoleForm />;
@@ -197,11 +206,11 @@ function Stat({ icon, label, value, detail, prefix = "", suffix = "" }: { icon: 
 function TalentsTable() {
   const [query, setQuery] = useState("");
   const filtered = useMemo(() => people.filter((person) => `${person.name} ${person.role} ${person.department}`.toLowerCase().includes(query.toLowerCase())), [query]);
-  return <section><SectionToolbar><div className="filter-row"><FilterButton label="Roles" /><FilterButton label="Department" /><FilterButton label="Managers" /><FilterButton label="Performance" /></div><SearchField value={query} onChange={setQuery} placeholder="Search talents" /></SectionToolbar><div className="data-table talent-table"><div className="data-table__head"><span>Name</span><span>Role</span><span>Performance</span><span>Manager</span><span /></div>{filtered.map((person) => <Link className="data-table__row" href="/company/talents/john-doe" key={person.id}><span className="person-cell"><Image src={person.avatar} alt="" width={42} height={42} /><b>{person.name}</b></span><span>{person.role}</span><span className="performance-cell"><i><b style={{ width: `${person.performance}%` }} /></i>{person.performance}%</span><span>{person.manager}</span><Ellipsis /></Link>)}</div></section>;
+  return <section><SectionToolbar><div className="filter-row"><FilterButton label="Roles" /><FilterButton label="Department" /><FilterButton label="Managers" /><FilterButton label="Performance" /></div><SearchField value={query} onChange={setQuery} placeholder="Search team members" /></SectionToolbar><div className="data-table talent-table"><div className="data-table__head"><span>Name</span><span>Role</span><span>Performance</span><span>Manager</span><span /></div>{filtered.map((person) => <Link className="data-table__row" href="/company/team-members/john-doe" key={person.id}><span className="person-cell"><Image src={person.avatar} alt="" width={42} height={42} /><b>{person.name}</b></span><span>{person.role}</span><span className="performance-cell"><i><b style={{ width: `${person.performance}%` }} /></i>{person.performance}%</span><span>{person.manager}</span><Ellipsis /></Link>)}</div></section>;
 }
 
 function ProfileTabs({ kind, active }: { kind: "talent" | "manager"; active: string }) {
-  const base = kind === "talent" ? "/company/talents/john-doe" : "/company/managers/richard-benson";
+  const base = kind === "talent" ? "/company/team-members/john-doe" : "/company/managers/richard-benson";
   const tabs = kind === "talent" ? [{ key: "profile", label: "Personal information", href: base }, { key: "tasks", label: "Assigned task", href: `${base}/tasks` }, { key: "performance", label: "Performance", href: `${base}/performance` }] : [{ key: "profile", label: "Manager information", href: base }, { key: "team", label: "Assigned team", href: `${base}/team` }];
   return <nav className="profile-tabs">{tabs.map((tab) => <Link className={active === tab.key ? "is-active" : ""} href={tab.href} key={tab.key}>{tab.label}</Link>)}</nav>;
 }
@@ -211,11 +220,12 @@ function PersonAside({ manager = false }: { manager?: boolean }) {
 }
 
 function TalentProfile({ tab }: { tab: "profile" | "tasks" | "performance" }) {
-  return <section className="profile-view"><ProfileTabs kind="talent" active={tab} /><div className="profile-layout"><PersonAside />{tab === "profile" ? <PersonalInformation /> : tab === "tasks" ? <TaskBoard compact /> : <EmptyDesignedState label="Talent performance content is blank in the supplied export" />}</div></section>;
+  return <section className="profile-view"><div className="company-record-note"><strong>Company employment record</strong><span>This workspace manages placement, work and performance data. The talent owns their Oreno account and professional profile.</span></div><ProfileTabs kind="talent" active={tab} /><div className="profile-layout"><PersonAside />{tab === "profile" ? <EmploymentInformation /> : tab === "tasks" ? <TaskBoard compact /> : <EmptyDesignedState label="Talent performance content is blank in the supplied export" />}</div></section>;
 }
 
-function PersonalInformation() {
-  return <div className="information-grid"><InfoCard title="Personal information" items={[["Full name", "John Doe C."], ["Email address", "john@oreno.team"], ["Phone number", "+234 (0)903-123-4567"], ["Role", "React developer"]]} /><InfoCard title="Home address" items={[["Street", "14 Admiralty Way"], ["City", "Lekki"], ["State", "Lagos"], ["Country", "Nigeria"]]} /></div>;
+function EmploymentInformation() {
+  const member = productService.getCompanyTeamMember("john-doe");
+  return <div className="information-grid"><InfoCard title="Employment details" items={[["Employee ID", member.employeeId], ["Role", member.employmentTitle], ["Engagement", member.engagement], ["Status", member.status]]} /><InfoCard title="Placement details" items={[["Department", member.department], ["Manager", member.manager], ["Start date", member.startDate], ["Placement ID", member.placementId]]} /></div>;
 }
 
 function InfoCard({ title, items }: { title: string; items: string[][] }) {

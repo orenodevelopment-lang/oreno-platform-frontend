@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { navigationLinks } from "@/data/site-content";
 import { m, useReducedMotion } from "motion/react";
-import { motionDurations, motionEasings } from "@/lib/motion/tokens";
+import { marketingMotion, motionEasings } from "@/lib/motion/tokens";
 
 type NavbarProps = {
   compact?: boolean;
@@ -31,7 +31,7 @@ export function Navbar({ compact = false }: NavbarProps) {
       initial={compact && !reduce ? { opacity: 0, y: -22 } : false}
       whileInView={compact ? { opacity: 1, y: 0 } : undefined}
       viewport={{ once: true, amount: .6 }}
-      transition={{ duration: motionDurations.reveal, ease: motionEasings.emphasized }}
+      transition={{ duration: marketingMotion.reveal, ease: motionEasings.emphasized }}
     >
       <div className="navbar__inner">
         <Link href="/" aria-label="Oreno home" className="navbar__brand">

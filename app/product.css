@@ -668,6 +668,31 @@
 .compensation-summary strong { font-size: 20px; }
 .compensation-summary small { margin-top: 4px; color: var(--app-muted); font-size: 8px; }
 
+.account-separation-note { display: flex; align-items: flex-start; gap: 13px; margin-bottom: 20px; border: 1px solid #bfe5de; border-radius: 14px; background: #effaf8; padding: 16px 18px; color: #175d54; }
+.account-separation-note > svg { width: 22px; height: 22px; flex: 0 0 22px; }
+.account-separation-note strong { display: block; font-size: 12px; }
+.account-separation-note p { margin: 4px 0 0; color: #47716b; font-size: 10px; line-height: 1.55; }
+.talent-account-form { display: grid; max-width: 900px; gap: 23px; }
+.talent-account-form > header { display: flex; align-items: center; gap: 13px; border-bottom: 1px solid var(--app-line); padding-bottom: 18px; }
+.talent-account-form > header > svg { width: 24px; height: 24px; color: var(--app-teal); }
+.talent-account-form > header > div { flex: 1; }
+.talent-account-form h3 { margin: 0; font-size: 15px; }
+.talent-account-form header p { margin: 4px 0 0; color: var(--app-muted); font-size: 9px; }
+.talent-account-form input[readonly] { background: #f3f6f5; color: #687471; cursor: not-allowed; }
+.talent-account-form > .platform-primary { justify-self: start; }
+.account-security-row, .account-linked-profile { display: grid; grid-template-columns: 42px 1fr auto; align-items: center; gap: 13px; border: 1px solid var(--app-line); border-radius: 12px; padding: 14px 16px; }
+.account-security-row > svg, .account-linked-profile > svg { width: 40px; height: 40px; border-radius: 11px; background: var(--app-aqua); color: var(--app-teal); padding: 10px; }
+.account-security-row strong, .account-linked-profile strong { display: block; font-size: 11px; }
+.account-security-row p, .account-linked-profile p { margin: 3px 0 0; color: var(--app-muted); font-size: 9px; }
+.account-security-row button, .account-linked-profile a { border: 0; background: transparent; color: var(--app-teal); font-size: 10px; font-weight: 600; }
+.account-linked-profile a { display: flex; align-items: center; gap: 5px; }
+.account-linked-profile a svg { width: 15px; }
+.account-toggle { display: grid; grid-template-columns: 36px 1fr; align-items: center; gap: 12px; border-bottom: 1px solid var(--app-line); padding: 8px 0 17px; cursor: pointer; }
+.account-toggle input { width: 34px; height: 18px; accent-color: var(--app-teal); }
+.account-toggle span { display: grid; gap: 3px; }
+.account-toggle strong { font-size: 11px; }
+.account-toggle small { color: var(--app-muted); font-size: 9px; line-height: 1.45; }
+
 @media (max-width: 1180px) {
   .public-talent-grid, .company-job-grid, .discovery-grid, .shortlist-grid, .team-grid, .talent-job-grid, .talent-team-grid { grid-template-columns: repeat(2,1fr); }
   .compensation-links, .talent-dashboard-grid, .compensation-summary { grid-template-columns: 1fr 1fr; }
@@ -741,4 +766,6 @@
   .talent-team-hero { align-items: flex-start; flex-direction: column; gap: 20px; }
   .talent-application-list > a { grid-template-columns: 42px 1fr auto; }
   .talent-application-list > a > svg { display: none; }
+  .account-security-row, .account-linked-profile { grid-template-columns: 38px 1fr; }
+  .account-security-row button, .account-linked-profile a { grid-column: 2; justify-self: start; }
 }

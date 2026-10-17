@@ -22,7 +22,6 @@ export function AnimatedGrid() {
     <div className="hero__canvas-wrap" aria-hidden="true">
       <m.div ref={ref} className="hero__canvas motion-grid" data-motion-active={visible} onPointerMove={followPointer} style={{ y: reduce ? 0 : y, scale: reduce ? 1 : scale }}>
         <span className="motion-grid__glow" />
-        <span className="motion-grid__scan" />
         <span className="motion-grid__connection motion-grid__connection--one" />
         <span className="motion-grid__connection motion-grid__connection--two" />
         <span className="motion-grid__pulse motion-grid__pulse--one" />

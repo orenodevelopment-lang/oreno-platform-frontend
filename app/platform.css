@@ -633,6 +633,10 @@
 .not-found h2 { font-size: 25px; }
 .not-found a { color: var(--app-pink); }
 
+.company-record-note { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; border-left: 4px solid var(--app-teal); border-radius: 0 10px 10px 0; background: var(--app-aqua); padding: 13px 16px; }
+.company-record-note strong { font-size: 11px; white-space: nowrap; }
+.company-record-note span { color: var(--app-muted); font-size: 9px; line-height: 1.5; }
+
 @media (max-width: 1250px) {
   .platform-shell { grid-template-columns: 270px minmax(0,1fr); }
   .platform-sidebar { padding-inline: 25px; }
@@ -721,6 +725,7 @@
   .application-track > div { display: flex; margin-bottom: 10px; }
   .application-track > div > svg { transform: rotate(90deg); }
   .wide-form, .manager-form { padding: 18px; }
+  .company-record-note { align-items: flex-start; flex-direction: column; }
 }
 
 @media (prefers-reduced-motion: reduce) {

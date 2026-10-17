@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { motionDistance, motionDurations, motionStagger, reducedMotion } from "../lib/motion/tokens.ts";
+import { marketingMotion, motionDistance, motionDurations, motionStagger, reducedMotion } from "../lib/motion/tokens.ts";
 
 test("motion tokens stay inside the approved timing ranges", () => {
   assert.ok(motionDurations.control >= .12 && motionDurations.control <= .22);
@@ -9,6 +9,8 @@ test("motion tokens stay inside the approved timing ranges", () => {
   assert.ok(motionStagger.standard >= .03 && motionStagger.standard <= .08);
   assert.ok(motionDurations.ambient >= 15 && motionDurations.ambient <= 30);
   assert.ok(motionDistance.medium >= 8 && motionDistance.medium <= 28);
+  assert.ok(marketingMotion.reveal >= .6 && marketingMotion.reveal <= 1);
+  assert.ok(marketingMotion.roleHoldMs >= 3500);
 });
 
 test("reduced motion removes travel and stagger", () => {
@@ -37,9 +39,13 @@ test("the homepage ships its narrative motion without the exported artboard tail
   const page = readFileSync(new URL("../app/page.tsx", import.meta.url), "utf8");
   const showcase = readFileSync(new URL("../components/ShowcaseSection.tsx", import.meta.url), "utf8");
   const scenes = readFileSync(new URL("../components/motion/ShowcaseMotionScene.tsx", import.meta.url), "utf8");
+  const grid = readFileSync(new URL("../components/motion/AnimatedGrid.tsx", import.meta.url), "utf8");
   assert.doesNotMatch(page, /artboard-tail/);
   assert.match(page, /HomepageScrollProgress/);
+  assert.match(page, /PointerFollower/);
+  assert.doesNotMatch(page, /HiringProcess/);
   assert.doesNotMatch(showcase, /Gif Image here/);
   assert.match(showcase, /ShowcaseMotionScene/);
   assert.match(scenes, /useReducedMotion/);
+  assert.doesNotMatch(grid, /motion-grid__scan/);
 });

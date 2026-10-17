@@ -1,5 +1,6 @@
 import type {
   ApplicationRecord,
+  CompanyTeamMemberRecord,
   InterviewRecord,
   JobRecord,
   NotificationRecord,
@@ -9,6 +10,7 @@ import type {
   PublicTalentProfile,
   ShortlistRecord,
   TalentProfileRecord,
+  TalentAccountRecord,
   TaskDetailRecord,
   TimeEntryRecord,
 } from "@/lib/platform/contracts";
@@ -84,6 +86,40 @@ export const talentProfile: TalentProfileRecord = {
   portfolio: [{ id: "portfolio-1", title: "Merchant operations dashboard", category: "Web application", url: "https://portfolio.example.com/merchant" }, { id: "portfolio-2", title: "Accessible component library", category: "Design system", url: "https://portfolio.example.com/system" }],
   vetting: { status: "Vetted", updatedAt: "Aug 12, 2026", publicLabel: "Oreno vetted" },
 };
+
+export const talentAccount: TalentAccountRecord = {
+  id: "talent-account-john",
+  profileId: "john-doe",
+  email: "john@oreno.team",
+  phone: "+234 (0)903-123-4567",
+  emailVerified: true,
+  status: "Active",
+  createdAt: "August 04, 2026",
+  lastSignedInAt: "Today at 09:42 WAT",
+  security: { twoFactorEnabled: false, activeSessions: 2 },
+  preferences: {
+    jobAlerts: true,
+    applicationUpdates: true,
+    profileVisibility: "Oreno companies only",
+    marketingEmails: false,
+  },
+};
+
+export const companyTeamMembers: CompanyTeamMemberRecord[] = [
+  {
+    id: "team-member-john",
+    placementId: "placement-john-2026",
+    talentProfileId: "john-doe",
+    companyId: "oreno-technologies",
+    employeeId: "OR-2041",
+    employmentTitle: "React developer",
+    department: "Engineering",
+    manager: "Richard Benson",
+    startDate: "February 12, 2024",
+    engagement: "Full time",
+    status: "Active",
+  },
+];
 
 export const taskDetails: TaskDetailRecord[] = [
   { id: "task-1", title: "Design homepage", description: "Create the final responsive homepage layout and document component states for handoff.", status: "To-do", priority: "High", startDate: "Sep 25, 2026", dueDate: "Sep 30, 2026", assignees: ["John Doe C.", "Chibuokem Chiorlu"], comments: [{ id: "comment-1", author: "Richard Benson", body: "Please include the empty and error states in the handoff.", createdAt: "Sep 25 · 9:14 AM" }, { id: "comment-2", author: "John Doe C.", body: "The responsive shell is ready for review.", createdAt: "Sep 25 · 11:02 AM" }] },

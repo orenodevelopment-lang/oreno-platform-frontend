@@ -15,7 +15,7 @@ type ShowcaseSectionProps = {
 export function ShowcaseSection({ eyebrow, accent, title, body, mediaSide, index }: ShowcaseSectionProps) {
   return (
     <Reveal className="showcase-motion-item" direction={mediaSide === "left" ? "left" : "right"}>
-    <article className={`showcase-card showcase-card--${mediaSide} showcase-card--${index + 1}`}>
+    <article id={`showcase-step-${index + 1}`} className={`showcase-card showcase-card--${mediaSide} showcase-card--${index + 1}`}>
       <div
         className="showcase-card__media"
         role="img"
@@ -24,7 +24,7 @@ export function ShowcaseSection({ eyebrow, accent, title, body, mediaSide, index
         <Parallax className="showcase-card__media-motion" distance={18}><ShowcaseMotionScene index={index} /></Parallax>
       </div>
       <div className="showcase-card__copy">
-        <span className={`showcase-card__eyebrow showcase-card__eyebrow--${accent}`}>{eyebrow}</span>
+        <span className={`showcase-card__eyebrow showcase-card__eyebrow--${accent}`}><b>{String(index + 1).padStart(2, "0")}</b>{eyebrow}</span>
         <h3>{title}</h3>
         <p>{body}</p>
         <CtaLink dark />

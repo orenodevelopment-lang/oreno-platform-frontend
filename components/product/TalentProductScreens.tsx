@@ -16,6 +16,9 @@ import {
   ExternalLink,
   FileBadge,
   GraduationCap,
+  KeyRound,
+  Laptop,
+  MailCheck,
   MapPin,
   MessageSquare,
   Plus,
@@ -38,6 +41,7 @@ export const talentProductTitles: Record<string, string> = {
   "": "Dashboard",
   onboarding: "Profile setup",
   profile: "Profile",
+  account: "Account",
   jobs: "Find jobs",
   applications: "Applications",
   interviews: "Interviews",
@@ -54,6 +58,7 @@ export function TalentProductScreen({ route }: { route: string }) {
   if (route === "") return <TalentDashboard />;
   if (route === "onboarding" || route.startsWith("onboarding/")) return <TalentOnboarding step={route.split("/")[1] ?? "basics"} />;
   if (route === "profile" || route.startsWith("profile/")) return <TalentProfileEditor section={route.split("/")[1] ?? "overview"} />;
+  if (route === "account" || route.startsWith("account/")) return <TalentAccount section={route.split("/")[1] ?? "overview"} />;
   if (route === "jobs") return <TalentJobs />;
   if (route.startsWith("jobs/")) return <TalentJobRoute segments={route.split("/").slice(1)} />;
   if (route === "applications") return <TalentApplications />;
@@ -103,6 +108,70 @@ function ProfileOverview() { return <form className="product-form-card profile-e
 function RepeatableRecords({ icon, title, records }: { icon: ReactNode; title: string; records: Array<{ title: string; subtitle: string; meta: string; body?: string }> }) { return <section className="record-editor"><header><div>{icon}<h3>{title}</h3></div><button type="button"><Plus /> Add {title.toLowerCase().replace(/s$/, "")}</button></header>{records.map((record) => <article key={`${record.title}-${record.subtitle}`}><span>{icon}</span><div><h4>{record.title}</h4><p>{record.subtitle}</p><small>{record.meta}</small>{record.body && <p>{record.body}</p>}</div><button type="button">Edit</button></article>)}</section>; }
 function AvailabilityEditor() { return <form className="product-form-card"><div className="form-grid"><TalentField label="Availability" value="Available in 2 weeks" /><TalentField label="Preferred engagement" value="Full time" /><TalentField label="Hourly rate" value="35" /><TalentField label="Currency" value="USD" /><TalentField label="Preferred workplace" value="Remote" /><TalentField label="Time zone" value="WAT (UTC+1)" /></div></form>; }
 function SkillsVetting() { const profile = productService.getTalentProfile(); return <div className="skills-vetting"><section><header><h3>Skills</h3><button type="button"><Plus /> Add skill</button></header>{profile.skills.map((skill) => <article key={skill.name}><span>{skill.name}</span><StatusChip status={skill.level} /><button type="button">Edit</button></article>)}</section><section><header><span><BadgeCheck /></span><div><h3>{profile.vetting.publicLabel}</h3><p>Updated {profile.vetting.updatedAt}</p></div></header><Timeline items={[{ label: "Profile submitted", date: "Aug 04, 2026", complete: true }, { label: "Information reviewed", date: "Aug 08, 2026", complete: true }, { label: "Vetting completed", date: profile.vetting.updatedAt, complete: true }]} /><p>Internal screening notes remain private to authorised Oreno operations staff.</p></section></div>; }
+
+const accountTabs = [
+  { key: "overview", label: "Account details", href: "/talent/account" },
+  { key: "security", label: "Security", href: "/talent/account/security" },
+  { key: "preferences", label: "Privacy & notifications", href: "/talent/account/preferences" },
+];
+
+function TalentAccount({ section }: { section: string }) {
+  const account = productService.getTalentAccount();
+  const [saved, setSaved] = useState(false);
+
+  function save(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    productService.updateTalentAccount({
+      phone: String(form.get("phone") ?? account.phone),
+      preferences: {
+        jobAlerts: form.get("jobAlerts") === "on",
+        applicationUpdates: form.get("applicationUpdates") === "on",
+        marketingEmails: form.get("marketingEmails") === "on",
+        profileVisibility: String(form.get("profileVisibility") ?? account.preferences.profileVisibility) as typeof account.preferences.profileVisibility,
+      },
+    });
+    setSaved(true);
+  }
+
+  return (
+    <ProductPage
+      eyebrow="Personal account"
+      title="Account and access"
+      description="Manage your sign-in identity separately from your professional talent profile."
+      actions={<Link className="product-button-secondary" href="/talent/profile"><UserRound /> View professional profile</Link>}
+    >
+      <ProductTabs items={accountTabs} active={section} />
+      {saved && <div className="inline-success" role="status"><CheckCircle2 /> Account settings saved locally.</div>}
+      <div className="account-separation-note"><ShieldCheck /><div><strong>Your account belongs to you</strong><p>Companies can manage a work placement after you are hired, but they cannot edit these account or profile details.</p></div></div>
+      {section === "security" ? (
+        <form className="product-form-card talent-account-form" onSubmit={save}>
+          <header><KeyRound /><div><h3>Password and sign-in</h3><p>Last signed in {account.lastSignedInAt}</p></div></header>
+          <div className="form-grid"><label className="form-field"><span>Current password</span><input type="password" autoComplete="current-password" /></label><label className="form-field"><span>New password</span><input type="password" minLength={8} autoComplete="new-password" /></label></div>
+          <div className="account-security-row"><Laptop /><div><strong>{account.security.activeSessions} active sessions</strong><p>Review and sign out devices you no longer use.</p></div><button type="button">Review sessions</button></div>
+          <label className="account-toggle"><input type="checkbox" defaultChecked={account.security.twoFactorEnabled} /><span><strong>Two-step verification</strong><small>Require a second factor when signing in on a new device.</small></span></label>
+          <button className="platform-primary" type="submit"><Save /> Save security settings</button>
+        </form>
+      ) : section === "preferences" ? (
+        <form className="product-form-card talent-account-form" onSubmit={save}>
+          <header><Bell /><div><h3>Privacy and notifications</h3><p>Choose how companies can discover you and which updates you receive.</p></div></header>
+          <label className="form-field"><span>Profile visibility</span><select name="profileVisibility" defaultValue={account.preferences.profileVisibility}><option>Public</option><option>Oreno companies only</option><option>Private</option></select></label>
+          <label className="account-toggle"><input name="jobAlerts" type="checkbox" defaultChecked={account.preferences.jobAlerts} /><span><strong>Job alerts</strong><small>Receive opportunities that match your professional profile.</small></span></label>
+          <label className="account-toggle"><input name="applicationUpdates" type="checkbox" defaultChecked={account.preferences.applicationUpdates} /><span><strong>Application updates</strong><small>Receive interview, offer and status notifications.</small></span></label>
+          <label className="account-toggle"><input name="marketingEmails" type="checkbox" defaultChecked={account.preferences.marketingEmails} /><span><strong>Product news</strong><small>Receive occasional Oreno product and community updates.</small></span></label>
+          <button className="platform-primary" type="submit"><Save /> Save preferences</button>
+        </form>
+      ) : (
+        <form className="product-form-card talent-account-form" onSubmit={save}>
+          <header><MailCheck /><div><h3>Sign-in identity</h3><p>Created {account.createdAt}</p></div><StatusChip status={account.emailVerified ? "Email verified" : "Verification pending"} /></header>
+          <div className="form-grid"><label className="form-field"><span>Email address</span><input type="email" value={account.email} readOnly /></label><label className="form-field"><span>Phone number</span><input name="phone" type="tel" defaultValue={account.phone} /></label></div>
+          <div className="account-linked-profile"><UserRound /><div><strong>Professional profile</strong><p>{productService.getTalentProfile().headline} · {productService.getTalentProfile().profileCompletion}% complete</p></div><Link href="/talent/profile">Manage profile <ArrowRight /></Link></div>
+          <button className="platform-primary" type="submit"><Save /> Save account details</button>
+        </form>
+      )}
+    </ProductPage>
+  );
+}
 
 function TalentJobs() {
   const jobs = productService.listPublicJobs();

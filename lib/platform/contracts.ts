@@ -172,6 +172,41 @@ export interface TalentProfileRecord {
   vetting: { status: "Not started" | "In review" | "More information required" | "Vetted"; updatedAt: string; publicLabel: string };
 }
 
+export interface TalentAccountRecord {
+  id: string;
+  profileId: string;
+  email: string;
+  phone: string;
+  emailVerified: boolean;
+  status: "Pending verification" | "Active" | "Suspended";
+  createdAt: string;
+  lastSignedInAt: string;
+  security: {
+    twoFactorEnabled: boolean;
+    activeSessions: number;
+  };
+  preferences: {
+    jobAlerts: boolean;
+    applicationUpdates: boolean;
+    profileVisibility: "Public" | "Oreno companies only" | "Private";
+    marketingEmails: boolean;
+  };
+}
+
+export interface CompanyTeamMemberRecord {
+  id: string;
+  placementId: string;
+  talentProfileId: string;
+  companyId: string;
+  employeeId: string;
+  employmentTitle: string;
+  department: string;
+  manager: string;
+  startDate: string;
+  engagement: "Full time" | "Part time" | "Contract";
+  status: "Onboarding" | "Active" | "Offboarded";
+}
+
 export interface TaskDetailRecord {
   id: string;
   title: string;
@@ -194,4 +229,7 @@ export interface InterviewOutcomeInput { interviewId: string; outcome: "Advance"
 export interface OfferDecisionInput { offerId: string; decision: "accept" | "reject"; note?: string }
 export interface ReplacementRequestInput { placementId: string; reason: string; details: string }
 export interface TimeEntryDecisionInput { timeEntryId: string; decision: "approve" | "reject"; note?: string }
+export interface TalentAccountCreateInput { firstName: string; lastName: string; email: string; password: string }
+export interface TalentAccountUpdateInput { phone?: string; preferences?: Partial<TalentAccountRecord["preferences"]> }
+export interface TalentProfileUpdateInput extends Partial<Omit<TalentProfileRecord, "id" | "vetting">> { id: string }
 

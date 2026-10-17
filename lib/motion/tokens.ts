@@ -7,6 +7,14 @@ export const motionDurations = {
   ambient: 22,
 } as const;
 
+export const marketingMotion = {
+  reveal: 0.76,
+  hero: 0.92,
+  stagger: 0.12,
+  distance: 38,
+  roleHoldMs: 4200,
+} as const;
+
 export const motionEasings = {
   standard: [0.22, 1, 0.36, 1] as const,
   emphasized: [0.16, 1, 0.3, 1] as const,

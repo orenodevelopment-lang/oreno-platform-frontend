@@ -2,6 +2,10 @@ import type { ApplicationStatus, JobStatus } from "./contracts.ts";
 
 export const companyProductRoutes = [
   "/company/onboarding/complete",
+  "/company/team-members",
+  "/company/team-members/john-doe",
+  "/company/team-members/john-doe/tasks",
+  "/company/team-members/john-doe/performance",
   "/company/organisation",
   "/company/access",
   "/company/access/invitations",
@@ -45,6 +49,9 @@ export const talentProductRoutes = [
   "/talent/profile/portfolio",
   "/talent/profile/availability",
   "/talent/profile/skills",
+  "/talent/account",
+  "/talent/account/security",
+  "/talent/account/preferences",
   "/talent/jobs",
   "/talent/jobs/product-designer",
   "/talent/jobs/product-designer/apply",

@@ -4,6 +4,7 @@ import "./globals.css";
 import "./platform.css";
 import "./product.css";
 import "./motion.css";
+import "./admin.css";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 
 const raleway = localFont({

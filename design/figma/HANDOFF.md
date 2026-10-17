@@ -11,6 +11,10 @@ npm run dev
 
 Start with `http://localhost:3000`, `/company`, or `/talent`.
 
+Platform administration is available at `/platform-admin/login`. The local
+frontend demo proceeds through `/platform-admin/two-factor`; it does not send or
+persist credentials.
+
 ## Public and authentication routes
 
 - Discovery: `/talent-catalogue`, `/talent-catalogue/john-doe`, `/jobs`, `/jobs/product-designer`
@@ -53,6 +57,16 @@ The original task, team, messages, settings, and application screens remain avai
 - `data/platform-product-fixtures.ts`: dedicated development data for the inferred flows.
 - `lib/platform/product-policy.ts`: route manifests, allowed lifecycle transitions, and validation helpers covered by unit tests.
 - `public/assets/figma/app/`: exact raster assets extracted from supplied exports.
+- `components/platform-admin/`: responsive administration shell, two-step
+  authentication, permission-aware screens, audited confirmation dialog, and
+  explicit empty/loading/error/denied states.
+- `app/platform-admin/[[...screen]]/page.tsx`: one catch-all App Router entry for
+  the approved administration inventory.
+- `app/admin.css`: isolated Oreno admin tokens, dense data layouts, mobile drawer,
+  authentication composition, and reduced-motion handling.
+- `lib/platform-admin/`: typed records, six-role permission matrix, route/API
+  manifests, action-reason validation, and the replaceable fixture service.
+- `data/platform-admin-fixtures.ts`: fictional development-only operational data.
 
 ## Product decisions preserved
 
@@ -61,6 +75,11 @@ The original task, team, messages, settings, and application screens remain avai
 - Compensation and payroll screens model agreements and payment records only; they do not claim to transfer money.
 - Destructive and irreversible-looking actions require confirmation, and status never relies on colour alone.
 - Platform-owner administration remains a separately scoped product surface.
+- Platform administration now has six explicit roles, mandatory two-factor UI,
+  route and action guards, reasons for high-risk changes, masked financial and
+  delivery data, read-only payment operations, and immutable-audit messaging.
+- Talent identities remain talent-owned after hiring; placements create company
+  workforce links rather than converting talent accounts into company users.
 - Forms and mutations provide local demo results only and never claim production persistence.
 
 ## States and accessibility
@@ -70,6 +89,18 @@ Shared data screens support loading, empty, no-result, API-error/retry, permissi
 ## Backend integration
 
 Replace `productService` in `lib/platform/product-service.ts` with an authenticated HTTP adapter while retaining the contracts. The required `/api/v1` capabilities, error envelope, authorisation expectations, idempotency needs, upload flow, WebSocket work, and integration TODOs are recorded in [`../product/API_REQUIREMENTS.md`](../product/API_REQUIREMENTS.md).
+
+Replace `platformAdminService` in `lib/platform-admin/service.ts` separately with
+cookie-authenticated `/api/v1/admin` calls. The admin-specific contract, command
+operations, privacy rules, audit fields, failure codes, and mandatory
+authorisation tests are in section 15 of the same API requirements document.
+The UI is intentionally an integration-ready local demo: actions return local
+confirmation and never claim server persistence.
+
+Use `?role=owner`, `operations`, `reviewer`, `support`, `finance`, or `analyst`
+to exercise the six role projections. Use the existing `?state=loading`,
+`empty`, `no-results`, `error`, `denied`, `archived`, or `success` query to
+review admin data states.
 
 ## Motion system
 
@@ -88,7 +119,7 @@ The homepage showcase placeholders are now approved code-native product animatio
 
 ## Verification
 
-- Unit policy/route/motion tests: passed (11/11).
+- Unit policy/route/motion/admin tests: passed (16/16).
 - ESLint: passed with zero warnings.
 - TypeScript: passed.
 - Production build: passed.

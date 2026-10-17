@@ -66,6 +66,12 @@ Source: `lib/motion/tokens.ts` and `lib/motion/variants.ts`.
 | Toast/inline feedback | Status and success selectors | Feedback enters | 220 ms | Immediate/short fade | Forms, preferences and shell notices |
 | Branded skeleton shimmer | `.motion-skeleton` | `?state=loading` | 1.45-second cycle | Static skeleton | Data-state-enabled product screens |
 | Empty-state breathing | Product-state icon | Non-loading state shown | 4.8-second cycle | Static icon | Empty, no-result, error and archived states |
+| Admin route entrance | `PlatformAdminApp` | Admin path change | 280 ms | Immediate/short fade | Platform administration |
+| Admin row reveal | `AdminTable` | Screen or filtered result mounts | 40 ms stagger | Immediate rows | Platform administration |
+| Admin mobile drawer | `AdminShell` sidebar/backdrop | Open/close | Motion spring/default | Immediate/short fade | Responsive platform administration |
+| Audited action dialog | `AdminConfirmDialog` | High-risk action selected | 320 ms | Short fade | Platform administration mutations |
+| Admin live marker | `.admin-live i` | Operational screen visible | 2.4-second restrained pulse | Static dot | Admin overview and system operations |
+| Admin authentication entrance | `AdminAuth` panel | Auth screen entry | Motion default | Immediate/short fade | Admin login, 2FA, expiry and denial |
 
 ## Performance and usability decisions
 

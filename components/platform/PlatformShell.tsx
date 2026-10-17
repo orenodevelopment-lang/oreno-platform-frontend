@@ -38,7 +38,7 @@ type NavItem = {
 const companyNavigation: NavItem[] = [
   { href: "/company", label: "Home", icon: House },
   { label: "Your Business", heading: true },
-  { href: "/company/talents", label: "Talents", icon: UsersRound },
+  { href: "/company/team-members", label: "Team members", icon: UsersRound },
   { href: "/company/departments", label: "Department", icon: Network },
   { href: "/company/roles", label: "Roles", icon: BriefcaseBusiness },
   { href: "/company/managers", label: "Managers", icon: UserRound },
@@ -52,15 +52,21 @@ const companyNavigation: NavItem[] = [
 ];
 
 const talentNavigation: NavItem[] = [
+  { href: "/talent", label: "Home", icon: House },
+  { label: "Career", heading: true },
+  { href: "/talent/profile", label: "Professional profile", icon: UserRound },
+  { href: "/talent/jobs", label: "Find jobs", icon: BriefcaseBusiness },
+  { href: "/talent/applications", label: "Applications", icon: ClipboardList },
+  { label: "Work", heading: true },
   { href: "/talent/tasks", label: "Tasks", icon: ClipboardList },
-  { href: "/talent/team", label: "Team", icon: UsersRound },
-  { href: "/talent/messages", label: "Message", icon: MessageSquare },
-  { href: "/talent/settings", label: "Settings", icon: Settings },
-  { href: "/talent/apply", label: "Apply", icon: BriefcaseBusiness },
+  { href: "/talent/team/current", label: "My team", icon: UsersRound },
+  { href: "/talent/messages", label: "Messages", icon: MessageSquare },
+  { label: "Personal", heading: true },
+  { href: "/talent/account", label: "Account & security", icon: Settings },
 ];
 
 function isActive(pathname: string, href: string) {
-  if (href === "/company" || href === "/talent/tasks") return pathname === href;
+  if (href === "/company" || href === "/talent") return pathname === href;
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -141,9 +147,9 @@ export function PlatformShell({
             <Link className="platform-icon-button platform-notification" aria-label="Notifications" href={kind === "company" ? "/company/notifications" : "/talent/notifications"}>
               <Bell aria-hidden="true" />
             </Link>
-            <button type="button" className="platform-icon-button platform-user" aria-label="Account menu" onClick={() => announce("Account menu opened.")}>
+            <Link className="platform-icon-button platform-user" aria-label="Account settings" href={kind === "company" ? "/company/settings" : "/talent/account"}>
               <UserRound aria-hidden="true" />
-            </button>
+            </Link>
           </div>
         </header>
         <main className="platform-content">

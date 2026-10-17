@@ -15,8 +15,10 @@ test("route manifest covers all three user surfaces", () => {
   assert.ok(publicProductRoutes.includes("/talent-catalogue"));
   assert.ok(publicProductRoutes.includes("/auth/reset-password"));
   assert.ok(companyProductRoutes.includes("/company/applications"));
+  assert.ok(companyProductRoutes.includes("/company/team-members/john-doe"));
   assert.ok(companyProductRoutes.includes("/company/compensation/payments"));
   assert.ok(talentProductRoutes.includes("/talent/profile/experience"));
+  assert.ok(talentProductRoutes.includes("/talent/account/security"));
   assert.ok(talentProductRoutes.includes("/talent/offers/offer-chibuokem"));
 });
 
