@@ -23,7 +23,7 @@ Source: `lib/motion/tokens.ts` and `lib/motion/variants.ts`.
 | Viewport reveal | `Reveal` | First viewport entry | 420 ms | 80 ms fade, no travel | Homepage headings and major content groups |
 | Staggered cards | `TalentCarousel`, list/card selectors | First entry or filtered remount | 40–75 ms interval | Items appear without stagger or travel | Homepage, catalogues, dashboards and records |
 | Hero composition entrance | Hero navigation, headline, CTA and quote | Initial page entry | 550–800 ms | Final composition shown immediately | Homepage hero |
-| Hero role rotation | `HeroRoleRotator` | Page visible | 2.8-second cadence | Static “Developers” label | Homepage hero |
+| Hero role typewriter | `HeroRoleRotator` | Page visible | 95 ms typing, 48 ms deletion, 1.65-second hold | Static “Designers” label | Homepage hero |
 | Hero grid drift | `AnimatedGrid`, `.motion-grid` | Visible in viewport | 24-second alternate cycle | Static grid | Homepage hero |
 | Hero grid scan and links | Grid scan/link selectors | Visible in viewport | 6.8–7.2-second cycles | Hidden/static grid | Homepage hero |
 | Grid intersection pulse | `.motion-grid__pulse` | Visible in viewport | 6.5-second cycle | Static intersections | Homepage hero |
@@ -38,7 +38,7 @@ Source: `lib/motion/tokens.ts` and `lib/motion/variants.ts`.
 | Showcase parallax | `Parallax` | Scroll progress | Continuous while visible | Static; disabled on mobile | Homepage showcase cards |
 | Showcase product narratives | `ShowcaseMotionScene` | First viewport entry plus restrained loops | 420 ms stagger and 2.4–18-second ambient cycles | Complete static product scenes | Homepage showcase cards |
 | CTA arrow response | Arrow selectors | Hover or keyboard focus | 220 ms | Immediate | Public and product CTAs |
-| Oreno mark response | Brand mark selectors | Hover or keyboard focus | 220 ms | Immediate final state | Website, public product, authentication and workspace navigation |
+| Oreno wordmark response | Full navbar `oreno-logo` | Hover or keyboard focus | 420 ms | Immediate final state | Website navigation |
 | Footer ambient shape | `.footer::before` | Page visible | 25-second cycle | Static | Homepage footer |
 | Organic authentication art | `.auth-art__orb`, `.auth-art__flower` | Page visible | 13–18-second cycles | Static | Company sign-up and login |
 | Newsletter confirmation | `Newsletter` success state | Valid form submission | 220 ms | Immediate confirmation | Homepage footer |

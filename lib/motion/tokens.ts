@@ -12,7 +12,9 @@ export const marketingMotion = {
   hero: 0.92,
   stagger: 0.12,
   distance: 38,
-  roleHoldMs: 4200,
+  roleTypeMs: 95,
+  roleDeleteMs: 48,
+  roleHoldMs: 1650,
 } as const;
 
 export const motionEasings = {

@@ -10,7 +10,9 @@ test("motion tokens stay inside the approved timing ranges", () => {
   assert.ok(motionDurations.ambient >= 15 && motionDurations.ambient <= 30);
   assert.ok(motionDistance.medium >= 8 && motionDistance.medium <= 28);
   assert.ok(marketingMotion.reveal >= .6 && marketingMotion.reveal <= 1);
-  assert.ok(marketingMotion.roleHoldMs >= 3500);
+  assert.ok(marketingMotion.roleTypeMs >= 70 && marketingMotion.roleTypeMs <= 130);
+  assert.ok(marketingMotion.roleDeleteMs >= 30 && marketingMotion.roleDeleteMs <= 80);
+  assert.ok(marketingMotion.roleHoldMs >= 1200 && marketingMotion.roleHoldMs <= 2500);
 });
 
 test("reduced motion removes travel and stagger", () => {
@@ -41,6 +43,9 @@ test("the homepage ships its narrative motion without the exported artboard tail
   const showcase = readFileSync(new URL("../components/ShowcaseSection.tsx", import.meta.url), "utf8");
   const scenes = readFileSync(new URL("../components/motion/ShowcaseMotionScene.tsx", import.meta.url), "utf8");
   const grid = readFileSync(new URL("../components/motion/AnimatedGrid.tsx", import.meta.url), "utf8");
+  const roles = readFileSync(new URL("../components/motion/HeroRoleRotator.tsx", import.meta.url), "utf8");
+  const simplified = readFileSync(new URL("../components/HiringSimplified.tsx", import.meta.url), "utf8");
+  const globalStyles = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
   assert.doesNotMatch(page, /artboard-tail/);
   assert.match(page, /HomepageScrollProgress/);
   assert.doesNotMatch(page, /HiringProcess/);
@@ -48,4 +53,9 @@ test("the homepage ships its narrative motion without the exported artboard tail
   assert.match(showcase, /ShowcaseMotionScene/);
   assert.match(scenes, /useReducedMotion/);
   assert.doesNotMatch(grid, /motion-grid__scan/);
+  assert.match(roles, /TYPE_DELAY/);
+  assert.doesNotMatch(roles, /AnimatePresence/);
+  assert.doesNotMatch(simplified, /CountUp/);
+  assert.match(globalStyles, /\.navbar--compact[\s\S]*?background:\s*var\(--ink\)/);
+  assert.match(globalStyles, /\.navbar__brand:hover \.oreno-logo/);
 });

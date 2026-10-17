@@ -12,7 +12,7 @@ export function Hero() {
         <h1 id="hero-title" className="hero__title">
           <span>Hiring skilled</span>
           <span>
-            <HeroRoleRotator /><span className="sr-only">Developers, designers and AI specialists</span> just became
+            <HeroRoleRotator /><span className="sr-only">Designers, developers and AI specialists</span> just became
           </span>
           <strong>very easy</strong>
         </h1>

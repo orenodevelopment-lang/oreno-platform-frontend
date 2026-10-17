@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { Reveal } from "@/components/motion/Reveal";
-import { CountUp } from "@/components/motion/CountUp";
 
 export function HiringSimplified() {
   return (
@@ -9,7 +8,7 @@ export function HiringSimplified() {
         <Reveal className="hiring-simplified__copy" direction="left">
           <h2 id="hiring-simplified-title"><span>Hiring</span><span>Simplified</span></h2>
           <p>
-            A single job advert can attract over <strong className="hiring-simplified__count"><CountUp value={1000} group /></strong> applicants. We take away the hassle of sorting through every candidate to find the best one.
+            A single job advert can attract over 1,000 applicants. We take away the hassle of sorting through every candidate to find the best one.
           </p>
         </Reveal>
         <Reveal className="hiring-simplified__image" direction="right" delay={0.12}>

@@ -82,8 +82,7 @@ button:disabled { cursor: not-allowed; opacity: .62; }
 
 .platform-brand img,
 .public-product-brand img,
-.auth-brand img,
-.navbar__brand .oreno-logo__mark {
+.auth-brand img {
   transform-origin: center;
   transition: transform var(--motion-feedback) var(--motion-emphasized), filter var(--motion-feedback) ease;
 }
@@ -93,9 +92,7 @@ button:disabled { cursor: not-allowed; opacity: .62; }
 .public-product-brand:hover img,
 .public-product-brand:focus-visible img,
 .auth-brand:hover img,
-.auth-brand:focus-visible img,
-.navbar__brand:hover .oreno-logo__mark,
-.navbar__brand:focus-visible .oreno-logo__mark {
+.auth-brand:focus-visible img {
   filter: drop-shadow(0 7px 12px rgba(49,188,169,.22));
   transform: rotate(14deg) scale(1.08);
 }
@@ -478,6 +475,7 @@ button:disabled { cursor: not-allowed; opacity: .62; }
 @keyframes motion-hero-mark { from { opacity: 0; transform: translateY(22px) rotate(-8deg); } }
 @keyframes motion-logo-mark { from { opacity: 0; transform: translateX(-12px) rotate(-24deg) scale(.82); } }
 @keyframes motion-logo-letter { from { opacity: 0; transform: translateY(22px) rotate(6deg); } }
+@keyframes hero-type-caret { 0%, 46% { opacity: 1; } 47%, 100% { opacity: 0; } }
 @keyframes motion-grid-drift { to { background-position: 29px 34px, 29px 34px, 69px 94px, 29px 94px, 69px 94px; } }
 @keyframes motion-grid-pulse { 0%, 100% { opacity: .2; box-shadow: 0 0 0 0 rgba(37,186,164,.32); } 46% { opacity: .9; box-shadow: 0 0 0 13px rgba(37,186,164,0); } }
 @keyframes motion-grid-link-one { 0%, 14%, 55%, 100% { opacity: 0; transform: rotate(24deg) scaleX(.08); } 24%, 40% { opacity: .78; transform: rotate(24deg) scaleX(1); } }

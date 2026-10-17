@@ -126,9 +126,9 @@ a {
   top: 0;
   height: 120px;
   border-bottom: 1px solid rgba(37,186,164,.16);
-  background: rgba(9,28,25,.92);
+  background: var(--ink);
   box-shadow: 0 14px 32px rgba(2,20,17,.12);
-  backdrop-filter: blur(18px);
+  backdrop-filter: none;
 }
 
 .navbar__inner {
@@ -143,6 +143,17 @@ a {
 
 .navbar__brand {
   display: inline-flex;
+}
+
+.navbar__brand .oreno-logo {
+  transform-origin: 50% 55%;
+  transition: transform 420ms var(--motion-emphasized), filter 420ms ease;
+}
+
+.navbar__brand:hover .oreno-logo,
+.navbar__brand:focus-visible .oreno-logo {
+  filter: drop-shadow(0 9px 16px rgba(37,186,164,.32));
+  transform: translateY(-3px) scale(1.055);
 }
 
 .navbar__links {
@@ -285,6 +296,19 @@ a {
   grid-area: 1 / 1;
   white-space: nowrap;
 }
+
+.hero__role-word::after {
+  display: inline-block;
+  width: 3px;
+  height: .82em;
+  margin-left: .09em;
+  background: var(--teal);
+  content: "";
+  transform: translateY(.07em);
+  animation: hero-type-caret .78s steps(1, end) infinite;
+}
+
+.hero__role-slot.is-static .hero__role-word::after { display: none; }
 
 .hero__title strong {
   color: var(--teal);
@@ -465,12 +489,6 @@ a {
   font-weight: 400;
   line-height: 1.5;
   letter-spacing: -.5px;
-}
-
-.hiring-simplified__count {
-  color: var(--pink);
-  font-weight: 700;
-  white-space: nowrap;
 }
 
 .hiring-simplified__image {
