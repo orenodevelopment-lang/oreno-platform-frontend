@@ -100,7 +100,7 @@ export const platformAdminService = {
   }),
   getMetrics: (): PlatformMetric[] => liveValue("admin:metrics", [], async () => {
     const dashboard = asRecord((await apiRequest<{ dashboard: unknown }>("/api/v1/admin/dashboard")).dashboard);
-    const sum = (rows: unknown) => asArray(rows).reduce((total, item) => total + numberValue(asRecord(item).count), 0);
+    const sum = (rows: unknown) => asArray(rows).reduce<number>((total, item) => total + numberValue(asRecord(item).count), 0);
     return [
       { id: "organisations", label: "Organisations", value: String(sum(dashboard.organisations)), detail: "Across all account states", tone: "teal" },
       { id: "users", label: "Users", value: String(sum(dashboard.users)), detail: "Registered platform identities", tone: "green" },

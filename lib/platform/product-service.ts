@@ -151,7 +151,67 @@ export const productService = {
   listNotifications: (): NotificationRecord[] => listResource("account:notifications", "notifications", "/api/v1/notifications", (value) => { const row = asRecord(value); return { id: textValue(row.id), title: textValue(row.title), body: textValue(row.body), category: titleCase(row.category, "Account") as NotificationRecord["category"], createdAt: dateLabel(row.createdAt), read: Boolean(row.readAt), href: textValue(row.actionUrl, "/") }; }),
   listTimeEntries: (): TimeEntryRecord[] => orgListResource("org:time", "timeEntries", "/time-entries", (value) => { const row = asRecord(value); return { id: textValue(row.id), person: nameOf(asRecord(row.talentProfile)), period: dateLabel(row.workDate), regularHours: Number(row.ordinaryMinutes ?? 0) / 60, overtimeHours: Number(row.overtimeMinutes ?? 0) / 60, status: titleCase(row.status, "Draft") as TimeEntryRecord["status"], note: textValue(row.note) || undefined }; }),
   listPaymentRecords: (): PaymentRecord[] => orgListResource("org:payments", "payments", "/payments", (value) => { const row = asRecord(value); return { id: textValue(row.id), person: nameOf(asRecord(row.talentProfile)), payrollPeriod: textValue(asRecord(row.payrollPeriod).reference) || dateLabel(row.createdAt), amount: String(row.amount ?? "0"), currency: textValue(row.currency), methodDescription: titleCase(row.method, "External payment"), externalReference: textValue(row.externalReference), status: titleCase(row.status, "Pending confirmation") as PaymentRecord["status"], paidAt: row.paidAt ? dateLabel(row.paidAt) : undefined }; }),
-  getTalentProfile: () => liveValue("talent:profile", emptyProfile, async () => { const row = asRecord((await apiRequest<{ profile: unknown }>("/api/v1/talents/me/profile")).profile); const publicProfile = mapTalent(row); return { ...emptyProfile, ...publicProfile, name: publicProfile.name, profileCompletion: Number(row.profileCompletion ?? 0), skills: asArray(row.skills).map((item) => ({ name: textValue(asRecord(asRecord(item).skill).name) || textValue(asRecord(item).name), level: titleCase(asRecord(item).level, "Working") as "Working" | "Advanced" | "Expert" })), vetting: { status: titleCase(row.vettingStatus, "Not started") as TalentProfileRecord["vetting"]["status"], updatedAt: dateLabel(row.updatedAt), publicLabel: publicProfile.vetted ? "Vetted" : "Not vetted" } }; }),
+  getTalentProfile: () => liveValue("talent:profile", emptyProfile, async () => {
+    const row = asRecord((await apiRequest<{ profile: unknown }>("/api/v1/talents/me/profile")).profile);
+    const publicProfile = mapTalent(row);
+    return {
+      ...emptyProfile,
+      id: publicProfile.id,
+      name: publicProfile.name,
+      headline: publicProfile.discipline,
+      bio: publicProfile.bio,
+      location: publicProfile.location,
+      rate: publicProfile.rate,
+      availability: publicProfile.availability,
+      profileCompletion: Number(row.profileCompletion ?? 0),
+      skills: asArray(row.skills).map((item) => ({
+        name: textValue(asRecord(asRecord(item).skill).name) || textValue(asRecord(item).name),
+        level: titleCase(asRecord(item).level, "Working") as "Working" | "Advanced" | "Expert",
+      })),
+      experience: asArray(row.experience ?? row.experiences).map((item, index) => {
+        const entry = asRecord(item);
+        return {
+          id: textValue(entry.id, `experience-${index}`),
+          role: textValue(entry.role) || textValue(entry.title),
+          company: textValue(entry.company) || textValue(entry.companyName),
+          period: textValue(entry.period) || [dateLabel(entry.startDate), entry.current ? "Present" : dateLabel(entry.endDate)].join(" - "),
+          summary: textValue(entry.summary) || textValue(entry.description),
+        };
+      }),
+      education: asArray(row.education).map((item, index) => {
+        const entry = asRecord(item);
+        return {
+          id: textValue(entry.id, `education-${index}`),
+          school: textValue(entry.school) || textValue(entry.institution),
+          qualification: textValue(entry.qualification) || textValue(entry.degree),
+          period: textValue(entry.period) || [dateLabel(entry.startDate), dateLabel(entry.endDate)].join(" - "),
+        };
+      }),
+      certifications: asArray(row.certifications).map((item, index) => {
+        const entry = asRecord(item);
+        return {
+          id: textValue(entry.id, `certification-${index}`),
+          name: textValue(entry.name),
+          issuer: textValue(entry.issuer),
+          issuedAt: dateLabel(entry.issuedAt ?? entry.issueDate),
+        };
+      }),
+      portfolio: asArray(row.portfolioItems ?? row.portfolio).map((item, index) => {
+        const entry = asRecord(item);
+        return {
+          id: textValue(entry.id, `portfolio-${index}`),
+          title: textValue(entry.title),
+          category: textValue(entry.category, "Portfolio"),
+          url: textValue(entry.url) || textValue(entry.projectUrl),
+        };
+      }),
+      vetting: {
+        status: titleCase(row.vettingStatus, "Not started") as TalentProfileRecord["vetting"]["status"],
+        updatedAt: dateLabel(row.updatedAt),
+        publicLabel: publicProfile.vetted ? "Vetted" : "Not vetted",
+      },
+    };
+  }),
   updateTalentProfile: async (input: TalentProfileUpdateInput) => { const result = await apiRequest<{ profile: unknown }>("/api/v1/talents/me/profile", { method: "PATCH", body: input }); invalidateLive("talent:profile"); return result; },
   getTalentAccount: () => liveValue("talent:account", emptyAccount, async () => { const row = asRecord((await apiRequest<{ account: unknown }>("/api/v1/talents/me/account")).account); return { ...emptyAccount, id: textValue(row.id), profileId: textValue(row.profileId), email: textValue(row.email), phone: textValue(row.phone), emailVerified: Boolean(row.emailVerifiedAt), status: row.status === "ACTIVE" ? "Active" : row.status === "SUSPENDED" ? "Suspended" : "Pending verification", createdAt: dateLabel(row.createdAt), lastSignedInAt: dateLabel(row.lastLoginAt), security: { twoFactorEnabled: Boolean(asRecord(row.security).twoFactorEnabled), activeSessions: asArray(asRecord(row.security).activeSessions).length }, preferences: { ...emptyAccount.preferences, ...asRecord(row.preferences) } } as TalentAccountRecord; }),
   createTalentAccount: (input: TalentAccountCreateInput) => apiRequest("/api/v1/auth/register", { method: "POST", idempotent: true, body: { accountType: "TALENT", email: input.email, password: input.password, firstName: input.firstName, lastName: input.lastName, acceptTerms: true } }),

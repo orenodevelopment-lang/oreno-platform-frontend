@@ -9,7 +9,7 @@ export interface ApiEnvelope<T> {
 }
 
 export interface ApiRequestOptions extends Omit<RequestInit, "body"> {
-  body?: BodyInit | JsonRecord | unknown[] | null;
+  body?: BodyInit | object | null;
   query?: Record<string, QueryValue>;
   idempotent?: boolean;
   raw?: boolean;
