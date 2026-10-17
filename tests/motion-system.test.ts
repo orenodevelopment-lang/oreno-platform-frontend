@@ -26,6 +26,7 @@ test("the global layer includes user motion preference safeguards", () => {
   assert.match(css, /animation-play-state:\s*paused/);
   assert.match(css, /workspace-ambient/);
   assert.match(provider, /reducedMotion="user"/);
+  assert.match(provider, /PointerFollower/);
 });
 
 test("the root layout tolerates extension attributes and exposes the Figma mark", () => {
@@ -42,7 +43,6 @@ test("the homepage ships its narrative motion without the exported artboard tail
   const grid = readFileSync(new URL("../components/motion/AnimatedGrid.tsx", import.meta.url), "utf8");
   assert.doesNotMatch(page, /artboard-tail/);
   assert.match(page, /HomepageScrollProgress/);
-  assert.match(page, /PointerFollower/);
   assert.doesNotMatch(page, /HiringProcess/);
   assert.doesNotMatch(showcase, /Gif Image here/);
   assert.match(showcase, /ShowcaseMotionScene/);

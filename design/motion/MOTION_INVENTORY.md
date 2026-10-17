@@ -28,6 +28,7 @@ Source: `lib/motion/tokens.ts` and `lib/motion/variants.ts`.
 | Hero grid scan and links | Grid scan/link selectors | Visible in viewport | 6.8–7.2-second cycles | Hidden/static grid | Homepage hero |
 | Grid intersection pulse | `.motion-grid__pulse` | Visible in viewport | 6.5-second cycle | Static intersections | Homepage hero |
 | Pointer illumination | `.motion-grid__glow` | Fine-pointer hover/move | 220 ms response | Hidden | Homepage hero |
+| Global pointer halo | `PointerFollower` | Fine mouse movement, interactive hover and press | 180–320 ms response | Hidden; native pointer remains | All public, talent, company and admin routes |
 | Homepage reading progress | `HomepageScrollProgress` | Page scroll | Scroll-linked spring | Direct scroll position | Homepage |
 | Candidate emphasis | Crowd image, top-match marker and `CountUp` | Section entry/visible | 940 ms count plus 2.2–11-second ambient cycles | Final number and static image | Hiring Simplified |
 | Talent browsing | `TalentCarousel` controls, drag surface and progress | Pointer drag, keyboard or arrow button | Native inertial scroll plus 340 ms focus response | Manual navigation remains available | Hiring process |
