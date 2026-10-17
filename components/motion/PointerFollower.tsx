@@ -18,16 +18,16 @@ export function PointerFollower() {
   const trailFourX = useSpring(trailThreeX, { stiffness: 145, damping: 27, mass: 0.4 });
   const trailFourY = useSpring(trailThreeY, { stiffness: 145, damping: 27, mass: 0.4 });
   const [visible, setVisible] = useState(false);
+  const [enabled, setEnabled] = useState(false);
   const [interactive, setInteractive] = useState(false);
   const [pressed, setPressed] = useState(false);
 
   useEffect(() => {
-    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
-    if (reduce || !finePointer.matches) return;
-
     const move = (event: PointerEvent) => {
-      x.set(event.clientX - 18);
-      y.set(event.clientY - 18);
+      if (event.pointerType && event.pointerType !== "mouse") return;
+      x.set(event.clientX - 21);
+      y.set(event.clientY - 21);
+      setEnabled(true);
       setVisible(true);
       setInteractive(Boolean((event.target as Element | null)?.closest("a, button, input, textarea, select, [role='button']")));
     };
@@ -38,27 +38,31 @@ export function PointerFollower() {
     window.addEventListener("pointerdown", down, { passive: true });
     window.addEventListener("pointerup", up, { passive: true });
     window.addEventListener("pointercancel", up, { passive: true });
+    window.addEventListener("blur", leave);
     document.documentElement.addEventListener("mouseleave", leave);
     return () => {
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerdown", down);
       window.removeEventListener("pointerup", up);
       window.removeEventListener("pointercancel", up);
+      window.removeEventListener("blur", leave);
       document.documentElement.removeEventListener("mouseleave", leave);
     };
-  }, [reduce, x, y]);
+  }, [x, y]);
 
-  if (reduce) return null;
-
-  const stateClass = `${visible ? "is-visible" : ""} ${interactive ? "is-interactive" : ""} ${pressed ? "is-pressed" : ""}`;
+  const stateClass = `${enabled ? "is-enabled" : ""} ${visible ? "is-visible" : ""} ${interactive ? "is-interactive" : ""} ${pressed ? "is-pressed" : ""}`;
 
   return (
     <>
-      <m.span className={`pointer-follower pointer-follower--trail pointer-follower--trail-four ${stateClass}`} style={{ x: trailFourX, y: trailFourY }} aria-hidden="true" />
-      <m.span className={`pointer-follower pointer-follower--trail pointer-follower--trail-three ${stateClass}`} style={{ x: trailThreeX, y: trailThreeY }} aria-hidden="true" />
-      <m.span className={`pointer-follower pointer-follower--trail pointer-follower--trail-two ${stateClass}`} style={{ x: trailTwoX, y: trailTwoY }} aria-hidden="true" />
-      <m.span className={`pointer-follower pointer-follower--trail pointer-follower--trail-one ${stateClass}`} style={{ x: trailOneX, y: trailOneY }} aria-hidden="true" />
-      <m.span className={`pointer-follower pointer-follower--lead ${stateClass}`} style={{ x: leadX, y: leadY }} aria-hidden="true" />
+      {!reduce ? (
+        <>
+          <m.span className={`pointer-follower pointer-follower--trail pointer-follower--trail-four ${stateClass}`} style={{ x: trailFourX, y: trailFourY }} aria-hidden="true" />
+          <m.span className={`pointer-follower pointer-follower--trail pointer-follower--trail-three ${stateClass}`} style={{ x: trailThreeX, y: trailThreeY }} aria-hidden="true" />
+          <m.span className={`pointer-follower pointer-follower--trail pointer-follower--trail-two ${stateClass}`} style={{ x: trailTwoX, y: trailTwoY }} aria-hidden="true" />
+          <m.span className={`pointer-follower pointer-follower--trail pointer-follower--trail-one ${stateClass}`} style={{ x: trailOneX, y: trailOneY }} aria-hidden="true" />
+        </>
+      ) : null}
+      <m.span className={`pointer-follower pointer-follower--lead ${stateClass}`} style={reduce ? { x, y } : { x: leadX, y: leadY }} aria-hidden="true" />
     </>
   );
 }

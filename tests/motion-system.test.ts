@@ -67,6 +67,9 @@ test("the desktop pointer uses a restrained branded trail", () => {
   const css = readFileSync(new URL("../app/motion.css", import.meta.url), "utf8");
   assert.match(pointer, /pointer-follower--trail-four/);
   assert.match(pointer, /pointer-follower--lead/);
-  assert.match(css, /\.pointer-follower\s*\{[\s\S]*?width:\s*36px/);
+  assert.match(pointer, /event\.pointerType !== "mouse"/);
+  assert.match(pointer, /is-enabled/);
+  assert.match(css, /\.pointer-follower\s*\{[\s\S]*?width:\s*42px/);
   assert.match(css, /\.pointer-follower--lead\.is-interactive[\s\S]*?var\(--pink\)/);
+  assert.doesNotMatch(css, /\.pointer-follower\s*\{\s*display:\s*none\s*!important/);
 });

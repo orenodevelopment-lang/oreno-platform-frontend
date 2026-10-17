@@ -7,8 +7,8 @@ The static Figma exports do not contain an authored animation timeline. These ef
 | Change | Implementation | Guardrail | Status |
 |---|---|---|---|
 | Persistent navigation | Render one viewport-fixed homepage navbar above the route-transition layer, using the same `--ink` green as the hero and a restrained shadow after scroll | Preserve mobile menu behaviour and offset in-page anchors below the bar | Implemented |
-| Desktop cursor tracking | Use a 36 px teal/mint lead glow with four progressively smaller spring-followed echoes; switch to Oreno pink over interactive controls | Fine pointers only, native cursor remains visible, hidden for reduced motion and touch input | Implemented |
-| Section entrances after the hero | Reveal the Hiring Simplified columns, hiring-guide intro/navigation, each showcase visual and copy block, final CTA content and footer columns on first viewport entry | Animate transform and opacity only; do not replay on scroll; collapse to short fades for reduced motion | Implemented |
+| Desktop cursor tracking | Use a 42 px teal/mint lead glow with four progressively smaller spring-followed echoes; switch to Oreno pink over interactive controls | Activate from real mouse pointer events so hybrid laptops work; native cursor remains; reduced motion keeps only the lead glow | Implemented |
+| Section entrances after the hero | Reveal the Hiring Simplified columns, hiring-guide intro/navigation, each showcase visual and copy block, final CTA content and footer columns on first viewport entry | Use clearly visible 52–86 px travel, scale and stagger; do not replay on scroll; collapse to short fades for reduced motion | Implemented |
 | Motion QA | Check desktop, tablet and mobile layout; confirm keyboard focus, sticky guide clearance, reduced motion and production compilation | No backend integration or product-workflow files are part of this pass | In verification |
 
 ## Shared tokens
@@ -29,7 +29,7 @@ Source: `lib/motion/tokens.ts` and `lib/motion/variants.ts`.
 | Effect | Component or selector | Trigger | Duration | Reduced-motion behaviour | Pages |
 |---|---|---|---|---|---|
 | Route entrance/exit | `PageTransition` | Path change | 160–440 ms | Short opacity-only transition through Motion user preference | All routes |
-| Viewport reveal | `Reveal`, homepage Motion groups | First viewport entry | 760–860 ms | 80 ms fade, no travel | Homepage headings, visuals, copy and major content groups |
+| Viewport reveal | `Reveal`, homepage Motion groups | First viewport entry | 960–1,080 ms | 80 ms fade, no travel | Homepage headings, visuals, copy and major content groups |
 | Staggered cards | `TalentCarousel`, list/card selectors | First entry or filtered remount | 40–75 ms interval | Items appear without stagger or travel | Homepage, catalogues, dashboards and records |
 | Hero composition entrance | Hero navigation, headline, CTA and quote | Initial page entry | 550–800 ms | Final composition shown immediately | Homepage hero |
 | Hero role typewriter | `HeroRoleRotator` | Page visible | 95 ms typing, 48 ms deletion, 1.65-second hold | Static “Designers” label | Homepage hero |
@@ -37,7 +37,7 @@ Source: `lib/motion/tokens.ts` and `lib/motion/variants.ts`.
 | Hero grid scan and links | Grid scan/link selectors | Visible in viewport | 6.8–7.2-second cycles | Hidden/static grid | Homepage hero |
 | Grid intersection pulse | `.motion-grid__pulse` | Visible in viewport | 6.5-second cycle | Static intersections | Homepage hero |
 | Pointer illumination | `.motion-grid__glow` | Fine-pointer hover/move | 220 ms response | Hidden | Homepage hero |
-| Global themed cursor trail | `PointerFollower` | Fine mouse movement, interactive hover and press | Spring-followed teal/mint trail; pink interactive state | Hidden; native pointer remains | All public, talent, company and admin routes |
+| Global themed cursor trail | `PointerFollower` | Mouse movement, interactive hover and press | Spring-followed teal/mint trail; pink interactive state | Lead glow only; native pointer remains | All public, talent, company and admin routes |
 | Persistent homepage navbar | `Navbar`, `MotionProvider` | Homepage load and scroll | 760 ms first entrance; 320 ms scroll shadow | Static fixed navigation | Homepage |
 | Homepage reading progress | `HomepageScrollProgress` | Page scroll | Scroll-linked spring | Direct scroll position | Homepage |
 | Candidate emphasis | Crowd image, top-match marker and `CountUp` | Section entry/visible | 940 ms count plus 2.2–11-second ambient cycles | Final number and static image | Hiring Simplified |

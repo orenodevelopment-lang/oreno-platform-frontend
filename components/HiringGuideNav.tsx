@@ -39,10 +39,10 @@ export function HiringGuideNav() {
     <m.nav
       className="hiring-guide"
       aria-label="Hiring process steps"
-      initial={{ opacity: 0, y: reduce ? 0 : 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: reduce ? 0 : 48, scale: reduce ? 1 : .975 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, amount: .7 }}
-      transition={{ duration: reduce ? .08 : marketingMotion.reveal, delay: reduce ? 0 : .08, ease: motionEasings.standard }}
+      transition={{ duration: reduce ? .08 : marketingMotion.reveal, delay: reduce ? 0 : .14, ease: motionEasings.standard }}
     >
       <span className="hiring-guide__line" aria-hidden="true"><i style={{ transform: `scaleX(${active / (showcaseSteps.length - 1)})` }} /></span>
       {showcaseSteps.map((step, index) => (

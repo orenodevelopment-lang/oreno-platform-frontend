@@ -8,10 +8,10 @@ export const motionDurations = {
 } as const;
 
 export const marketingMotion = {
-  reveal: 0.76,
+  reveal: 0.96,
   hero: 0.92,
-  stagger: 0.12,
-  distance: 38,
+  stagger: 0.16,
+  distance: 56,
   roleTypeMs: 95,
   roleDeleteMs: 48,
   roleHoldMs: 1650,

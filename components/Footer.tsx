@@ -18,16 +18,16 @@ export function Footer() {
   const reduce = useReducedMotion();
   const container: Variants = {
     hidden: {},
-    visible: { transition: { staggerChildren: reduce ? 0 : .13, delayChildren: reduce ? 0 : .04 } },
+    visible: { transition: { staggerChildren: reduce ? 0 : marketingMotion.stagger, delayChildren: reduce ? 0 : .1 } },
   };
   const item: Variants = {
-    hidden: { opacity: 0, y: reduce ? 0 : 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: reduce ? .08 : marketingMotion.reveal, ease: motionEasings.standard } },
+    hidden: { opacity: 0, y: reduce ? 0 : 54, scale: reduce ? 1 : .98 },
+    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: reduce ? .08 : marketingMotion.reveal, ease: motionEasings.standard } },
   };
 
   return (
     <footer id="footer" className="footer">
-      <m.div className="footer__inner" variants={container} initial="hidden" whileInView="visible" viewport={{ once: true, amount: .18 }}>
+      <m.div className="footer__inner" variants={container} initial="hidden" whileInView="visible" viewport={{ once: true, amount: .12 }}>
         <m.div className="footer__brand-column" variants={item}>
           <Link href="/" aria-label="Oreno home"><Logo dark className="footer__logo" /></Link>
           <Newsletter />
