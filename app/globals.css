@@ -33,6 +33,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 124px;
 }
 
 body {
@@ -120,15 +121,21 @@ a {
   font-family: var(--font-raleway), sans-serif;
 }
 
-.navbar--compact {
-  position: sticky;
-  z-index: 60;
-  top: 0;
-  height: 120px;
+.navbar--fixed {
+  position: fixed;
+  z-index: 110;
+  top: 4px;
+  right: 0;
+  left: 0;
   border-bottom: 1px solid rgba(37,186,164,.16);
   background: var(--ink);
-  box-shadow: 0 14px 32px rgba(2,20,17,.12);
-  backdrop-filter: none;
+  box-shadow: 0 12px 32px rgba(2,20,17,0);
+  transition: border-color 320ms ease, box-shadow 320ms ease;
+}
+
+.navbar--fixed.is-scrolled {
+  border-bottom-color: rgba(37,186,164,.32);
+  box-shadow: 0 16px 36px rgba(2,20,17,.22);
 }
 
 .navbar__inner {
@@ -809,7 +816,7 @@ a {
 .hiring-guide {
   position: sticky;
   z-index: 18;
-  top: 82px;
+  top: 136px;
   display: grid;
   width: min(920px, calc(100% - 80px));
   grid-template-columns: repeat(3, 1fr);
@@ -1398,9 +1405,9 @@ a {
 }
 
 @media (max-width: 767px) {
+  html { scroll-padding-top: 80px; }
   .desktop-only { display: none; }
   .navbar { height: 76px; }
-  .navbar--compact { display: none; }
   .navbar__inner { width: 100%; padding: 0 16px 0 12px; }
   .navbar__toggle {
     position: relative;

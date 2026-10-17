@@ -8,11 +8,12 @@ import { m, useReducedMotion } from "motion/react";
 import { marketingMotion, motionEasings } from "@/lib/motion/tokens";
 
 type NavbarProps = {
-  compact?: boolean;
+  fixed?: boolean;
 };
 
-export function Navbar({ compact = false }: NavbarProps) {
+export function Navbar({ fixed = false }: NavbarProps) {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const reduce = useReducedMotion();
 
   useEffect(() => {
@@ -24,35 +25,41 @@ export function Navbar({ compact = false }: NavbarProps) {
     return () => window.removeEventListener("keydown", close);
   }, [open]);
 
+  useEffect(() => {
+    if (!fixed) return;
+
+    const update = () => setScrolled(window.scrollY > 18);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, [fixed]);
+
   return (
     <m.nav
-      className={`navbar ${compact ? "navbar--compact" : ""}`}
+      className={`navbar ${fixed ? "navbar--fixed" : ""} ${scrolled ? "is-scrolled" : ""}`.trim()}
       aria-label="Primary navigation"
-      initial={compact && !reduce ? { opacity: 0, y: -22 } : false}
-      whileInView={compact ? { opacity: 1, y: 0 } : undefined}
-      viewport={{ once: true, amount: .6 }}
+      initial={fixed && !reduce ? { opacity: 0, y: -18 } : false}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: marketingMotion.reveal, ease: motionEasings.emphasized }}
     >
       <div className="navbar__inner">
         <Link href="/" aria-label="Oreno home" className="navbar__brand">
           <Logo />
         </Link>
-        {!compact ? (
-          <button
-            type="button"
-            className="navbar__toggle"
-            aria-expanded={open}
-            aria-controls="mobile-navigation"
-            onClick={() => setOpen((current) => !current)}
-          >
-            <span className="sr-only">{open ? "Close navigation" : "Open navigation"}</span>
-            <span aria-hidden="true" />
-            <span aria-hidden="true" />
-            <span aria-hidden="true" />
-          </button>
-        ) : null}
+        <button
+          type="button"
+          className="navbar__toggle"
+          aria-expanded={open}
+          aria-controls="mobile-navigation"
+          onClick={() => setOpen((current) => !current)}
+        >
+          <span className="sr-only">{open ? "Close navigation" : "Open navigation"}</span>
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+        </button>
         <div
-          id={!compact ? "mobile-navigation" : undefined}
+          id="mobile-navigation"
           className={`navbar__links ${open ? "navbar__links--open" : ""}`}
         >
           {navigationLinks.map((link) => {

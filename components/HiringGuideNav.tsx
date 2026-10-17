@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { m, useReducedMotion } from "motion/react";
 import { showcaseSteps } from "@/data/site-content";
+import { marketingMotion, motionEasings } from "@/lib/motion/tokens";
 
 export function HiringGuideNav() {
   const [active, setActive] = useState(0);
+  const reduce = useReducedMotion();
 
   useEffect(() => {
     const sections = showcaseSteps
@@ -33,7 +36,14 @@ export function HiringGuideNav() {
   }
 
   return (
-    <nav className="hiring-guide" aria-label="Hiring process steps">
+    <m.nav
+      className="hiring-guide"
+      aria-label="Hiring process steps"
+      initial={{ opacity: 0, y: reduce ? 0 : 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: .7 }}
+      transition={{ duration: reduce ? .08 : marketingMotion.reveal, delay: reduce ? 0 : .08, ease: motionEasings.standard }}
+    >
       <span className="hiring-guide__line" aria-hidden="true"><i style={{ transform: `scaleX(${active / (showcaseSteps.length - 1)})` }} /></span>
       {showcaseSteps.map((step, index) => (
         <button
@@ -47,6 +57,6 @@ export function HiringGuideNav() {
           <strong>{step.eyebrow}</strong>
         </button>
       ))}
-    </nav>
+    </m.nav>
   );
 }

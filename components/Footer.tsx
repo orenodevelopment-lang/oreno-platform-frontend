@@ -1,8 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { m, useReducedMotion, type Variants } from "motion/react";
 import { Logo } from "@/components/Logo";
 import { Newsletter } from "@/components/Newsletter";
 import { footerColumns } from "@/data/site-content";
-import { Reveal } from "@/components/motion/Reveal";
+import { marketingMotion, motionEasings } from "@/lib/motion/tokens";
 
 const socialLinks = [
   { label: "Instagram", text: "◎" },
@@ -12,10 +15,20 @@ const socialLinks = [
 ] as const;
 
 export function Footer() {
+  const reduce = useReducedMotion();
+  const container: Variants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: reduce ? 0 : .13, delayChildren: reduce ? 0 : .04 } },
+  };
+  const item: Variants = {
+    hidden: { opacity: 0, y: reduce ? 0 : 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: reduce ? .08 : marketingMotion.reveal, ease: motionEasings.standard } },
+  };
+
   return (
     <footer id="footer" className="footer">
-      <Reveal className="footer__inner">
-        <div className="footer__brand-column">
+      <m.div className="footer__inner" variants={container} initial="hidden" whileInView="visible" viewport={{ once: true, amount: .18 }}>
+        <m.div className="footer__brand-column" variants={item}>
           <Link href="/" aria-label="Oreno home"><Logo dark className="footer__logo" /></Link>
           <Newsletter />
           <div className="footer__socials" aria-label="Social media links">
@@ -25,20 +38,20 @@ export function Footer() {
               </a>
             ))}
           </div>
-        </div>
-        <div className="footer__columns">
+        </m.div>
+        <m.div className="footer__columns" variants={container}>
           {footerColumns.map((column) => (
-            <section key={column.heading}>
+            <m.section variants={item} key={column.heading}>
               <h2>{column.heading}</h2>
               <ul>
                 {column.links.map((label) => (
                   <li key={label}>{label === "Contact" ? <Link href="/contact">{label}</Link> : <a href="#footer">{label}</a>}</li>
                 ))}
               </ul>
-            </section>
+            </m.section>
           ))}
-        </div>
-      </Reveal>
+        </m.div>
+      </m.div>
     </footer>
   );
 }

@@ -56,6 +56,17 @@ test("the homepage ships its narrative motion without the exported artboard tail
   assert.match(roles, /TYPE_DELAY/);
   assert.doesNotMatch(roles, /AnimatePresence/);
   assert.doesNotMatch(simplified, /CountUp/);
-  assert.match(globalStyles, /\.navbar--compact[\s\S]*?background:\s*var\(--ink\)/);
+  assert.doesNotMatch(page, /<Navbar compact/);
+  assert.match(globalStyles, /\.navbar--fixed[\s\S]*?position:\s*fixed/);
+  assert.match(globalStyles, /\.navbar--fixed[\s\S]*?background:\s*var\(--ink\)/);
   assert.match(globalStyles, /\.navbar__brand:hover \.oreno-logo/);
+});
+
+test("the desktop pointer uses a restrained branded trail", () => {
+  const pointer = readFileSync(new URL("../components/motion/PointerFollower.tsx", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../app/motion.css", import.meta.url), "utf8");
+  assert.match(pointer, /pointer-follower--trail-four/);
+  assert.match(pointer, /pointer-follower--lead/);
+  assert.match(css, /\.pointer-follower\s*\{[\s\S]*?width:\s*36px/);
+  assert.match(css, /\.pointer-follower--lead\.is-interactive[\s\S]*?var\(--pink\)/);
 });

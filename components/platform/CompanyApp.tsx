@@ -33,6 +33,7 @@ import { ManagerGrid, MessagesView, TaskBoard } from "./SharedViews";
 import { CompanyOnboardingComplete, CompanyProductScreen, PerformanceFoundation, companyProductTitles } from "@/components/product/CompanyProductScreens";
 import { CountUp } from "@/components/motion/CountUp";
 import { motionDurations, motionEasings } from "@/lib/motion/tokens";
+import { useApiRevision } from "@/lib/api/live-store";
 import { productService } from "@/lib/platform/product-service";
 
 const companyTitles: Record<string, string> = {
@@ -61,6 +62,7 @@ const companyTitles: Record<string, string> = {
 };
 
 export function CompanyApp({ segments }: { segments: string[] }) {
+  useApiRevision();
   const route = segments.join("/");
   if (route === "login" || route === "signup") return <AuthScreen mode={route} />;
   if (route === "onboarding/complete") return <CompanyOnboardingComplete />;

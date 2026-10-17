@@ -1,12 +1,10 @@
 import { CtaLink } from "@/components/CtaLink";
-import { Navbar } from "@/components/Navbar";
 import { AnimatedGrid } from "@/components/motion/AnimatedGrid";
 import { HeroRoleRotator } from "@/components/motion/HeroRoleRotator";
 
 export function Hero() {
   return (
     <section id="top" className="hero" aria-labelledby="hero-title">
-      <Navbar />
       <AnimatedGrid />
       <div className="hero__content">
         <h1 id="hero-title" className="hero__title">

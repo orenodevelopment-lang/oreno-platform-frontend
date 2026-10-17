@@ -64,7 +64,7 @@ const stateCopy: Record<AsyncState, { title: string; body: string; icon: typeof 
   error: { title: "Administration data unavailable", body: "The request failed safely. Retry or use the request ID when contacting support.", icon: AlertTriangle },
   denied: { title: "Permission denied", body: "Your platform role does not permit this view or action.", icon: ShieldAlert },
   archived: { title: "Archived record", body: "This record is retained for history and cannot be changed.", icon: CircleSlash2 },
-  success: { title: "Action recorded", body: "The audited action completed in the local platform-admin demo.", icon: CheckCircle2 },
+  success: { title: "Action recorded", body: "The audited action completed successfully.", icon: CheckCircle2 },
 };
 
 export function AdminStateBoundary({ state, children }: { state?: AsyncState | null; children: ReactNode }) {

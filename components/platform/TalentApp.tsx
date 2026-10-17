@@ -1,5 +1,7 @@
 "use client";
 
+import { useApiRevision } from "@/lib/api/live-store";
+
 import Image from "next/image";
 import { Bookmark, BriefcaseBusiness, Building2, CalendarDays, Check, ChevronRight, Clock3, MapPin, Save, Search, Upload } from "lucide-react";
 import { useMemo, useState, type FormEvent } from "react";
@@ -17,6 +19,7 @@ const titles: Record<string, string> = {
 };
 
 export function TalentApp({ segments }: { segments: string[] }) {
+  useApiRevision();
   const route = segments.join("/");
   const rootRoute = segments[0] ?? "";
   const inferredTitle = talentProductTitles[route] ?? talentProductTitles[rootRoute] ?? (route.startsWith("jobs/") ? "Job detail" : route.startsWith("applications/") ? "Application detail" : route.startsWith("interviews/") ? "Interview" : route.startsWith("offers/") ? "Offer review" : route.startsWith("tasks/") ? "Task" : "Dashboard");
