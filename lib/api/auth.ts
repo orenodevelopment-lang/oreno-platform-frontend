@@ -32,6 +32,8 @@ export const authApi = {
   login: (input: LoginInput) => apiRequest<{ user: AuthContextResponse["user"]; session: { expiresAt: string } }>("/api/v1/auth/login", { method: "POST", body: input }),
   current: () => apiRequest<AuthContextResponse>("/api/v1/auth/me"),
   completeTwoFactor: (code: string) => apiRequest<{ authenticated: true }>("/api/v1/auth/2fa/challenge", { method: "POST", body: { code } }),
+  forgotPassword: (email: string) => apiRequest<{ accepted: true }>("/api/v1/auth/password/forgot", { method: "POST", body: { email } }),
+  resetPassword: (token: string, password: string) => apiRequest<{ reset: true }>("/api/v1/auth/password/reset", { method: "POST", body: { token, password } }),
   logout: async () => {
     await apiRequest<void>("/api/v1/auth/logout", { method: "POST" });
     invalidateLive();

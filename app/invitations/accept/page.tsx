@@ -1,3 +1,3 @@
 import { AuthJourney } from "@/components/product/PublicProduct";
-export default function InvitationAcceptancePage() { return <AuthJourney flow="accept-invitation" />; }
+export default async function InvitationAcceptancePage({ searchParams }: { searchParams: Promise<{ token?: string | string[] }> }) { const query = await searchParams; const token = Array.isArray(query.token) ? query.token[0] : query.token; return <AuthJourney flow="accept-invitation" initialToken={token} />; }
 

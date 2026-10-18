@@ -5,6 +5,8 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight, BadgeCheck, BriefcaseBusiness, CheckCircle2, Clock3, Mail, MapPin, Search, ShieldCheck, Sparkles, UsersRound } from "lucide-react";
 import { useMemo, useState, type FormEvent } from "react";
 import { productService } from "@/lib/platform/product-service";
+import { authApi } from "@/lib/api/auth";
+import { ApiClientError } from "@/lib/api/client";
 import { DataStateBoundary, FieldError, StatusChip } from "./ProductUI";
 import { PublicShell } from "./PublicShell";
 
@@ -49,18 +51,27 @@ function CatalogueHero({ kind }: { kind: "talent" | "jobs" }) {
 
 export function PublicLeadForm({ kind }: { kind: "demo" | "contact" }) {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const nextErrors: Record<string, string> = {};
     for (const key of ["name", "email"]) if (!String(form.get(key) ?? "").trim()) nextErrors[key] = "This field is required.";
     if (Object.keys(nextErrors).length) { setErrors(nextErrors); return; }
-    if (kind === "demo") productService.submitDemoRequest({ name: String(form.get("name")), workEmail: String(form.get("email")), company: String(form.get("company")), teamSize: String(form.get("teamSize")), message: String(form.get("message")) });
-    else productService.submitContactRequest({ name: String(form.get("name")), email: String(form.get("email")), topic: String(form.get("topic")), message: String(form.get("message")) });
-    setSubmitted(true);
+    setSubmitting(true);
+    setErrors({});
+    try {
+      if (kind === "demo") await productService.submitDemoRequest({ name: String(form.get("name")), workEmail: String(form.get("email")), company: String(form.get("company")), teamSize: String(form.get("teamSize")), message: String(form.get("message")) });
+      else await productService.submitContactRequest({ name: String(form.get("name")), email: String(form.get("email")), topic: String(form.get("topic")), message: String(form.get("message")) });
+      setSubmitted(true);
+    } catch (cause) {
+      setErrors({ form: cause instanceof Error ? cause.message : "The request could not be sent." });
+    } finally {
+      setSubmitting(false);
+    }
   }
-  return <PublicShell><section className="public-form-page"><div><span className="product-eyebrow">{kind === "demo" ? "Company teams" : "Contact Oreno"}</span><h1>{kind === "demo" ? "See how Oreno can support your next hire" : "Tell us how we can help"}</h1><p>{kind === "demo" ? "Share a little about your team. This demo form records no production data." : "Choose a topic and leave a message. We’ll confirm that the request was received."}</p><ul className="public-check-list"><li><CheckCircle2 /> Curated talent and explainable matching</li><li><CheckCircle2 /> Hiring workflow and onboarding support</li><li><CheckCircle2 /> Tasks, teams and compensation visibility</li></ul></div>{submitted ? <div className="public-success" role="status"><CheckCircle2 /><h2>Request received</h2><p>Thanks. Your submission is confirmed in this local product demo.</p><Link href="/">Return to the homepage</Link></div> : <form onSubmit={submit} noValidate><label>Full name<input name="name" aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "lead-name-error" : undefined} />{errors.name && <FieldError id="lead-name-error">{errors.name}</FieldError>}</label><label>{kind === "demo" ? "Work email" : "Email address"}<input name="email" type="email" aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? "lead-email-error" : undefined} />{errors.email && <FieldError id="lead-email-error">{errors.email}</FieldError>}</label>{kind === "demo" ? <><label>Company<input name="company" required /></label><label>Team size<select name="teamSize"><option>1–10</option><option>11–50</option><option>51–200</option><option>201+</option></select></label></> : <label>Topic<select name="topic"><option>Hiring</option><option>Talent support</option><option>Partnership</option><option>Other</option></select></label>}<label>Message<textarea name="message" rows={6} /></label><button type="submit">Send request <ArrowRight /></button></form>}</section></PublicShell>;
+  return <PublicShell><section className="public-form-page"><div><span className="product-eyebrow">{kind === "demo" ? "Company teams" : "Contact Oreno"}</span><h1>{kind === "demo" ? "See how Oreno can support your next hire" : "Tell us how we can help"}</h1><p>{kind === "demo" ? "Share a little about your team and the roles you need." : "Choose a topic and leave a message. We’ll confirm that the request was received."}</p><ul className="public-check-list"><li><CheckCircle2 /> Curated talent and explainable matching</li><li><CheckCircle2 /> Hiring workflow and onboarding support</li><li><CheckCircle2 /> Tasks, teams and compensation visibility</li></ul></div>{submitted ? <div className="public-success" role="status"><CheckCircle2 /><h2>Request received</h2><p>Thanks. Your submission has been recorded.</p><Link href="/">Return to the homepage</Link></div> : <form onSubmit={submit} noValidate><label>Full name<input name="name" aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "lead-name-error" : undefined} />{errors.name && <FieldError id="lead-name-error">{errors.name}</FieldError>}</label><label>{kind === "demo" ? "Work email" : "Email address"}<input name="email" type="email" aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? "lead-email-error" : undefined} />{errors.email && <FieldError id="lead-email-error">{errors.email}</FieldError>}</label>{kind === "demo" ? <><label>Company<input name="company" required /></label><label>Team size<select name="teamSize"><option>1–10</option><option>11–50</option><option>51–200</option><option>201+</option></select></label></> : <label>Topic<select name="topic"><option>Hiring</option><option>Talent support</option><option>Partnership</option><option>Other</option></select></label>}<label>Message<textarea name="message" rows={6} /></label>{errors.form && <FieldError id="lead-form-error">{errors.form}</FieldError>}<button type="submit" disabled={submitting}>{submitting ? "Sending…" : "Send request"} <ArrowRight /></button></form>}</section></PublicShell>;
 }
 
 export function NewsletterState({ mode }: { mode: "confirmed" | "unsubscribe" }) {
@@ -68,8 +79,12 @@ export function NewsletterState({ mode }: { mode: "confirmed" | "unsubscribe" })
   return <PublicShell><section className="focused-state"><span className="focused-state__icon"><Mail /></span><h1>{mode === "confirmed" || complete ? (mode === "confirmed" ? "Your subscription is confirmed" : "You are unsubscribed") : "Unsubscribe from Oreno updates?"}</h1><p>{mode === "confirmed" ? "We’ll send occasional product and hiring updates to your confirmed address." : complete ? "No further newsletter messages will be sent to this address." : "Account and security messages are not affected."}</p>{mode === "unsubscribe" && !complete && <button className="is-danger" type="button" onClick={() => setComplete(true)}>Confirm unsubscribe</button>}<Link href="/">Return to Oreno</Link></section></PublicShell>;
 }
 
-export function AuthJourney({ flow }: { flow: string }) {
+export function AuthJourney({ flow, initialToken = "" }: { flow: string; initialToken?: string }) {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [needsCode, setNeedsCode] = useState(false);
+  const [urlToken, setUrlToken] = useState(initialToken);
   const copy: Record<string, { title: string; body: string; button: string }> = {
     "talent-signup": { title: "Create your talent profile", body: "Join Oreno to discover roles and present your experience.", button: "Create account" },
     "talent-login": { title: "Welcome back", body: "Log in to manage applications, interviews and work.", button: "Log in" },
@@ -79,17 +94,40 @@ export function AuthJourney({ flow }: { flow: string }) {
     "accept-invitation": { title: "Join Oreno Technologies", body: "Richard Benson invited you to join as a Manager.", button: "Accept invitation" },
   };
   const current = copy[flow] ?? copy["talent-login"];
-  const successHref = flow === "talent-signup" ? "/auth/verify-email" : flow === "verify-email" ? "/talent/onboarding/basics" : flow === "talent-login" ? "/talent" : flow === "accept-invitation" ? "/company" : "/auth/talent-login";
+  const successHref = flow === "talent-signup" || flow === "verify-email" ? "/auth/talent-login" : flow === "talent-login" ? "/talent" : flow === "accept-invitation" ? "/company" : "/auth/talent-login";
 
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setSubmitting(true);
+    setError("");
     const form = new FormData(event.currentTarget);
-    if (flow === "talent-signup") productService.createTalentAccount({ firstName: String(form.get("firstName")), lastName: String(form.get("lastName")), email: String(form.get("email")), password: String(form.get("password")) });
-    if (flow === "verify-email") productService.verifyTalentEmail(String(form.get("code")));
-    setSubmitted(true);
+    const email = String(form.get("email") ?? "");
+    const password = String(form.get("password") ?? "");
+    const token = String(form.get("token") ?? urlToken);
+    try {
+      if (flow === "talent-signup") await productService.createTalentAccount({ firstName: String(form.get("firstName")), lastName: String(form.get("lastName")), email, password });
+      else if (flow === "verify-email") await productService.verifyTalentEmail(token);
+      else if (flow === "talent-login") await authApi.login({ email, password, twoFactorCode: String(form.get("twoFactorCode") ?? "") || undefined });
+      else if (flow === "forgot-password") await authApi.forgotPassword(email);
+      else if (flow === "reset-password") await authApi.resetPassword(token, password);
+      else if (flow === "accept-invitation") {
+        await authApi.login({ email, password, twoFactorCode: String(form.get("twoFactorCode") ?? "") || undefined });
+        await productService.acceptInvitation({ token, firstName: String(form.get("firstName")), lastName: String(form.get("lastName")), password });
+      }
+      setSubmitted(true);
+    } catch (cause) {
+      if (cause instanceof ApiClientError && cause.code === "TWO_FACTOR_REQUIRED") {
+        setNeedsCode(true);
+        setError("Enter the code from your authenticator app to continue.");
+      } else {
+        setError(cause instanceof Error ? cause.message : "The request could not be completed.");
+      }
+    } finally {
+      setSubmitting(false);
+    }
   }
 
-  return <PublicShell><section className="auth-journey"><span><Image src="/assets/figma/oreno-mark.svg" alt="" width={55} height={55} /></span>{submitted ? <div className="public-success"><CheckCircle2 /><h1>{flow === "accept-invitation" ? "Invitation accepted" : flow === "verify-email" ? "Email verified" : "Check your email"}</h1><p>{flow === "talent-signup" ? "Your account was created. Verify your email before building your professional profile." : "Your request was completed in this local product demo."}</p><Link href={successHref}>Continue <ArrowRight /></Link></div> : <><h1>{current.title}</h1><p>{current.body}</p><form onSubmit={submit}>{flow === "accept-invitation" && <div className="invitation-summary"><UsersRound /><div><strong>Oreno Technologies</strong><span>Manager · Company workspace</span></div></div>}{flow === "talent-signup" || flow === "accept-invitation" ? <div className="form-grid"><label>First name<input name="firstName" required /></label><label>Last name<input name="lastName" required /></label></div> : null}{flow === "verify-email" ? <label>Verification code<input name="code" required inputMode="numeric" pattern="[0-9]{6}" maxLength={6} placeholder="000000" /></label> : <label>Email address<input name="email" type="email" required placeholder="name@example.com" /></label>}{["talent-login", "talent-signup", "reset-password", "accept-invitation"].includes(flow) && <label>{flow === "reset-password" ? "New password" : "Password"}<input name="password" type="password" required minLength={8} /></label>}<button type="submit">{current.button} <ArrowRight /></button></form>{flow === "talent-login" && <p><Link href="/auth/forgot-password">Forgot password?</Link></p>}</>}</section></PublicShell>;
+  return <PublicShell><section className="auth-journey"><span><Image src="/assets/figma/oreno-mark.svg" alt="" width={55} height={55} /></span>{submitted ? <div className="public-success"><CheckCircle2 /><h1>{flow === "accept-invitation" ? "Invitation accepted" : flow === "verify-email" ? "Email verified" : "Request completed"}</h1><p>{flow === "talent-signup" ? "Your account was created. Verify your email before building your professional profile." : "Your request was completed successfully."}</p><Link href={successHref}>Continue <ArrowRight /></Link></div> : <><h1>{current.title}</h1><p>{current.body}</p><form onSubmit={submit}>{flow === "accept-invitation" && <div className="invitation-summary"><UsersRound /><div><strong>Organisation invitation</strong><span>Sign in to accept workspace access</span></div></div>}{flow === "talent-signup" ? <div className="form-grid"><label>First name<input name="firstName" required /></label><label>Last name<input name="lastName" required /></label></div> : null}{["verify-email", "reset-password", "accept-invitation"].includes(flow) && <label>Secure token<input name="token" required value={urlToken} onChange={(event) => setUrlToken(event.target.value)} autoComplete="off" /></label>}{!["verify-email", "reset-password"].includes(flow) && <label>Email address<input name="email" type="email" required placeholder="name@example.com" /></label>}{["talent-login", "talent-signup", "reset-password", "accept-invitation"].includes(flow) && <label>{flow === "reset-password" ? "New password" : "Password"}<input name="password" type="password" required minLength={8} /></label>}{needsCode && <label>Two-factor code<input name="twoFactorCode" required autoComplete="one-time-code" inputMode="numeric" /></label>}{error && <FieldError id="auth-request-error">{error}</FieldError>}<button type="submit" disabled={submitting}>{submitting ? "Please wait…" : current.button} <ArrowRight /></button></form>{flow === "talent-login" && <p><Link href="/auth/forgot-password">Forgot password?</Link></p>}</>}</section></PublicShell>;
 }
 
 export function SystemState({ type }: { type: "not-found" | "unauthorised" | "error" }) {

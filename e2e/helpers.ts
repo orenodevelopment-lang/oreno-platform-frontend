@@ -37,3 +37,17 @@ export async function csrfToken(page: Page) {
   const cookies = await page.context().cookies();
   return cookies.find((cookie) => cookie.name === csrfCookie)?.value;
 }
+
+export async function browserWrite<T>(page: Page, path: string, body: object, options: { idempotent?: boolean } = {}) {
+  const token = await csrfToken(page);
+  expect(token, `Missing ${csrfCookie} after login`).toBeTruthy();
+  return browserApi<T>(page, path, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      [csrfHeader]: token!,
+      ...(options.idempotent ? { "Idempotency-Key": crypto.randomUUID() } : {}),
+    },
+    body: JSON.stringify(body),
+  });
+}

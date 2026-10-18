@@ -6,16 +6,20 @@ test.describe("registration, verification, cookies and CSRF", () => {
 
   test("registration creates a pending account", async ({ page }) => {
     const suffix = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-    await page.goto("/");
-    const result = await browserApi(page, "/api/v1/auth/register", { method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": `registration-${suffix}` }, body: JSON.stringify({ accountType: "TALENT", email: `e2e+${suffix}@example.test`, password: `E2E-${suffix}-Safe!9`, firstName: "Browser", lastName: "Test", acceptTerms: true }) });
-    expect(result.status, JSON.stringify(result.payload)).toBe(201);
+    await page.goto("/auth/talent-signup");
+    await page.getByLabel("First name").fill("Browser");
+    await page.getByLabel("Last name").fill("Test");
+    await page.getByLabel("Email address").fill(`e2e+${suffix}@example.test`);
+    await page.getByLabel("Password").fill(`E2E-${suffix}-Safe!9`);
+    await page.getByRole("button", { name: /create account/i }).click();
+    await expect(page.getByRole("heading", { name: "Request completed" })).toBeVisible();
   });
 
   test("email verification consumes a real test token", async ({ page }) => {
     test.skip(!process.env.E2E_VERIFICATION_TOKEN, "Set E2E_VERIFICATION_TOKEN from the staging capture mailbox.");
-    await page.goto("/");
-    const result = await browserApi(page, "/api/v1/auth/email/verify", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ token: process.env.E2E_VERIFICATION_TOKEN }) });
-    expect(result.status, JSON.stringify(result.payload)).toBe(200);
+    await page.goto(`/auth/verify-email?token=${encodeURIComponent(process.env.E2E_VERIFICATION_TOKEN!)}`);
+    await page.getByRole("button", { name: /verify email/i }).click();
+    await expect(page.getByRole("heading", { name: "Email verified" })).toBeVisible();
   });
 
   test("session cookie authenticates reads and CSRF protects writes", async ({ page }) => {

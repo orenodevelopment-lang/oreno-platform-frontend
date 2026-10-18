@@ -135,6 +135,7 @@ export interface NotificationRecord {
 
 export interface TimeEntryRecord {
   id: string;
+  updatedAt?: string;
   person: string;
   period: string;
   regularHours: number;

@@ -149,7 +149,7 @@ export const productService = {
   listOffers: () => orgListResource("org:offers", "offers", "/offers", mapOffer),
   getOffer: (id: string) => productService.listOffers().find((item) => item.id === id) ?? { ...emptyOffer, id },
   listNotifications: (): NotificationRecord[] => listResource("account:notifications", "notifications", "/api/v1/notifications", (value) => { const row = asRecord(value); return { id: textValue(row.id), title: textValue(row.title), body: textValue(row.body), category: titleCase(row.category, "Account") as NotificationRecord["category"], createdAt: dateLabel(row.createdAt), read: Boolean(row.readAt), href: textValue(row.actionUrl, "/") }; }),
-  listTimeEntries: (): TimeEntryRecord[] => orgListResource("org:time", "timeEntries", "/time-entries", (value) => { const row = asRecord(value); return { id: textValue(row.id), person: nameOf(asRecord(row.talentProfile)), period: dateLabel(row.workDate), regularHours: Number(row.ordinaryMinutes ?? 0) / 60, overtimeHours: Number(row.overtimeMinutes ?? 0) / 60, status: titleCase(row.status, "Draft") as TimeEntryRecord["status"], note: textValue(row.note) || undefined }; }),
+  listTimeEntries: (): TimeEntryRecord[] => orgListResource("org:time", "timeEntries", "/time-entries", (value) => { const row = asRecord(value); return { id: textValue(row.id), updatedAt: textValue(row.updatedAt), person: nameOf(asRecord(row.talentProfile)), period: dateLabel(row.workDate), regularHours: Number(row.ordinaryMinutes ?? 0) / 60, overtimeHours: Number(row.overtimeMinutes ?? 0) / 60, status: titleCase(row.status, "Draft") as TimeEntryRecord["status"], note: textValue(row.note) || undefined }; }),
   listPaymentRecords: (): PaymentRecord[] => orgListResource("org:payments", "payments", "/payments", (value) => { const row = asRecord(value); return { id: textValue(row.id), person: nameOf(asRecord(row.talentProfile)), payrollPeriod: textValue(asRecord(row.payrollPeriod).reference) || dateLabel(row.createdAt), amount: String(row.amount ?? "0"), currency: textValue(row.currency), methodDescription: titleCase(row.method, "External payment"), externalReference: textValue(row.externalReference), status: titleCase(row.status, "Pending confirmation") as PaymentRecord["status"], paidAt: row.paidAt ? dateLabel(row.paidAt) : undefined }; }),
   getTalentProfile: () => liveValue("talent:profile", emptyProfile, async () => {
     const row = asRecord((await apiRequest<{ profile: unknown }>("/api/v1/talents/me/profile")).profile);
@@ -214,11 +214,11 @@ export const productService = {
     };
   }),
   updateTalentProfile: async (input: TalentProfileUpdateInput) => {
-    const current = productService.getTalentProfile();
+    const current = asRecord((await apiRequest<{ profile: unknown }>("/api/v1/talents/me/profile")).profile);
     const result = await apiRequest<{ profile: unknown }>("/api/v1/talents/me/profile", {
       method: "PATCH",
       body: {
-        expectedUpdatedAt: input.expectedUpdatedAt || current.updatedAt,
+        expectedUpdatedAt: input.expectedUpdatedAt || textValue(current.updatedAt),
         ...(input.headline !== undefined ? { headline: input.headline || null } : {}),
         ...(input.bio !== undefined ? { bio: input.bio || null } : {}),
       },
@@ -239,9 +239,9 @@ export const productService = {
     if (input.phone !== undefined) requests.push(apiRequest("/api/v1/auth/me", { method: "PATCH", body: { phone: input.phone || null } }));
     if (Object.keys(accountPreferences).length) requests.push(apiRequest("/api/v1/talents/me/account/preferences", { method: "PATCH", body: accountPreferences }));
     if (preferences.profileVisibility !== undefined) {
-      const profile = productService.getTalentProfile();
+      const profile = asRecord((await apiRequest<{ profile: unknown }>("/api/v1/talents/me/profile")).profile);
       const visibility = preferences.profileVisibility === "Public" ? "PUBLIC" : preferences.profileVisibility === "Private" ? "PRIVATE" : "ORENO_COMPANIES_ONLY";
-      requests.push(apiRequest("/api/v1/talents/me/visibility", { method: "PATCH", body: { expectedUpdatedAt: profile.updatedAt, visibility } }));
+      requests.push(apiRequest("/api/v1/talents/me/visibility", { method: "PATCH", body: { expectedUpdatedAt: textValue(profile.updatedAt), visibility } }));
     }
     const result = await Promise.all(requests);
     invalidateLive("talent:account");
@@ -256,7 +256,14 @@ export const productService = {
   submitContactRequest: (input: ContactRequestInput) => apiRequest("/api/v1/public/contact-requests", { method: "POST", body: { fullName: input.name, email: input.email, subject: input.topic, message: input.message, source: "website" } }),
   acceptInvitation: (input: InvitationAcceptanceInput) => apiRequest(`/api/v1/organisations/invitations/${encodeURIComponent(input.token)}/accept`, { method: "POST", body: {} }),
   createApplication: (input: ApplicationCreateInput) => apiRequest(`/api/v1/public/jobs/${input.jobId}/applications`, { method: "POST", idempotent: true, body: { coverLetter: input.coverNote, answers: Object.entries(input.answers ?? {}).map(([questionKey, answer]) => ({ questionKey, question: questionKey, answer })), attachments: [] } }),
-  decideOffer: async (input: OfferDecisionInput) => { const result = await apiRequest(`/api/v1/talents/me/offers/${input.offerId}/respond`, { method: "POST", idempotent: true, body: { decision: input.decision === "accept" ? "ACCEPT" : "REJECT", note: input.note } }); invalidateLive("org:offers"); return result; },
-  requestReplacement: async (input: ReplacementRequestInput) => { const result = await orgRequest("/replacements", { method: "POST", idempotent: true, body: input }); invalidateLive("org:replacements"); return result; },
-  decideTimeEntry: async (input: TimeEntryDecisionInput) => { const result = await orgRequest(`/time-entries/${input.timeEntryId}/decision`, { method: "POST", body: { decision: input.decision === "approve" ? "APPROVE" : "REJECT", note: input.note } }); invalidateLive("org:time"); return result; },
+  decideOffer: async (input: OfferDecisionInput) => { const result = await apiRequest(`/api/v1/talents/me/offers/${input.offerId}/respond`, { method: "POST", idempotent: true, body: { response: input.decision === "accept" ? "ACCEPT" : "DECLINE", ...(input.decision === "reject" ? { declineReason: input.note || "Declined by talent." } : {}) } }); invalidateLive("org:offers"); return result; },
+  requestReplacement: async (input: ReplacementRequestInput) => { const reason = [input.reason, input.details].filter(Boolean).join(": "); const result = await orgRequest("/replacements", { method: "POST", idempotent: true, body: { placementId: input.placementId, reason, reasonCategory: "OTHER" } }); invalidateLive("org:replacements"); return result; },
+  decideTimeEntry: async (input: TimeEntryDecisionInput) => {
+    const result = await orgRequest<Record<string, unknown>>("/time-entries", { query: pageQuery(1, 100) });
+    const current = asArray(result.timeEntries).map(asRecord).find((entry) => entry.id === input.timeEntryId);
+    if (!current?.updatedAt) throw new Error("Refresh the time entries before recording a decision.");
+    const decision = await orgRequest(`/time-entries/${input.timeEntryId}/decision`, { method: "POST", body: { expectedUpdatedAt: current.updatedAt, decision: input.decision === "approve" ? "APPROVE" : "REJECT", reason: input.note } });
+    invalidateLive("org:time");
+    return decision;
+  },
 };

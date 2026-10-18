@@ -4454,6 +4454,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/users/{id}/sessions/revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * POST /api/v1/admin/users/{id}/sessions/revoke
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        post: operations["catalogPostApiV1AdminUsersIdSessionsRevoke"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/organisations": {
         parameters: {
             query?: never;
@@ -4606,6 +4626,26 @@ export interface paths {
          * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
          */
         get: operations["catalogGetApiV1AdminCompensationPayments"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/jobs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * GET /api/v1/admin/jobs
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        get: operations["catalogGetApiV1AdminJobs"];
         put?: never;
         post?: never;
         delete?: never;
@@ -4821,13 +4861,57 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /**
+         * GET /api/v1/admin/announcements
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        get: operations["catalogGetApiV1AdminAnnouncements"];
         put?: never;
         /**
          * POST /api/v1/admin/announcements
          * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
          */
         post: operations["catalogPostApiV1AdminAnnouncements"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/deliveries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * GET /api/v1/admin/deliveries
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        get: operations["catalogGetApiV1AdminDeliveries"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/deliveries/{id}/retry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * POST /api/v1/admin/deliveries/{id}/retry
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        post: operations["catalogPostApiV1AdminDeliveriesIdRetry"];
         delete?: never;
         options?: never;
         head?: never;
@@ -6508,7 +6592,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            request: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -6525,7 +6618,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            request: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -6568,7 +6670,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            request: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -6585,7 +6696,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            request: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -6628,7 +6748,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            subscription: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -6645,7 +6774,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            subscription: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -6683,7 +6821,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            subscription: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -6700,7 +6847,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            subscription: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -6738,7 +6894,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            subscription: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -6755,7 +6920,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            subscription: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -7177,7 +7351,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            categories: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -7214,7 +7397,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            skills: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -7261,7 +7453,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            talents: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -7295,7 +7496,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            profile: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -7327,7 +7537,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            categories: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -7364,7 +7583,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            skills: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -7411,7 +7639,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            talents: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -7445,7 +7682,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            profile: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -7477,7 +7723,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            account: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -7518,7 +7773,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            account: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -7551,7 +7815,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            profile: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -7604,7 +7877,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            profile: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -7653,7 +7935,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            profile: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -7695,7 +7986,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            profile: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -7728,7 +8028,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            profile: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -7745,7 +8054,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            profile: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -7787,7 +8105,18 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            file: {
+                                id?: string;
+                                status: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                                originalName: string;
+                                mimeType: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -7834,7 +8163,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            experience: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -7851,7 +8189,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            experience: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -7878,22 +8225,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Request completed. */
-            200: {
+            /** @description Resource removed. */
+            204: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": {
-                        data: {
-                            [key: string]: unknown;
-                        };
-                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
-                        meta: {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
+                content?: never;
             };
             400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorised"];
@@ -7936,7 +8273,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            experience: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -7981,7 +8327,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            education: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -7998,7 +8353,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            education: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -8025,22 +8389,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Request completed. */
-            200: {
+            /** @description Resource removed. */
+            204: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": {
-                        data: {
-                            [key: string]: unknown;
-                        };
-                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
-                        meta: {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
+                content?: never;
             };
             400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorised"];
@@ -8082,7 +8436,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            education: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -8127,7 +8490,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            certification: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -8144,7 +8516,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            certification: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -8171,22 +8552,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Request completed. */
-            200: {
+            /** @description Resource removed. */
+            204: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": {
-                        data: {
-                            [key: string]: unknown;
-                        };
-                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
-                        meta: {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
+                content?: never;
             };
             400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorised"];
@@ -8228,7 +8599,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            certification: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -8273,7 +8653,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            portfolioItem: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -8290,7 +8679,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            portfolioItem: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -8317,22 +8715,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Request completed. */
-            200: {
+            /** @description Resource removed. */
+            204: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": {
-                        data: {
-                            [key: string]: unknown;
-                        };
-                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
-                        meta: {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
+                content?: never;
             };
             400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorised"];
@@ -8373,7 +8761,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            portfolioItem: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -8418,7 +8815,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            skill: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -8435,7 +8841,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            skill: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -8462,22 +8877,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Request completed. */
-            200: {
+            /** @description Resource removed. */
+            204: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": {
-                        data: {
-                            [key: string]: unknown;
-                        };
-                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
-                        meta: {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
+                content?: never;
             };
             400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorised"];
@@ -8516,7 +8921,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            skill: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -8682,7 +9096,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            assignments: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -8718,7 +9141,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            interviews: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -8929,7 +9361,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            tasks: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -8964,7 +9405,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            task: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9009,7 +9459,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            task: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9026,7 +9485,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            task: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9067,7 +9535,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            comment: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9084,7 +9561,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            comment: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9127,7 +9613,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            attachment: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9144,7 +9639,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            attachment: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9184,7 +9688,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            timeEntries: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9231,7 +9744,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            timeEntry: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9248,7 +9770,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            timeEntry: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9296,7 +9827,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            timeEntry: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9338,7 +9878,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            timeEntry: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9355,7 +9904,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            timeEntry: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9394,7 +9952,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            events: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9436,7 +10003,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            event: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9453,7 +10029,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            event: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9492,7 +10077,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            reviews: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9527,7 +10121,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            review: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9570,7 +10173,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            review: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9587,7 +10199,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            review: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9632,7 +10253,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            review: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9649,7 +10279,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            review: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9682,7 +10321,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            case: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9721,7 +10369,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            case: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9738,7 +10395,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            case: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9781,7 +10447,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            case: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9798,7 +10473,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            case: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9919,7 +10603,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            agreements: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9952,7 +10645,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            organisations: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -9987,7 +10689,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            organisation: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10040,7 +10751,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            organisation: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10075,7 +10795,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            onboarding: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10153,7 +10882,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            onboarding: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10188,7 +10926,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            onboarding: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10205,7 +10952,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            onboarding: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10240,7 +10996,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            addresses: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10291,7 +11056,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            address: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10308,7 +11082,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            address: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10336,22 +11119,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Request completed. */
-            200: {
+            /** @description Resource removed. */
+            204: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": {
-                        data: {
-                            [key: string]: unknown;
-                        };
-                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
-                        meta: {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
+                content?: never;
             };
             400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorised"];
@@ -10397,7 +11170,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            address: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10432,7 +11214,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            settings: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10475,7 +11266,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            settings: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10516,7 +11316,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            members: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10551,7 +11360,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            roles: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10596,7 +11414,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            member: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10640,7 +11467,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            member: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10657,7 +11493,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            member: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10700,7 +11545,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            member: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10717,7 +11571,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            member: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10753,22 +11616,12 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Request completed. */
-            200: {
+            /** @description Resource removed. */
+            204: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": {
-                        data: {
-                            [key: string]: unknown;
-                        };
-                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
-                        meta: {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
+                content?: never;
             };
             400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorised"];
@@ -10800,7 +11653,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            invitations: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10847,7 +11709,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            invitation: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10864,7 +11735,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            invitation: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10906,7 +11786,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            invitation: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10923,7 +11812,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            invitation: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10965,7 +11863,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            invitation: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -10982,7 +11889,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            invitation: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -11017,7 +11933,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            invitation: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -11051,7 +11976,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            membership: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -11068,7 +12002,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            membership: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -12001,7 +12944,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            interviews: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -12066,7 +13018,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            interview: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -12083,7 +13044,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            interview: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -12136,7 +13106,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            interview: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -12180,7 +13159,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            interview: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -12197,7 +13185,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            interview: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -12243,7 +13240,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            interview: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -12260,7 +13266,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            interview: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -12802,7 +13817,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            teamMember: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -12856,7 +13880,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            teamMember: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -12873,7 +13906,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            teamMember: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -12917,7 +13959,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            teamMember: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -12934,7 +13985,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            teamMember: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -12983,7 +14043,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            teamMember: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13000,7 +14069,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            teamMember: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13048,7 +14126,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            teamMember: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13065,7 +14152,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            teamMember: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13100,7 +14196,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            departments: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13145,7 +14250,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            department: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13162,7 +14276,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            department: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13190,22 +14313,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Request completed. */
-            200: {
+            /** @description Resource removed. */
+            204: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": {
-                        data: {
-                            [key: string]: unknown;
-                        };
-                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
-                        meta: {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
+                content?: never;
             };
             400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorised"];
@@ -13245,7 +14358,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            department: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13280,7 +14402,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            teams: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13323,7 +14454,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            team: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13340,7 +14480,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            team: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13368,22 +14517,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Request completed. */
-            200: {
+            /** @description Resource removed. */
+            204: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": {
-                        data: {
-                            [key: string]: unknown;
-                        };
-                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
-                        meta: {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
+                content?: never;
             };
             400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorised"];
@@ -13422,7 +14561,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            team: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13464,7 +14612,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            tasks: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13518,7 +14675,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            task: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13535,7 +14701,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            task: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13571,7 +14746,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            task: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13623,7 +14807,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            task: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13669,7 +14862,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            task: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13686,7 +14888,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            task: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13728,7 +14939,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            comment: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13745,7 +14965,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            comment: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13789,7 +15018,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            attachment: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13806,7 +15044,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            attachment: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13848,7 +15095,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            timeEntries: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13894,7 +15150,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            timeEntry: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13911,7 +15176,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            timeEntry: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -13952,7 +15226,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            events: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14022,7 +15305,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            event: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14039,7 +15331,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            event: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14075,7 +15376,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            event: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14140,7 +15450,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            event: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14183,7 +15502,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            event: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14200,7 +15528,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            event: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14239,7 +15576,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            periods: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14284,7 +15630,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            period: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14301,7 +15656,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            period: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14337,7 +15701,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            period: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14385,7 +15758,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            period: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14430,7 +15812,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            period: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14447,7 +15838,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            period: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14502,7 +15902,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            metric: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14519,7 +15928,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            metric: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14577,7 +15995,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            metric: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14618,7 +16045,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            reviews: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14662,7 +16098,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            review: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14679,7 +16124,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            review: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14715,7 +16169,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            review: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14759,7 +16222,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            review: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14808,7 +16280,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            feedback: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14825,7 +16306,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            feedback: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14874,7 +16364,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            review: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14919,7 +16418,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            review: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14936,7 +16444,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            review: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -14977,7 +16494,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            matches: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15019,7 +16545,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            matches: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15036,7 +16571,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            matches: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15076,7 +16620,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            shortlists: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15119,7 +16672,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            shortlist: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15136,7 +16698,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            shortlist: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15172,7 +16743,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            shortlist: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15217,7 +16797,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            shortlist: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15260,7 +16849,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            shortlist: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15277,7 +16875,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            shortlist: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15323,7 +16930,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            candidate: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15340,7 +16956,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            candidate: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15369,22 +16994,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Request completed. */
-            200: {
+            /** @description Resource removed. */
+            204: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": {
-                        data: {
-                            [key: string]: unknown;
-                        };
-                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
-                        meta: {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
+                content?: never;
             };
             400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorised"];
@@ -15419,7 +17034,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            note: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15436,7 +17060,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            note: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15574,7 +17207,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            placement: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15620,7 +17262,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            placement: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15637,7 +17288,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            placement: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15673,7 +17333,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            eligibility: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15712,7 +17381,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            replacements: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15758,7 +17436,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            replacement: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15775,7 +17462,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            replacement: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15811,7 +17507,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            replacement: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15855,7 +17560,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            replacement: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15872,7 +17586,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            replacement: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15918,7 +17641,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            candidate: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15935,7 +17667,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            candidate: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -15975,7 +17716,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            agreements: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16031,7 +17781,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            agreement: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16048,7 +17807,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            agreement: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16099,7 +17867,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            agreement: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16145,7 +17922,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            agreement: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16162,7 +17948,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            agreement: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16212,7 +18007,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            adjustment: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16229,7 +18033,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            adjustment: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16268,7 +18081,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            payrollPeriods: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16314,7 +18136,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            payrollPeriod: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16331,7 +18162,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            payrollPeriod: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16375,7 +18215,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            payrollPeriod: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16392,7 +18241,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            payrollPeriod: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16436,7 +18294,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            payrollPeriod: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16453,7 +18320,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            payrollPeriod: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16497,7 +18373,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            payrollPeriod: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16514,7 +18399,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            payrollPeriod: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16558,7 +18452,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            payrollPeriod: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16575,7 +18478,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            payrollPeriod: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16619,7 +18531,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            payrollPeriod: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16636,7 +18557,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            payrollPeriod: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16680,7 +18610,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            payrollPeriod: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16697,7 +18636,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            payrollPeriod: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16738,7 +18686,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            payments: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16788,7 +18745,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            payment: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16805,7 +18771,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            payment: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16852,7 +18827,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            payment: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16869,7 +18853,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            payment: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16909,7 +18902,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            exports: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16961,7 +18963,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            export: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -16978,7 +18989,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            export: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17014,7 +19034,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            export: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17050,7 +19079,10 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            /** Format: uri */
+                            downloadUrl: string;
+                            /** Format: date-time */
+                            expiresAt: string;
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17088,7 +19120,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            dashboard: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17133,7 +19174,28 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            file: {
+                                id?: string;
+                                status: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                                originalName: string;
+                                mimeType: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                            upload: {
+                                /** Format: uri */
+                                uploadUrl: string;
+                                method: string;
+                                headers: {
+                                    [key: string]: string;
+                                };
+                                /** Format: date-time */
+                                expiresAt: string;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17150,7 +19212,28 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            file: {
+                                id?: string;
+                                status: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                                originalName: string;
+                                mimeType: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                            upload: {
+                                /** Format: uri */
+                                uploadUrl: string;
+                                method: string;
+                                headers: {
+                                    [key: string]: string;
+                                };
+                                /** Format: date-time */
+                                expiresAt: string;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17191,7 +19274,18 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            file: {
+                                id?: string;
+                                status: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                                originalName: string;
+                                mimeType: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17208,7 +19302,18 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            file: {
+                                id?: string;
+                                status: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                                originalName: string;
+                                mimeType: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17243,7 +19348,18 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            file: {
+                                id?: string;
+                                status: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                                originalName: string;
+                                mimeType: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17270,22 +19386,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Request completed. */
-            200: {
+            /** @description Resource removed. */
+            204: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": {
-                        data: {
-                            [key: string]: unknown;
-                        };
-                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
-                        meta: {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
+                content?: never;
             };
             400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorised"];
@@ -17313,7 +19419,10 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            /** Format: uri */
+                            downloadUrl: string;
+                            /** Format: date-time */
+                            expiresAt: string;
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17330,7 +19439,10 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            /** Format: uri */
+                            downloadUrl: string;
+                            /** Format: date-time */
+                            expiresAt: string;
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17367,7 +19479,17 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            notifications: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
+                            unreadCount: number;
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17400,7 +19522,7 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            updated: number;
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17417,7 +19539,7 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            updated: number;
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17450,7 +19572,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            preferences: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17490,7 +19621,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            preference: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17525,7 +19665,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            notification: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17542,7 +19691,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            notification: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17569,22 +19727,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Request completed. */
-            200: {
+            /** @description Resource removed. */
+            204: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": {
-                        data: {
-                            [key: string]: unknown;
-                        };
-                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
-                        meta: {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
+                content?: never;
             };
             400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorised"];
@@ -17614,7 +19762,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            conversations: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17662,7 +19819,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            conversation: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17679,7 +19845,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            conversation: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17714,7 +19889,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            conversation: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17755,7 +19939,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            conversation: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17772,7 +19965,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            conversation: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17799,39 +20001,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Request completed. */
-            200: {
+            /** @description Resource removed. */
+            204: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": {
-                        data: {
-                            [key: string]: unknown;
-                        };
-                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
-                        meta: {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-            /** @description Resource created. */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            [key: string]: unknown;
-                        };
-                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
-                        meta: {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
+                content?: never;
             };
             400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorised"];
@@ -17862,7 +20037,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            messages: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17907,7 +20091,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            message: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17924,7 +20117,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            message: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -17959,22 +20161,12 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Request completed. */
-            200: {
+            /** @description Resource removed. */
+            204: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": {
-                        data: {
-                            [key: string]: unknown;
-                        };
-                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
-                        meta: {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
+                content?: never;
             };
             400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorised"];
@@ -18011,7 +20203,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            message: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18046,7 +20247,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            receipt: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18063,7 +20273,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            receipt: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18103,7 +20322,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            cases: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18161,7 +20389,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            case: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18178,7 +20415,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            case: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18213,7 +20459,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            case: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18256,7 +20511,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            note: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18273,7 +20537,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            note: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18316,7 +20589,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            case: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18333,7 +20615,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            case: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18371,7 +20662,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            results: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18404,7 +20704,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            dashboard: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18442,7 +20751,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            users: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18477,7 +20795,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            user: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18522,7 +20849,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            user: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18539,7 +20875,74 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
+                            user: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
                             [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogPostApiV1AdminUsersIdSessionsRevoke: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    reason: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            revokedSessions: number;
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            /** @description Resource created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            revokedSessions: number;
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18577,7 +20980,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            organisations: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18612,7 +21024,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            organisation: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18657,7 +21078,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            organisation: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18674,7 +21104,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            organisation: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18719,7 +21158,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            organisation: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18736,7 +21184,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            organisation: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18774,7 +21231,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            applications: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18812,7 +21278,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            placements: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18850,7 +21325,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            payrollPeriods: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18888,7 +21372,63 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
+                            payments: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
                             [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogGetApiV1AdminJobs: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                q?: string;
+                moderationStatus?: "NOT_REVIEWED" | "APPROVED" | "FLAGGED" | "REMOVED";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            jobs: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18933,7 +21473,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            job: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18950,7 +21499,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            job: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -18983,7 +21541,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            roles: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19026,7 +21593,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            assignment: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19043,7 +21619,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            assignment: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19086,7 +21671,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            assignment: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19103,7 +21697,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            assignment: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19143,7 +21746,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            leads: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19188,7 +21800,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            lead: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19230,7 +21851,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            events: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19263,7 +21893,26 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            featureFlags: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
+                            policies: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19313,7 +21962,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            featureFlag: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19358,7 +22016,62 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
+                            policy: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
                             [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogGetApiV1AdminAnnouncements: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                status?: "DRAFT" | "PUBLISHED" | "EXPIRED";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            announcements: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19408,7 +22121,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            announcement: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19425,7 +22147,138 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
+                            announcement: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
                             [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogGetApiV1AdminDeliveries: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                status?: "PENDING" | "SENT" | "FAILED" | "SKIPPED";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            deliveries: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogPostApiV1AdminDeliveriesIdRetry: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    reason: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            delivery: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            /** @description Resource created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            delivery: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19462,7 +22315,36 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            outcomes: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
+                            queues: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
+                            failures: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19503,7 +22385,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            job: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19520,7 +22411,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            job: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19558,7 +22458,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            cases: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19593,7 +22502,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            case: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19638,7 +22556,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            case: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19655,7 +22582,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            case: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19702,7 +22638,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            assessment: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19719,7 +22664,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            assessment: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19765,7 +22719,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            case: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19782,7 +22745,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            case: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19819,7 +22791,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            replacements: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19866,7 +22847,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            replacement: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19883,7 +22873,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            replacement: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19930,7 +22929,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            candidates: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19947,7 +22955,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            candidates: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -19985,7 +23002,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            exports: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -20035,7 +23061,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            export: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -20052,7 +23087,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            export: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -20087,7 +23131,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            export: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -20122,7 +23175,10 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            /** Format: uri */
+                            downloadUrl: string;
+                            /** Format: date-time */
+                            expiresAt: string;
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -20162,7 +23218,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            cases: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -20197,7 +23262,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            case: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -20246,7 +23320,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            case: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -20289,7 +23372,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            note: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -20306,7 +23398,16 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: {
-                            [key: string]: unknown;
+                            note: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
