@@ -45,9 +45,13 @@ test("the homepage ships its narrative motion without the exported artboard tail
   const grid = readFileSync(new URL("../components/motion/AnimatedGrid.tsx", import.meta.url), "utf8");
   const roles = readFileSync(new URL("../components/motion/HeroRoleRotator.tsx", import.meta.url), "utf8");
   const simplified = readFileSync(new URL("../components/HiringSimplified.tsx", import.meta.url), "utf8");
+  const provider = readFileSync(new URL("../components/motion/MotionProvider.tsx", import.meta.url), "utf8");
   const globalStyles = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
+  const motionStyles = readFileSync(new URL("../app/motion.css", import.meta.url), "utf8");
   assert.doesNotMatch(page, /artboard-tail/);
-  assert.match(page, /HomepageScrollProgress/);
+  assert.doesNotMatch(page, /HomepageScrollProgress/);
+  assert.match(provider, /HomepageScrollProgress/);
+  assert.ok(provider.indexOf("HomepageScrollProgress") < provider.indexOf("PageTransition"));
   assert.doesNotMatch(page, /HiringProcess/);
   assert.doesNotMatch(showcase, /Gif Image here/);
   assert.match(showcase, /ShowcaseMotionScene/);
@@ -59,6 +63,7 @@ test("the homepage ships its narrative motion without the exported artboard tail
   assert.doesNotMatch(page, /<Navbar compact/);
   assert.match(globalStyles, /\.navbar--fixed[\s\S]*?position:\s*fixed/);
   assert.match(globalStyles, /\.navbar--fixed[\s\S]*?background:\s*var\(--ink\)/);
+  assert.match(motionStyles, /\.navbar--fixed\s*\{\s*top:\s*0/);
   assert.match(globalStyles, /\.navbar__brand:hover \.oreno-logo/);
 });
 

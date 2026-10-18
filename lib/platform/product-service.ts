@@ -36,7 +36,7 @@ const emptyApplication: ApplicationRecord = { id: "", candidateId: "", candidate
 const emptyInterview: InterviewRecord = { id: "", applicationId: "", candidateName: "Loading…", jobTitle: "", startsAt: "", durationMinutes: 0, participants: [], meetingUrl: "", status: "Scheduled" };
 const emptyOffer: OfferRecord = { id: "", applicationId: "", candidateName: "Loading…", jobTitle: "", startDate: "", compensation: "", workplace: "", status: "Draft", terms: [] };
 const emptyTask: TaskDetailRecord = { id: "", title: "Loading…", description: "", status: "", priority: "Low", startDate: "", dueDate: "", assignees: [], comments: [] };
-const emptyProfile: TalentProfileRecord = { id: "", name: "Loading…", headline: "", bio: "", location: "", rate: "", availability: "", profileCompletion: 0, skills: [], experience: [], education: [], certifications: [], portfolio: [], vetting: { status: "Not started", updatedAt: "", publicLabel: "Not vetted" } };
+const emptyProfile: TalentProfileRecord = { id: "", updatedAt: "", name: "Loading…", headline: "", bio: "", location: "", rate: "", availability: "", profileCompletion: 0, skills: [], experience: [], education: [], certifications: [], portfolio: [], vetting: { status: "Not started", updatedAt: "", publicLabel: "Not vetted" } };
 const emptyAccount: TalentAccountRecord = { id: "", profileId: "", email: "", phone: "", emailVerified: false, status: "Pending verification", createdAt: "", lastSignedInAt: "", security: { twoFactorEnabled: false, activeSessions: 0 }, preferences: { jobAlerts: true, applicationUpdates: true, profileVisibility: "Oreno companies only", marketingEmails: false } };
 const emptyMember: CompanyTeamMemberRecord = { id: "", placementId: "", talentProfileId: "", companyId: "", employeeId: "", employmentTitle: "", department: "", manager: "", startDate: "", engagement: "Full time", status: "Onboarding" };
 
@@ -157,6 +157,7 @@ export const productService = {
     return {
       ...emptyProfile,
       id: publicProfile.id,
+      updatedAt: textValue(row.updatedAt),
       name: publicProfile.name,
       headline: publicProfile.discipline,
       bio: publicProfile.bio,
@@ -212,10 +213,41 @@ export const productService = {
       },
     };
   }),
-  updateTalentProfile: async (input: TalentProfileUpdateInput) => { const result = await apiRequest<{ profile: unknown }>("/api/v1/talents/me/profile", { method: "PATCH", body: input }); invalidateLive("talent:profile"); return result; },
+  updateTalentProfile: async (input: TalentProfileUpdateInput) => {
+    const current = productService.getTalentProfile();
+    const result = await apiRequest<{ profile: unknown }>("/api/v1/talents/me/profile", {
+      method: "PATCH",
+      body: {
+        expectedUpdatedAt: input.expectedUpdatedAt || current.updatedAt,
+        ...(input.headline !== undefined ? { headline: input.headline || null } : {}),
+        ...(input.bio !== undefined ? { bio: input.bio || null } : {}),
+      },
+    });
+    invalidateLive("talent:profile");
+    return result;
+  },
   getTalentAccount: () => liveValue("talent:account", emptyAccount, async () => { const row = asRecord((await apiRequest<{ account: unknown }>("/api/v1/talents/me/account")).account); return { ...emptyAccount, id: textValue(row.id), profileId: textValue(row.profileId), email: textValue(row.email), phone: textValue(row.phone), emailVerified: Boolean(row.emailVerifiedAt), status: row.status === "ACTIVE" ? "Active" : row.status === "SUSPENDED" ? "Suspended" : "Pending verification", createdAt: dateLabel(row.createdAt), lastSignedInAt: dateLabel(row.lastLoginAt), security: { twoFactorEnabled: Boolean(asRecord(row.security).twoFactorEnabled), activeSessions: asArray(asRecord(row.security).activeSessions).length }, preferences: { ...emptyAccount.preferences, ...asRecord(row.preferences) } } as TalentAccountRecord; }),
   createTalentAccount: (input: TalentAccountCreateInput) => apiRequest("/api/v1/auth/register", { method: "POST", idempotent: true, body: { accountType: "TALENT", email: input.email, password: input.password, firstName: input.firstName, lastName: input.lastName, acceptTerms: true } }),
-  updateTalentAccount: async (input: TalentAccountUpdateInput) => { const result = await apiRequest("/api/v1/talents/me/account/preferences", { method: "PATCH", body: input.preferences ?? {} }); invalidateLive("talent:account"); return result; },
+  updateTalentAccount: async (input: TalentAccountUpdateInput) => {
+    const preferences = input.preferences ?? {};
+    const accountPreferences = {
+      ...(preferences.jobAlerts !== undefined ? { jobAlerts: preferences.jobAlerts } : {}),
+      ...(preferences.applicationUpdates !== undefined ? { applicationUpdates: preferences.applicationUpdates } : {}),
+      ...(preferences.marketingEmails !== undefined ? { marketingEmails: preferences.marketingEmails } : {}),
+    };
+    const requests: Promise<unknown>[] = [];
+    if (input.phone !== undefined) requests.push(apiRequest("/api/v1/auth/me", { method: "PATCH", body: { phone: input.phone || null } }));
+    if (Object.keys(accountPreferences).length) requests.push(apiRequest("/api/v1/talents/me/account/preferences", { method: "PATCH", body: accountPreferences }));
+    if (preferences.profileVisibility !== undefined) {
+      const profile = productService.getTalentProfile();
+      const visibility = preferences.profileVisibility === "Public" ? "PUBLIC" : preferences.profileVisibility === "Private" ? "PRIVATE" : "ORENO_COMPANIES_ONLY";
+      requests.push(apiRequest("/api/v1/talents/me/visibility", { method: "PATCH", body: { expectedUpdatedAt: profile.updatedAt, visibility } }));
+    }
+    const result = await Promise.all(requests);
+    invalidateLive("talent:account");
+    invalidateLive("talent:profile");
+    return result;
+  },
   verifyTalentEmail: (token: string) => apiRequest("/api/v1/auth/email/verify", { method: "POST", body: { token } }),
   getCompanyTeamMember: (talentProfileId: string) => productService.listCompanyTeamMembers().find((item) => item.talentProfileId === talentProfileId) ?? { ...emptyMember, talentProfileId },
   listCompanyTeamMembers: (): CompanyTeamMemberRecord[] => orgListResource("org:team", "teamMembers", "/team-members", (value) => { const row = asRecord(value); return { id: textValue(row.id), placementId: textValue(row.placementId), talentProfileId: textValue(row.talentProfileId), companyId: textValue(row.organisationId), employeeId: textValue(row.employeeCode), employmentTitle: textValue(row.title), department: textValue(asRecord(row.department).name), manager: nameOf(asRecord(row.manager)), startDate: dateLabel(row.startDate), engagement: titleCase(row.engagementType, "Full time") as CompanyTeamMemberRecord["engagement"], status: titleCase(row.status, "Onboarding") as CompanyTeamMemberRecord["status"] }; }),

@@ -3,10 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, CalendarDays, Mail, MessageCircle, Paperclip, Phone, Plus, Send, Video } from "lucide-react";
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { AnimatePresence, LayoutGroup, m, useReducedMotion } from "motion/react";
-import { initialMessages, managers, tasks } from "@/lib/platform/mock-service";
-import type { ChatMessage, TaskStatus } from "@/lib/platform/types";
+import { managers, tasks } from "@/lib/platform/mock-service";
+import { listConversations, listMessages, sendMessage, subscribeToConversation } from "@/lib/api/messaging";
+import { useApiRevision } from "@/lib/api/live-store";
+import type { TaskStatus } from "@/lib/platform/types";
 import { SearchField } from "./Primitives";
 
 const taskStatuses: TaskStatus[] = ["To-do", "In progress", "In review", "Completed"];
@@ -93,30 +95,39 @@ export function ManagerGrid({ company = false }: { company?: boolean }) {
 }
 
 export function MessagesView() {
-  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
+  useApiRevision();
+  const conversations = listConversations();
+  const [selectedId, setSelectedId] = useState("");
   const [draft, setDraft] = useState("");
   const [query, setQuery] = useState("");
-  const names = ["John Doe C", "Chibuokem Chiorlu", "Benny Asitonka-Joe", "Chimzibudu Chiorlu", "Sarima Chiorlu", "Precious Akehome"];
-  const filtered = names.filter((name) => name.toLowerCase().includes(query.toLowerCase()));
+  const activeId = selectedId || conversations[0]?.id || "";
+  const active = conversations.find((item) => item.id === activeId);
+  const messages = listMessages(activeId);
+  const filtered = conversations.filter((item) => item.title.toLowerCase().includes(query.toLowerCase()));
 
-  function sendMessage(event: FormEvent) {
+  useEffect(() => {
+    if (!activeId) return;
+    return subscribeToConversation(activeId);
+  }, [activeId]);
+
+  async function submit(event: FormEvent) {
     event.preventDefault();
-    if (!draft.trim()) return;
-    setMessages((current) => [...current, { id: `m-${Date.now()}`, body: draft.trim(), time: "now", direction: "out" }]);
+    const body = draft.trim();
+    if (!body || !activeId) return;
     setDraft("");
+    await sendMessage(activeId, body);
   }
 
   return (
     <section className="messages-view">
       <div className="messages-view__search"><SearchField value={query} onChange={setQuery} /></div>
       <aside className="conversation-lists">
-        <section><header><h2>People</h2><button type="button" aria-label="Start conversation"><Plus /></button></header>{filtered.map((name) => <button className={name === "John Doe C" ? "is-active" : ""} type="button" key={name}>{name}</button>)}</section>
-        <section><header><h2>Groups</h2><button type="button" aria-label="Create group"><Plus /></button></header>{["Managers", "Team leads", "All staffs"].map((name) => <button type="button" key={name}>{name}</button>)}</section>
+        <section><header><h2>Conversations</h2><button type="button" aria-label="Start conversation"><Plus /></button></header>{filtered.map((conversation) => <button className={conversation.id === activeId ? "is-active" : ""} onClick={() => setSelectedId(conversation.id)} type="button" key={conversation.id}>{conversation.title}</button>)}</section>
       </aside>
       <article className="chat-panel">
-        <header><Image src="/assets/figma/app/company-profile.png" alt="" width={60} height={60} /><h2>John Doe C.</h2><span /><button type="button" aria-label="Audio call"><Phone /></button><button type="button" aria-label="Video call"><Video /></button></header>
-        <div className="chat-panel__messages"><AnimatePresence initial={false}>{messages.map((message) => <m.div className={`chat-bubble chat-bubble--${message.direction}`} key={message.id} initial={{ opacity: 0, x: message.direction === "out" ? 12 : -12, y: 5 }} animate={{ opacity: 1, x: 0, y: 0 }} exit={{ opacity: 0 }} layout>{message.body}<time>{message.time}</time></m.div>)}</AnimatePresence></div>
-        <form onSubmit={sendMessage}><button type="button" aria-label="Attach file"><Paperclip /></button><input value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="Type your message here..." aria-label="Message" /><button type="submit" aria-label="Send message"><Send /></button></form>
+        <header><Image src="/assets/figma/app/company-profile.png" alt="" width={60} height={60} /><h2>{active?.title ?? "Choose a conversation"}</h2><span /><button type="button" aria-label="Audio call"><Phone /></button><button type="button" aria-label="Video call"><Video /></button></header>
+        <div className="chat-panel__messages"><AnimatePresence initial={false}>{messages.map((message) => <m.div className="chat-bubble chat-bubble--in" key={message.id} initial={{ opacity: 0, x: -12, y: 5 }} animate={{ opacity: 1, x: 0, y: 0 }} exit={{ opacity: 0 }} layout><strong>{message.senderName}</strong>{message.body}<time>{message.createdAt}</time></m.div>)}</AnimatePresence>{activeId && messages.length === 0 && <p>No messages yet. Start the conversation.</p>}</div>
+        <form onSubmit={(event) => { void submit(event); }}><button type="button" aria-label="Attach file"><Paperclip /></button><input disabled={!activeId} value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="Type your message here..." aria-label="Message" /><button disabled={!activeId} type="submit" aria-label="Send message"><Send /></button></form>
       </article>
     </section>
   );

@@ -95,7 +95,7 @@ export interface ShortlistRecord {
   jobTitle: string;
   owner: string;
   candidateIds: string[];
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 export interface InterviewRecord {
@@ -157,6 +157,7 @@ export interface PaymentRecord {
 
 export interface TalentProfileRecord {
   id: string;
+  updatedAt: string;
   name: string;
   headline: string;
   bio: string;
@@ -231,5 +232,5 @@ export interface ReplacementRequestInput { placementId: string; reason: string; 
 export interface TimeEntryDecisionInput { timeEntryId: string; decision: "approve" | "reject"; note?: string }
 export interface TalentAccountCreateInput { firstName: string; lastName: string; email: string; password: string }
 export interface TalentAccountUpdateInput { phone?: string; preferences?: Partial<TalentAccountRecord["preferences"]> }
-export interface TalentProfileUpdateInput extends Partial<Omit<TalentProfileRecord, "id" | "vetting">> { id: string }
+export interface TalentProfileUpdateInput extends Partial<Omit<TalentProfileRecord, "id" | "updatedAt" | "vetting">> { id: string; expectedUpdatedAt?: string }
 

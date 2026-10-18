@@ -78,7 +78,7 @@ export const paymentRecords: PaymentRecord[] = [
 ];
 
 export const talentProfile: TalentProfileRecord = {
-  id: "john-doe", name: "John Doe C.", headline: "Senior frontend engineer", bio: "I build accessible, maintainable product interfaces for growing teams.", location: "Lagos, Nigeria", rate: "$35/hr", availability: "Available in 2 weeks", profileCompletion: 88,
+  id: "john-doe", updatedAt: "2026-08-12T00:00:00.000Z", name: "John Doe C.", headline: "Senior frontend engineer", bio: "I build accessible, maintainable product interfaces for growing teams.", location: "Lagos, Nigeria", rate: "$35/hr", availability: "Available in 2 weeks", profileCompletion: 88,
   skills: [{ name: "React", level: "Expert" }, { name: "TypeScript", level: "Advanced" }, { name: "Next.js", level: "Advanced" }, { name: "Accessibility", level: "Expert" }],
   experience: [{ id: "exp-1", role: "Senior frontend engineer", company: "Kora Systems", period: "2023 – present", summary: "Owns customer-facing web architecture and accessibility." }, { id: "exp-2", role: "Frontend engineer", company: "Mango Labs", period: "2020 – 2023", summary: "Built operations tools and a shared component library." }],
   education: [{ id: "edu-1", school: "University of Lagos", qualification: "BSc Computer Science", period: "2015 – 2019" }],

@@ -2,7 +2,7 @@ import { apiRequest } from "./client";
 
 interface UploadTicket {
   file: { id: string; status: string };
-  upload: { url: string; method?: string; headers?: Record<string, string> };
+  upload: { uploadUrl: string; method?: string; headers?: Record<string, string> };
 }
 
 export async function uploadFile(file: File, category: string, organisationId?: string) {
@@ -16,7 +16,7 @@ export async function uploadFile(file: File, category: string, organisationId?: 
       ...(organisationId ? { organisationId } : {}),
     },
   });
-  const upload = await fetch(ticket.upload.url, {
+  const upload = await fetch(ticket.upload.uploadUrl, {
     method: ticket.upload.method ?? "PUT",
     headers: ticket.upload.headers,
     body: file,

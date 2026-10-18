@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { platformAdminService } from "../lib/platform-admin/service.ts";
 import {
   adminApiRoutes,
   canAccessAdminRoute,
@@ -36,15 +35,16 @@ test("high-risk administration actions require a meaningful reason", () => {
 });
 
 test("admin transport contract remains under the isolated API namespace", () => {
-  assert.equal(adminApiRoutes.companies, "/api/v1/admin/companies");
-  assert.equal(adminApiRoutes.company("company-1"), "/api/v1/admin/companies/company-1");
-  assert.equal(adminApiRoutes.retryJob("job-1"), "/api/v1/admin/system/jobs/job-1/retry");
+  assert.equal(adminApiRoutes.companies, "/api/v1/admin/organisations");
+  assert.equal(adminApiRoutes.company("company-1"), "/api/v1/admin/organisations/company-1");
+  assert.equal(adminApiRoutes.payments, "/api/v1/admin/compensation/payments");
+  assert.equal(adminApiRoutes.system, "/api/v1/admin/operations");
+  assert.equal(adminApiRoutes.retryJob("job-1"), "/api/v1/admin/operations/jobs/job-1/retry");
 });
 
-test("fixture service exposes separate user, placement, and system records", () => {
-  const talent = platformAdminService.getUser("ibrahim-diallo");
-  const placement = platformAdminService.listPlacements()[0];
-  assert.equal(talent.type, "Talent");
-  assert.notEqual(talent.id, placement.id);
-  assert.ok(platformAdminService.listServiceHealth().some((service) => service.name === "PostgreSQL" || service.type === "PostgreSQL"));
+test("admin contract exposes dashboard resources required by the frontend", () => {
+  assert.equal(adminApiRoutes.jobs, "/api/v1/admin/jobs");
+  assert.equal(adminApiRoutes.announcements, "/api/v1/admin/announcements");
+  assert.equal(adminApiRoutes.deliveries, "/api/v1/admin/deliveries");
+  assert.equal(adminApiRoutes.revokeUserSessions("user-1"), "/api/v1/admin/users/user-1/sessions/revoke");
 });
