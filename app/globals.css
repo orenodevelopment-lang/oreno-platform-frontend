@@ -370,6 +370,23 @@ a {
   left: 100px;
 }
 
+.hero__talent-entry {
+  position: absolute;
+  z-index: 3;
+  top: 672px;
+  left: 100px;
+  margin: 0;
+  color: rgba(255,255,255,.72);
+  font-size: 14px;
+}
+
+.hero__talent-entry a {
+  color: var(--teal);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
 .hero__quote {
   position: absolute;
   z-index: 2;
@@ -1098,27 +1115,32 @@ a {
 
 .showcase-card__eyebrow {
   display: inline-flex;
-  height: 50px;
+  min-height: 42px;
   align-items: center;
-  border-radius: 999px;
-  padding: 0 20px;
-  color: white;
+  border-left: 3px solid currentColor;
+  padding: 0 0 0 14px;
+  color: var(--ink);
   font-family: var(--font-raleway), sans-serif;
   font-size: 20px;
-  font-weight: 400;
+  font-weight: 650;
 }
 
 .showcase-card__eyebrow b {
   margin-right: 10px;
-  border-right: 1px solid rgba(255,255,255,.45);
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
   padding-right: 10px;
   font-family: var(--font-poppins), sans-serif;
   font-size: 12px;
 }
 
-.showcase-card__eyebrow--pink { background: var(--pink); }
-.showcase-card__eyebrow--green { background: #34b44a; }
-.showcase-card__eyebrow--blue { background: #249bab; }
+.showcase-card__eyebrow--pink { color: var(--pink); }
+.showcase-card__eyebrow--green { color: #258c38; }
+.showcase-card__eyebrow--blue { color: #1f8290; }
 
 .showcase-card h3 {
   margin: 39px 0 34px;
@@ -1376,6 +1398,7 @@ a {
 @media (max-width: 1200px) {
   .hero__title { left: 7vw; }
   .hero__cta { left: 7vw; }
+  .hero__talent-entry { left: 7vw; }
   .hero__quote { right: 5vw; }
   .hero__quote-mark { right: 13vw; }
   .hiring-simplified__copy { left: 7vw; width: 48vw; }
@@ -1384,6 +1407,20 @@ a {
   .showcase-card--right { grid-template-columns: 54% 46%; }
   .showcase-card__media { width: min(390px, 80%); }
   .showcase-card__copy { width: 84%; }
+}
+
+@media (min-width: 768px) and (max-width: 1100px) {
+  .hero { height: 900px; }
+  .hero__canvas-wrap { top: 150px; left: 4vw; width: 92vw; }
+  .hero__title { top: 215px; left: 6vw; width: 54vw; gap: 10px; font-size: clamp(44px, 5.3vw, 56px); line-height: 1.15; }
+  .hero__title > span, .hero__title > strong { min-height: 1.15em; }
+  .hero__title strong { font-size: inherit; line-height: inherit; }
+  .hero__role-slot { min-width: 4.7em; }
+  .hero__quote { top: 215px; right: 4vw; width: 34vw; min-height: 0; }
+  .hero__quote p { padding: 14px 16px; font-size: clamp(15px, 1.8vw, 18px); }
+  .hero__quote-mark { top: 430px; right: 12vw; }
+  .hero__cta { top: 545px; left: 6vw; }
+  .hero__talent-entry { top: 610px; left: 6vw; }
 }
 
 @media (max-width: 900px) {
@@ -1481,6 +1518,7 @@ a {
     letter-spacing: -1px;
   }
   .hero__cta { top: 418px; left: 31px; }
+  .hero__talent-entry { top: 478px; left: 31px; width: 300px; font-size: 13px; }
   .hero__quote {
     top: 571px;
     left: 20px;

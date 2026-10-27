@@ -33,7 +33,9 @@ import {
   WalletCards,
 } from "lucide-react";
 import { useState, type FormEvent, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
 import { productService } from "@/lib/platform/product-service";
+import { authApi } from "@/lib/api/auth";
 import { CountUp } from "@/components/motion/CountUp";
 import { ConfirmDialog, DataStateBoundary, ProductPage, ProductTabs, StatusChip, Timeline } from "./ProductUI";
 
@@ -76,18 +78,43 @@ export function TalentProductScreen({ route }: { route: string }) {
 }
 
 function TalentDashboard() {
-  return <ProductPage eyebrow="Talent workspace" title="Good morning, John" description="Keep track of applications, interviews and current work from one place."><div className="talent-dashboard-grid"><Link href="/talent/applications"><span><BriefcaseBusiness /></span><div><small>Active applications</small><strong><CountUp value={3} /></strong><p>1 interview scheduled</p></div><ArrowRight /></Link><Link href="/talent/tasks"><span><CheckCircle2 /></span><div><small>Tasks due this week</small><strong><CountUp value={4} /></strong><p>2 in progress</p></div><ArrowRight /></Link><Link href="/talent/profile"><span><UserRound /></span><div><small>Profile completion</small><strong><CountUp value={88} suffix="%" /></strong><p>Portfolio can be improved</p></div><ArrowRight /></Link></div><div className="talent-dashboard-columns"><section><header><h3>Upcoming</h3><Link href="/talent/tasks/calendar">View calendar</Link></header><article><CalendarDays /><div><strong>Technical interview</strong><p>Frontend engineer · Sep 29, 10:30 AM</p></div><Link href="/talent/interviews/interview-john">Details</Link></article><article><Clock3 /><div><strong>Design homepage due</strong><p>Sep 30 · High priority</p></div><Link href="/talent/tasks/task-1">Open task</Link></article></section><section><header><h3>Application progress</h3><Link href="/talent/applications">View all</Link></header><Timeline items={[{ label: "Frontend engineer", date: "Interviewing", complete: true }, { label: "Senior product designer", date: "Shortlisted", complete: true }, { label: "Database analyst", date: "Under review", complete: false }]} /></section></div></ProductPage>;
+  const profile = productService.getTalentProfile();
+  const applications = productService.listTalentApplications();
+  const interviews = productService.listTalentInterviews();
+  const firstName = profile.name && profile.name !== "Loading…" ? profile.name.split(" ")[0] : "there";
+  const activeApplications = applications.filter((item) => !["Accepted", "Rejected", "Withdrawn"].includes(item.status));
+  return <ProductPage eyebrow="Talent workspace" title={`Good morning, ${firstName}`} description="Keep track of applications, interviews and your professional profile from one place."><div className="talent-dashboard-grid"><Link href="/talent/applications"><span><BriefcaseBusiness /></span><div><small>Active applications</small><strong><CountUp value={activeApplications.length} /></strong><p>{interviews.length} interview{interviews.length === 1 ? "" : "s"} scheduled</p></div><ArrowRight /></Link><Link href="/talent/jobs"><span><Search /></span><div><small>Open opportunities</small><strong>Explore</strong><p>Find roles that fit your profile</p></div><ArrowRight /></Link><Link href="/talent/profile"><span><UserRound /></span><div><small>Profile completion</small><strong><CountUp value={profile.profileCompletion} suffix="%" /></strong><p>Keep your information current</p></div><ArrowRight /></Link></div><div className="talent-dashboard-columns"><section><header><h3>Upcoming interviews</h3><Link href="/talent/applications">View applications</Link></header>{interviews.length ? interviews.slice(0, 3).map((interview) => <article key={interview.id}><CalendarDays /><div><strong>{interview.jobTitle}</strong><p>{interview.startsAt} · {interview.status}</p></div><Link href={`/talent/interviews/${interview.id}`}>Details</Link></article>) : <p>No interviews are scheduled yet.</p>}</section><section><header><h3>Application progress</h3><Link href="/talent/applications">View all</Link></header><Timeline items={applications.slice(0, 4).map((item) => ({ label: item.jobTitle, date: item.status, complete: item.status !== "Submitted" }))} /></section></div></ProductPage>;
 }
 
 const onboardingSteps = [{ key: "basics", label: "Basics" }, { key: "professional", label: "Professional profile" }, { key: "availability", label: "Availability" }, { key: "complete", label: "Complete" }];
 function TalentOnboarding({ step }: { step: string }) {
+  const router = useRouter();
   const index = Math.max(0, onboardingSteps.findIndex((item) => item.key === step));
-  if (step === "complete") return <section className="talent-onboarding-complete"><span><CheckCircle2 /></span><h2>Your profile is ready for review</h2><p>You can continue improving it while Oreno reviews your information.</p><div><BadgeCheck /><p><strong>Vetting status</strong>Not started · No vetted label is shown until review is complete.</p></div><Link className="platform-primary" href="/talent">Open dashboard <ArrowRight /></Link></section>;
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  async function finish() {
+    setSaving(true); setError("");
+    try { await productService.completeTalentOnboarding(); router.replace("/talent"); }
+    catch (cause) { setError(cause instanceof Error ? cause.message : "Your profile could not be submitted."); }
+    finally { setSaving(false); }
+  }
+  if (step === "complete") return <section className="talent-onboarding-complete"><span><CheckCircle2 /></span><h2>Submit your profile for review</h2><p>Oreno checks that the essential profile fields are complete before activating your talent profile.</p><div><BadgeCheck /><p><strong>Vetting status</strong>Vetting remains separate and no vetted label is shown until review is complete.</p></div>{error && <span className="field-error" role="alert">{error}</span>}<button className="platform-primary" type="button" disabled={saving} onClick={() => void finish()}>{saving ? "Submitting…" : "Complete profile"} <ArrowRight /></button></section>;
   const next = onboardingSteps[index + 1]?.key ?? "complete";
-  return <section className="talent-onboarding"><aside><h2>Build your Oreno profile</h2><p>A complete profile supports job discovery and human review.</p><ol>{onboardingSteps.map((item, itemIndex) => <li className={item.key === step ? "is-active" : itemIndex < index ? "is-complete" : ""} key={item.key}><i>{itemIndex < index ? <Check /> : itemIndex + 1}</i>{item.label}</li>)}</ol></aside><form onSubmit={(event) => event.preventDefault()}><span className="product-eyebrow">Step {index + 1} of 3</span><h2>{onboardingSteps[index].label}</h2>{step === "basics" && <><div className="form-grid"><TalentField label="First name" value="John" /><TalentField label="Last name" value="Doe C." /><TalentField label="Location" value="Lagos, Nigeria" /><TalentField label="Professional headline" value="Senior frontend engineer" /></div><label className="form-field form-field--wide"><span>About you</span><textarea rows={7} defaultValue="I build accessible, maintainable product interfaces for growing teams." /></label></>}{step === "professional" && <><div className="form-grid"><TalentField label="Primary discipline" value="Frontend engineering" /><TalentField label="Years of experience" value="6" /><TalentField label="Top skills" value="React, TypeScript, Accessibility" /><TalentField label="Portfolio URL" value="https://portfolio.example.com/john" /></div><label className="upload-field"><Upload /><span><strong>Upload CV</strong>PDF or DOCX · 10 MB maximum</span><input type="file" accept=".pdf,.doc,.docx" /></label></>}{step === "availability" && <div className="form-grid"><TalentField label="Availability" value="Available in 2 weeks" /><TalentField label="Preferred engagement" value="Full time" /><TalentField label="Hourly rate" value="35" /><TalentField label="Currency" value="USD" /><TalentField label="Preferred workplace" value="Remote" /><TalentField label="Time zone" value="WAT (UTC+1)" /></div>}<footer><Link href={index ? `/talent/onboarding/${onboardingSteps[index - 1].key}` : "/"}>Back</Link><Link className="platform-primary" href={`/talent/onboarding/${next}`}>Save and continue <ArrowRight /></Link></footer></form></section>;
+  async function saveStep(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault(); setSaving(true); setError("");
+    const form = new FormData(event.currentTarget);
+    try {
+      if (step === "basics") await productService.updateTalentOnboardingProfile({ firstName: String(form.get("firstName")), lastName: String(form.get("lastName")), city: String(form.get("city")), countryCode: String(form.get("countryCode")), headline: String(form.get("headline")), bio: String(form.get("bio")) });
+      if (step === "professional") await productService.updateTalentOnboardingProfile({ currentTitle: String(form.get("currentTitle")), yearsExperience: Number(form.get("yearsExperience")), portfolioUrl: String(form.get("portfolioUrl")) });
+      if (step === "availability") await productService.updateTalentAvailability({ availabilityStatus: String(form.get("availabilityStatus")) as "AVAILABLE_NOW" | "AVAILABLE_FROM_DATE" | "UNAVAILABLE", availableFrom: form.get("availableFrom") ? String(form.get("availableFrom")) : null, preferredEmploymentTypes: [String(form.get("employmentType")) as "FULL_TIME" | "PART_TIME" | "CONTRACT"], preferredWorkArrangement: String(form.get("workArrangement")) as "REMOTE" | "HYBRID" | "ONSITE", hoursPerWeek: Number(form.get("hoursPerWeek")), expectedRateAmount: String(form.get("rate")), expectedRateCurrency: String(form.get("currency")), expectedRateUnit: "HOURLY" });
+      router.push(`/talent/onboarding/${next}`);
+    } catch (cause) { setError(cause instanceof Error ? cause.message : "This step could not be saved."); }
+    finally { setSaving(false); }
+  }
+  return <section className="talent-onboarding"><aside><h2>Build your Oreno profile</h2><p>A complete profile supports job discovery and human review.</p><ol>{onboardingSteps.map((item, itemIndex) => <li className={item.key === step ? "is-active" : itemIndex < index ? "is-complete" : ""} key={item.key}><i>{itemIndex < index ? <Check /> : itemIndex + 1}</i>{item.label}</li>)}</ol></aside><form onSubmit={saveStep}><span className="product-eyebrow">Step {index + 1} of 3</span><h2>{onboardingSteps[index].label}</h2>{step === "basics" && <><div className="form-grid"><TalentField name="firstName" label="First name" required /><TalentField name="lastName" label="Last name" required /><TalentField name="city" label="City" required /><TalentField name="countryCode" label="Country code" value="NG" required /><TalentField name="headline" label="Professional headline" required /></div><label className="form-field form-field--wide"><span>About you</span><textarea name="bio" rows={7} required /></label></>}{step === "professional" && <><div className="form-grid"><TalentField name="currentTitle" label="Current or primary role" required /><TalentField name="yearsExperience" label="Years of experience" type="number" value="1" required /><TalentField name="portfolioUrl" label="Portfolio URL" type="url" required /></div><p className="account-separation-note">You can add skills, experience, education, a CV, and portfolio records from your profile after this setup.</p></>}{step === "availability" && <div className="form-grid"><label className="form-field"><span>Availability</span><select name="availabilityStatus" defaultValue="AVAILABLE_NOW"><option value="AVAILABLE_NOW">Available now</option><option value="AVAILABLE_FROM_DATE">Available from a date</option><option value="UNAVAILABLE">Unavailable</option></select></label><TalentField name="availableFrom" label="Available from (if later)" type="date" /><label className="form-field"><span>Preferred engagement</span><select name="employmentType" defaultValue="FULL_TIME"><option value="FULL_TIME">Full time</option><option value="PART_TIME">Part time</option><option value="CONTRACT">Contract</option></select></label><TalentField name="rate" label="Hourly rate" type="number" value="25" required /><TalentField name="currency" label="Currency" value="USD" required /><label className="form-field"><span>Preferred workplace</span><select name="workArrangement" defaultValue="REMOTE"><option value="REMOTE">Remote</option><option value="HYBRID">Hybrid</option><option value="ONSITE">On site</option></select></label><TalentField name="hoursPerWeek" label="Hours per week" type="number" value="40" required /></div>}{error && <span className="field-error" role="alert">{error}</span>}<footer><Link href={index ? `/talent/onboarding/${onboardingSteps[index - 1].key}` : "/"}>Back</Link><button className="platform-primary" type="submit" disabled={saving}>{saving ? "Saving…" : "Save and continue"} <ArrowRight /></button></footer></form></section>;
 }
 
-function TalentField({ label, value = "", type = "text" }: { label: string; value?: string; type?: string }) { return <label className="form-field"><span>{label}</span><input type={type} defaultValue={value} /></label>; }
+function TalentField({ label, name, value = "", type = "text", required = false }: { label: string; name?: string; value?: string; type?: string; required?: boolean }) { return <label className="form-field"><span>{label}</span><input name={name} type={type} defaultValue={value} required={required} /></label>; }
 
 const profileTabs = [
   { key: "overview", label: "Overview", href: "/talent/profile" },
@@ -118,20 +145,34 @@ const accountTabs = [
 function TalentAccount({ section }: { section: string }) {
   const account = productService.getTalentAccount();
   const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState("");
 
-  function save(event: FormEvent<HTMLFormElement>) {
+  async function save(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setSaved(false);
+    setSaveError("");
     const form = new FormData(event.currentTarget);
-    productService.updateTalentAccount({
-      phone: String(form.get("phone") ?? account.phone),
-      preferences: {
-        jobAlerts: form.get("jobAlerts") === "on",
-        applicationUpdates: form.get("applicationUpdates") === "on",
-        marketingEmails: form.get("marketingEmails") === "on",
-        profileVisibility: String(form.get("profileVisibility") ?? account.preferences.profileVisibility) as typeof account.preferences.profileVisibility,
-      },
-    });
-    setSaved(true);
+    try {
+      if (section === "security") {
+        const currentPassword = String(form.get("currentPassword") ?? "");
+        const newPassword = String(form.get("newPassword") ?? "");
+        if (!currentPassword || !newPassword) throw new Error("Enter your current and new password.");
+        await authApi.changePassword(currentPassword, newPassword);
+      } else {
+        await productService.updateTalentAccount({
+          phone: String(form.get("phone") ?? account.phone),
+          preferences: {
+            jobAlerts: form.get("jobAlerts") === "on",
+            applicationUpdates: form.get("applicationUpdates") === "on",
+            marketingEmails: form.get("marketingEmails") === "on",
+            profileVisibility: String(form.get("profileVisibility") ?? account.preferences.profileVisibility) as typeof account.preferences.profileVisibility,
+          },
+        });
+      }
+      setSaved(true);
+    } catch (cause) {
+      setSaveError(cause instanceof Error ? cause.message : "Your settings could not be saved.");
+    }
   }
 
   return (
@@ -142,15 +183,16 @@ function TalentAccount({ section }: { section: string }) {
       actions={<Link className="product-button-secondary" href="/talent/profile"><UserRound /> View professional profile</Link>}
     >
       <ProductTabs items={accountTabs} active={section} />
-      {saved && <div className="inline-success" role="status"><CheckCircle2 /> Account settings saved locally.</div>}
+      {saved && <div className="inline-success" role="status"><CheckCircle2 /> Account settings saved.</div>}
+      {saveError && <span className="field-error" role="alert">{saveError}</span>}
       <div className="account-separation-note"><ShieldCheck /><div><strong>Your account belongs to you</strong><p>Companies can manage a work placement after you are hired, but they cannot edit these account or profile details.</p></div></div>
       {section === "security" ? (
         <form className="product-form-card talent-account-form" onSubmit={save}>
           <header><KeyRound /><div><h3>Password and sign-in</h3><p>Last signed in {account.lastSignedInAt}</p></div></header>
-          <div className="form-grid"><label className="form-field"><span>Current password</span><input type="password" autoComplete="current-password" /></label><label className="form-field"><span>New password</span><input type="password" minLength={8} autoComplete="new-password" /></label></div>
+          <div className="form-grid"><label className="form-field"><span>Current password</span><input name="currentPassword" type="password" autoComplete="current-password" required /></label><label className="form-field"><span>New password</span><input name="newPassword" type="password" minLength={12} autoComplete="new-password" required /></label></div>
           <div className="account-security-row"><Laptop /><div><strong>{account.security.activeSessions} active sessions</strong><p>Review and sign out devices you no longer use.</p></div><button type="button">Review sessions</button></div>
-          <label className="account-toggle"><input type="checkbox" defaultChecked={account.security.twoFactorEnabled} /><span><strong>Two-step verification</strong><small>Require a second factor when signing in on a new device.</small></span></label>
-          <button className="platform-primary" type="submit"><Save /> Save security settings</button>
+          <div className="account-security-row"><ShieldCheck /><div><strong>Two-step verification is {account.security.twoFactorEnabled ? "enabled" : "not enabled"}</strong><p>Authenticator setup and recovery-code management use Oreno’s protected two-factor flow.</p></div><StatusChip status={account.security.twoFactorEnabled ? "Active" : "Not enabled"} /></div>
+          <button className="platform-primary" type="submit"><Save /> Change password</button>
         </form>
       ) : section === "preferences" ? (
         <form className="product-form-card talent-account-form" onSubmit={save}>
@@ -196,24 +238,24 @@ function ApplicationForm({ jobId, mode }: { jobId: string; mode: "quick" | "stan
 }
 
 function TalentApplications() {
-  const records = productService.listApplications();
+  const records = productService.listTalentApplications();
   return <ProductPage eyebrow="Opportunity" title="Your applications" description="Company and candidate views read from the same lifecycle and status history."><DataStateBoundary><div className="talent-application-list">{records.map((record) => <Link href={`/talent/applications/${record.id}`} key={record.id}><span className="record-icon"><BriefcaseBusiness /></span><div><p>Oreno Technologies</p><strong>{record.jobTitle}</strong><small>Applied {record.appliedAt}</small></div><StatusChip status={record.status} /><ChevronRight /></Link>)}</div></DataStateBoundary></ProductPage>;
 }
 
 function TalentApplicationDetail({ id }: { id: string }) {
-  const record = productService.getApplication(id);
+  const record = productService.getTalentApplication(id);
   const [confirm, setConfirm] = useState(false);
   const [withdrawn, setWithdrawn] = useState(false);
   return <ProductPage eyebrow="Application tracking" title={record.jobTitle} description={`Oreno Technologies · Applied ${record.appliedAt}`} actions={!withdrawn && !["Accepted", "Rejected", "Withdrawn"].includes(record.status) ? <button className="product-button-danger" type="button" onClick={() => setConfirm(true)}>Withdraw application</button> : undefined}><div className="product-detail-columns"><section className="detail-card"><StatusChip status={withdrawn ? "Withdrawn" : record.status} /><h3>Current next step</h3><p>{withdrawn ? "This application is closed. Its history remains available." : record.status === "Interviewing" ? "Review your scheduled interview details and meeting link." : "The company is reviewing your application. No action is required now."}</p>{record.status === "Interviewing" && !withdrawn && <Link className="platform-primary" href="/talent/interviews/interview-john">View interview</Link>}</section><section className="detail-card"><h3>Status history</h3><Timeline items={[...record.statusHistory.map((item) => ({ label: item.status, date: item.at, detail: item.note, complete: true })), ...(withdrawn ? [{ label: "Withdrawn", date: "Just now", complete: true }] : [])]} /></section></div><ConfirmDialog open={confirm} title="Withdraw this application?" description="The company will no longer consider it. The application remains in your history." confirmLabel="Withdraw application" onCancel={() => setConfirm(false)} onConfirm={() => { setWithdrawn(true); setConfirm(false); }} /></ProductPage>;
 }
 
 function TalentInterview({ id }: { id: string }) {
-  const record = productService.getInterview(id);
+  const record = productService.getTalentInterview(id);
   return <ProductPage eyebrow="Interview" title={record.jobTitle} description={`With Oreno Technologies · ${record.status}`} actions={<a className="platform-primary" href={record.meetingUrl} target="_blank" rel="noreferrer">Join meeting <ExternalLink /></a>}><div className="interview-card"><header><span><CalendarDays /></span><div><h3>{record.startsAt}</h3><p>{record.durationMinutes} minutes</p></div><StatusChip status={record.status} /></header><dl><div><dt>Participants</dt><dd>{record.participants.join(", ")}</dd></div><div><dt>Meeting link</dt><dd><a href={record.meetingUrl}>{record.meetingUrl}</a></dd></div><div><dt>Role</dt><dd>{record.jobTitle}</dd></div></dl><section><h3>Prepare for the conversation</h3><ul className="product-check-list"><li><CheckCircle2 /> Review the role and your submitted profile</li><li><CheckCircle2 /> Test the external meeting link before the interview</li><li><CheckCircle2 /> Prepare examples that show your relevant work</li></ul></section></div></ProductPage>;
 }
 
 function TalentOffer({ id }: { id: string }) {
-  const offer = productService.getOffer(id);
+  const offer = productService.getTalentOffer(id);
   const [decision, setDecision] = useState<"accept" | "reject" | null>(null);
   const [result, setResult] = useState("");
   return <ProductPage eyebrow="Offer review" title={offer.jobTitle} description={`From Oreno Technologies · Starts ${offer.startDate}`}><div className="offer-review"><main><header><div><h3>Employment offer</h3><p>Prepared for {offer.candidateName}</p></div><StatusChip status={result || offer.status} /></header><dl><div><dt>Compensation</dt><dd>{offer.compensation}</dd></div><div><dt>Start date</dt><dd>{offer.startDate}</dd></div><div><dt>Workplace</dt><dd>{offer.workplace}</dd></div></dl><h3>Terms</h3><ul className="product-check-list">{offer.terms.map((term) => <li key={term}><CheckCircle2 />{term}</li>)}</ul></main><aside><ShieldCheck /><h3>Review before deciding</h3><p>Your decision is recorded against this offer. Ask the hiring team about anything unclear before responding.</p><Link href="/talent/messages"><MessageSquare /> Ask a question</Link><button className="platform-primary" type="button" onClick={() => setDecision("accept")}>Accept offer</button><button className="product-button-danger" type="button" onClick={() => setDecision("reject")}>Decline offer</button></aside></div><ConfirmDialog open={Boolean(decision)} title={`${decision === "accept" ? "Accept" : "Decline"} this offer?`} description={decision === "accept" ? "Acceptance starts the controlled placement process with the company." : "The company will see that you declined. The offer remains in history."} confirmLabel={decision === "accept" ? "Accept offer" : "Decline offer"} tone={decision === "accept" ? "positive" : "danger"} onCancel={() => setDecision(null)} onConfirm={() => { if (decision) { productService.decideOffer({ offerId: offer.id, decision }); setResult(decision === "accept" ? "Accepted" : "Rejected"); } setDecision(null); }} /></ProductPage>;

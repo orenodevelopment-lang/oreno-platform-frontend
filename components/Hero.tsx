@@ -1,6 +1,7 @@
 import { CtaLink } from "@/components/CtaLink";
 import { AnimatedGrid } from "@/components/motion/AnimatedGrid";
 import { HeroRoleRotator } from "@/components/motion/HeroRoleRotator";
+import Link from "next/link";
 
 export function Hero() {
   return (
@@ -15,6 +16,7 @@ export function Hero() {
           <strong>very easy</strong>
         </h1>
         <CtaLink withArrow className="hero__cta" />
+        <p className="hero__talent-entry">Looking for work? <Link href="/auth/talent-signup">Create a talent account</Link></p>
         <div className="hero__quote">
           <p>
             Select your next staff from a pool of carefully vetted and curated developers, AI people and designers across Africa, fast and on a budget.

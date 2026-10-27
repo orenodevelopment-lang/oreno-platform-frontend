@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, CheckCircle2, KeyRound, LockKeyhole, ShieldCheck } from "lucide-react";
@@ -10,9 +9,10 @@ import { ApiClientError } from "@/lib/api/client";
 import { authApi } from "@/lib/api/auth";
 import { invalidateLive } from "@/lib/api/live-store";
 import { AdminButton, AdminNotice } from "./AdminUI";
+import { Logo } from "@/components/Logo";
 
 function AuthFrame({ eyebrow, title, description, children }: { eyebrow: string; title: string; description: string; children: React.ReactNode }) {
-  return <main className="admin-auth"><section className="admin-auth__story" aria-label="Oreno platform administration"><Link className="admin-auth__brand" href="/"><Image alt="" height={46} src="/assets/figma/oreno-mark.svg" width={46} priority /><span><b>oreno</b><small>PLATFORM ADMIN</small></span></Link><div><span className="admin-auth__eyebrow"><ShieldCheck /> Restricted operations</span><h1>One secure view of the whole Oreno platform.</h1><p>Review organisations, users, hiring activity, support cases, and platform health with role-based controls and an immutable audit trail.</p></div><ul><li><CheckCircle2 /> Mandatory two-factor verification</li><li><CheckCircle2 /> Least-privilege access by admin role</li><li><CheckCircle2 /> Reasons recorded for high-risk actions</li></ul></section><m.section className="admin-auth__panel" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}><div className="admin-auth__form-wrap"><span className="admin-auth__step">{eyebrow}</span><h2>{title}</h2><p>{description}</p>{children}<Link className="admin-auth__back" href="/"><ArrowLeft /> Return to Oreno</Link></div></m.section></main>;
+  return <main className="admin-auth"><section className="admin-auth__story" aria-label="Oreno platform administration"><Link className="admin-auth__brand" href="/" aria-label="Oreno platform administration"><Logo /><small>PLATFORM ADMIN</small></Link><div><span className="admin-auth__eyebrow"><ShieldCheck /> Restricted operations</span><h1>One secure view of the whole Oreno platform.</h1><p>Review organisations, users, hiring activity, support cases, and platform health with role-based controls and an immutable audit trail.</p></div><ul><li><CheckCircle2 /> Mandatory two-factor verification</li><li><CheckCircle2 /> Least-privilege access by admin role</li><li><CheckCircle2 /> Reasons recorded for high-risk actions</li></ul></section><m.section className="admin-auth__panel" initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}><div className="admin-auth__form-wrap"><span className="admin-auth__step">{eyebrow}</span><h2>{title}</h2><p>{description}</p>{children}<Link className="admin-auth__back" href="/"><ArrowLeft /> Return to Oreno</Link></div></m.section></main>;
 }
 
 function Login() {

@@ -26,7 +26,9 @@ test("primary marketing navigation enters real product journeys", () => {
   assert.deepEqual(
     navigationLinks.map(({ label, href }) => [label, href]),
     [
-      ["Apply", "/jobs"],
+      ["Find jobs", "/jobs"],
+      ["Join as talent", "/auth/talent-signup"],
+      ["Talent login", "/auth/talent-login"],
       ["Start hiring", "/company/signup"],
       ["Request a demo", "/request-demo"],
     ],

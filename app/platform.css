@@ -76,12 +76,7 @@
   letter-spacing: -2px;
 }
 
-.platform-brand img {
-  width: 48px;
-  height: 48px;
-}
-
-.platform-brand span { margin-left: -2px; }
+.platform-brand .oreno-logo { flex: 0 0 144px; }
 .platform-sidebar__close { display: none; }
 
 .platform-nav {
@@ -275,10 +270,10 @@
 }
 
 .auth-panel { position: relative; min-height: 100vh; padding: 33px 60px; }
-.auth-brand { display: inline-flex; align-items: center; color: var(--app-ink); font-family: var(--font-raleway); font-size: 47px; letter-spacing: -2px; }
-.auth-brand img { width: 46px; height: 46px; }
-.auth-brand span { margin-left: -2px; }
+.auth-brand { display: inline-flex; align-items: center; color: var(--app-ink); }
 .auth-brand--light { color: white; }
+.auth-brand--light .oreno-logo { color: white; }
+.platform-nav__logout { border: 0; text-align: left; cursor: pointer; }
 .auth-form-wrap { width: min(500px, 100%); margin: 55px auto 0; }
 .auth-form-wrap h1 { margin: 0; font-size: 42px; font-weight: 600; }
 .auth-form-wrap > p { margin: 8px 0 30px; color: var(--app-muted); font-size: 16px; }

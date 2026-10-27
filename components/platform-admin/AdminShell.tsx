@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -12,6 +11,7 @@ import { AnimatePresence, m } from "motion/react";
 import { useState, type ReactNode } from "react";
 import type { AdminPermission, AdminSession } from "@/lib/platform-admin/contracts";
 import { hasAdminPermission } from "@/lib/platform-admin/policy";
+import { Logo } from "@/components/Logo";
 
 type NavItem = { href: string; label: string; icon: ReactNode; permission: AdminPermission; exact?: boolean };
 const navSections: Array<{ title: string; items: NavItem[] }> = [
@@ -67,7 +67,7 @@ function withRole(href: string, roleSlug?: string) {
 
 function SidebarContent({ session, roleSlug, onNavigate }: { session: AdminSession; roleSlug?: string; onNavigate?: () => void }) {
   const pathname = usePathname();
-  return <><div className="admin-brand"><Link href={withRole("/platform-admin", roleSlug)} onClick={onNavigate}><Image alt="" height={30} src="/assets/figma/oreno-mark.svg" width={30} /><span><b>oreno</b><small>PLATFORM ADMIN</small></span></Link></div><nav aria-label="Platform administration">{navSections.map((section) => { const items = section.items.filter((item) => hasAdminPermission(session.role, item.permission)); if (!items.length) return null; return <section key={section.title}><h2>{section.title}</h2>{items.map((item) => { const active = item.exact ? pathname === item.href : pathname.startsWith(item.href); return <Link aria-current={active ? "page" : undefined} className={active ? "is-active" : ""} href={withRole(item.href, roleSlug)} key={item.href} onClick={onNavigate}><span>{item.icon}</span>{item.label}{active && <i aria-hidden="true" />}</Link>; })}</section>; })}</nav><footer><Link href={withRole("/platform-admin/account", roleSlug)} onClick={onNavigate}><span>{session.initials}</span><div><strong>{session.name}</strong><small>{session.role}</small></div></Link><Link aria-label="View audit log" href={withRole("/platform-admin/audit", roleSlug)} onClick={onNavigate}><FileClock /></Link></footer></>;
+  return <><div className="admin-brand"><Link href={withRole("/platform-admin", roleSlug)} onClick={onNavigate} aria-label="Oreno platform administration"><Logo /><small>PLATFORM ADMIN</small></Link></div><nav aria-label="Platform administration">{navSections.map((section) => { const items = section.items.filter((item) => hasAdminPermission(session.role, item.permission)); if (!items.length) return null; return <section key={section.title}><h2>{section.title}</h2>{items.map((item) => { const active = item.exact ? pathname === item.href : pathname.startsWith(item.href); return <Link aria-current={active ? "page" : undefined} className={active ? "is-active" : ""} href={withRole(item.href, roleSlug)} key={item.href} onClick={onNavigate}><span>{item.icon}</span>{item.label}{active && <i aria-hidden="true" />}</Link>; })}</section>; })}</nav><footer><Link href={withRole("/platform-admin/account", roleSlug)} onClick={onNavigate}><span>{session.initials}</span><div><strong>{session.name}</strong><small>{session.role}</small></div></Link><Link aria-label="View audit log" href={withRole("/platform-admin/audit", roleSlug)} onClick={onNavigate}><FileClock /></Link></footer></>;
 }
 
 export function AdminShell({ children, route, session, roleSlug }: { children: ReactNode; route: string; session: AdminSession; roleSlug?: string }) {

@@ -1,5 +1,7 @@
 export const navigationLinks = [
-  { label: "Apply", href: "/jobs" },
+  { label: "Find jobs", href: "/jobs" },
+  { label: "Join as talent", href: "/auth/talent-signup" },
+  { label: "Talent login", href: "/auth/talent-login" },
   { label: "Start hiring", href: "/company/signup" },
   { label: "Request a demo", href: "/request-demo", featured: true },
 ] as const;

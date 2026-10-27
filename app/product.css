@@ -63,9 +63,8 @@
 /* Public product shell */
 .public-product-shell { min-height: 100vh; background: #fbfcfc; color: var(--app-copy); font-family: var(--font-poppins), sans-serif; }
 .public-product-nav { display: flex; height: 92px; align-items: center; gap: 44px; border-bottom: 1px solid rgba(255,255,255,.08); background: var(--app-ink); color: white; padding: 0 max(28px, calc((100vw - 1240px) / 2)); }
-.public-product-brand { display: flex; align-items: center; font-family: var(--font-raleway), sans-serif; font-size: 38px; letter-spacing: -1.5px; }
-.public-product-brand img { width: 42px; height: 42px; }
-.public-product-brand span { margin-left: -2px; }
+.public-product-brand { display: flex; width: 144px; align-items: center; }
+.public-product-brand .oreno-logo { transform: scale(.9); transform-origin: left center; }
 .public-product-nav nav { display: flex; gap: 28px; margin-left: auto; font-size: 14px; }
 .public-product-nav nav a:hover { color: var(--app-teal); }
 .public-product-cta { display: inline-flex; min-height: 44px; align-items: center; border-radius: 22px; background: var(--app-pink); padding: 0 18px; font-size: 13px; }
@@ -187,6 +186,17 @@
 .auth-journey form label { display: grid; gap: 7px; font-size: 12px; }
 .auth-journey .form-grid { gap: 14px; }
 .auth-journey > p a { color: var(--app-pink); }
+.auth-consent { display: grid !important; grid-template-columns: 20px 1fr; align-items: start; gap: 10px !important; }
+.auth-consent input { width: 18px !important; height: 18px !important; margin-top: 1px; accent-color: var(--app-teal); }
+.auth-consent a, .auth-links a { color: var(--app-pink); text-decoration: underline; text-underline-offset: 2px; }
+.auth-divider { position: relative; margin: 2px 0; color: var(--app-muted); text-align: center; font-size: 10px; }
+.auth-divider::before { position: absolute; top: 50%; right: 0; left: 0; height: 1px; background: var(--app-line); content: ""; }
+.auth-divider span { position: relative; background: white; padding: 0 10px; }
+.auth-providers { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.auth-providers button { min-height: 45px; border: 1px solid var(--app-line); border-radius: 23px; background: white; color: var(--app-deep); font-weight: 600; }
+.auth-providers button:hover { border-color: var(--app-teal); background: var(--app-aqua); }
+.auth-links { display: grid; gap: 8px; margin-top: 16px; color: var(--app-muted); font-size: 12px; }
+.auth-session-loading { display: grid; min-height: 100vh; place-items: center; background: var(--app-ink); color: white; font-family: var(--font-poppins), sans-serif; }
 .invitation-summary { display: flex; align-items: center; gap: 13px; border-radius: 10px; background: var(--app-aqua); padding: 15px; }
 .invitation-summary > svg { width: 28px; color: var(--app-teal); }
 .invitation-summary div { display: grid; }
@@ -731,8 +741,8 @@
   .product-toolbar label, .product-toolbar select { width: 100%; min-height: 48px; }
   .public-product-nav { height: 76px; }
   .public-product-cta { min-height: 40px; padding-inline: 13px; font-size: 11px; }
-  .public-product-brand { font-size: 32px; }
-  .public-product-brand img { width: 36px; height: 36px; }
+  .public-product-brand { width: 128px; }
+  .public-product-brand .oreno-logo { transform: scale(.8); }
   .catalogue-hero { min-height: 320px; padding-block: 55px; }
   .catalogue-hero h1 { font-size: 38px; }
   .public-catalogue { width: min(100% - 32px, 1240px); }

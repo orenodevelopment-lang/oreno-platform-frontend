@@ -1,4 +1,4 @@
-import { apiRequest, asArray, asRecord, dateLabel, pageQuery, textValue, titleCase } from "@/lib/api/client";
+import { apiRequest, asArray, asRecord, dateLabel, numberValue, pageQuery, textValue, titleCase } from "@/lib/api/client";
 import { authApi } from "@/lib/api/auth";
 import { invalidateLive, liveValue } from "@/lib/api/live-store";
 import type {
@@ -164,10 +164,10 @@ export const productService = {
       location: publicProfile.location,
       rate: publicProfile.rate,
       availability: publicProfile.availability,
-      profileCompletion: Number(row.profileCompletion ?? 0),
+      profileCompletion: Number(row.completionPercent ?? 0),
       skills: asArray(row.skills).map((item) => ({
         name: textValue(asRecord(asRecord(item).skill).name) || textValue(asRecord(item).name),
-        level: titleCase(asRecord(item).level, "Working") as "Working" | "Advanced" | "Expert",
+        level: titleCase(asRecord(item).proficiency, "Working") as "Working" | "Advanced" | "Expert",
       })),
       experience: asArray(row.experience ?? row.experiences).map((item, index) => {
         const entry = asRecord(item);
@@ -226,7 +226,94 @@ export const productService = {
     invalidateLive("talent:profile");
     return result;
   },
-  getTalentAccount: () => liveValue("talent:account", emptyAccount, async () => { const row = asRecord((await apiRequest<{ account: unknown }>("/api/v1/talents/me/account")).account); return { ...emptyAccount, id: textValue(row.id), profileId: textValue(row.profileId), email: textValue(row.email), phone: textValue(row.phone), emailVerified: Boolean(row.emailVerifiedAt), status: row.status === "ACTIVE" ? "Active" : row.status === "SUSPENDED" ? "Suspended" : "Pending verification", createdAt: dateLabel(row.createdAt), lastSignedInAt: dateLabel(row.lastLoginAt), security: { twoFactorEnabled: Boolean(asRecord(row.security).twoFactorEnabled), activeSessions: asArray(asRecord(row.security).activeSessions).length }, preferences: { ...emptyAccount.preferences, ...asRecord(row.preferences) } } as TalentAccountRecord; }),
+  updateTalentOnboardingProfile: async (input: {
+    firstName?: string;
+    lastName?: string;
+    headline?: string;
+    bio?: string;
+    city?: string;
+    countryCode?: string;
+    yearsExperience?: number;
+    currentTitle?: string;
+    portfolioUrl?: string;
+  }) => {
+    const current = asRecord((await apiRequest<{ profile: unknown }>("/api/v1/talents/me/profile")).profile);
+    const profileBody = {
+      expectedUpdatedAt: textValue(current.updatedAt),
+      ...(input.headline !== undefined ? { headline: input.headline || null } : {}),
+      ...(input.bio !== undefined ? { bio: input.bio || null } : {}),
+      ...(input.city !== undefined ? { city: input.city || null } : {}),
+      ...(input.countryCode !== undefined ? { countryCode: input.countryCode ? input.countryCode.toUpperCase() : null } : {}),
+      ...(input.yearsExperience !== undefined ? { yearsExperience: input.yearsExperience } : {}),
+      ...(input.currentTitle !== undefined ? { currentTitle: input.currentTitle || null } : {}),
+      ...(input.portfolioUrl !== undefined ? { portfolioUrl: input.portfolioUrl || null } : {}),
+    };
+    const requests: Promise<unknown>[] = [apiRequest("/api/v1/talents/me/profile", { method: "PATCH", body: profileBody })];
+    if (input.firstName !== undefined || input.lastName !== undefined) {
+      requests.push(apiRequest("/api/v1/auth/me", { method: "PATCH", body: {
+        ...(input.firstName !== undefined ? { firstName: input.firstName } : {}),
+        ...(input.lastName !== undefined ? { lastName: input.lastName } : {}),
+      } }));
+    }
+    const result = await Promise.all(requests);
+    invalidateLive("talent:profile");
+    return result;
+  },
+  updateTalentAvailability: async (input: {
+    availabilityStatus: "AVAILABLE_NOW" | "AVAILABLE_FROM_DATE" | "UNAVAILABLE";
+    availableFrom: string | null;
+    preferredEmploymentTypes: Array<"FULL_TIME" | "PART_TIME" | "CONTRACT">;
+    preferredWorkArrangement: "REMOTE" | "HYBRID" | "ONSITE" | null;
+    hoursPerWeek: number | null;
+    expectedRateAmount: string | null;
+    expectedRateCurrency: string | null;
+    expectedRateUnit: "HOURLY" | "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY" | null;
+  }) => {
+    const current = asRecord((await apiRequest<{ profile: unknown }>("/api/v1/talents/me/profile")).profile);
+    const result = await apiRequest("/api/v1/talents/me/availability", {
+      method: "PATCH",
+      body: { expectedUpdatedAt: textValue(current.updatedAt), ...input },
+    });
+    invalidateLive("talent:profile");
+    return result;
+  },
+  completeTalentOnboarding: async () => {
+    const result = await apiRequest("/api/v1/talents/me/onboarding/complete", { method: "POST" });
+    invalidateLive("talent:profile");
+    return result;
+  },
+  getTalentAccount: () => liveValue("talent:account", emptyAccount, async () => {
+    const row = asRecord((await apiRequest<{ account: unknown }>("/api/v1/talents/me/account")).account);
+    const preferences = asRecord(row.preferences);
+    const visibility = textValue(preferences.profileVisibility);
+    return {
+      ...emptyAccount,
+      id: textValue(row.id),
+      profileId: textValue(row.profileId),
+      email: textValue(row.email),
+      phone: textValue(row.phone),
+      emailVerified: Boolean(row.emailVerified),
+      status: row.status === "ACTIVE" ? "Active" : row.status === "SUSPENDED" ? "Suspended" : "Pending verification",
+      createdAt: dateLabel(row.createdAt),
+      lastSignedInAt: dateLabel(row.lastSignedInAt),
+      security: {
+        twoFactorEnabled: Boolean(asRecord(row.security).twoFactorEnabled),
+        activeSessions: numberValue(asRecord(row.security).activeSessions),
+      },
+      preferences: {
+        jobAlerts: preferences.jobAlerts !== false,
+        applicationUpdates: preferences.applicationUpdates !== false,
+        marketingEmails: Boolean(preferences.marketingEmails),
+        profileVisibility: visibility === "PUBLIC" ? "Public" : visibility === "PRIVATE" ? "Private" : "Oreno companies only",
+      },
+    } as TalentAccountRecord;
+  }),
+  listTalentApplications: () => listResource("talent:applications", "applications", "/api/v1/talents/me/applications", mapApplication),
+  getTalentApplication: (id: string) => productService.listTalentApplications().find((item) => item.id === id) ?? { ...emptyApplication, id },
+  listTalentInterviews: () => listResource("talent:interviews", "interviews", "/api/v1/talents/me/interviews", mapInterview),
+  getTalentInterview: (id: string) => productService.listTalentInterviews().find((item) => item.id === id) ?? { ...emptyInterview, id },
+  listTalentOffers: () => listResource("talent:offers", "offers", "/api/v1/talents/me/offers", mapOffer),
+  getTalentOffer: (id: string) => productService.listTalentOffers().find((item) => item.id === id) ?? { ...emptyOffer, id },
   createTalentAccount: (input: TalentAccountCreateInput) => apiRequest("/api/v1/auth/register", { method: "POST", idempotent: true, body: { accountType: "TALENT", email: input.email, password: input.password, firstName: input.firstName, lastName: input.lastName, acceptTerms: true } }),
   updateTalentAccount: async (input: TalentAccountUpdateInput) => {
     const preferences = input.preferences ?? {};

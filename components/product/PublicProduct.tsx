@@ -3,7 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, BadgeCheck, BriefcaseBusiness, CheckCircle2, Clock3, Mail, MapPin, Search, ShieldCheck, Sparkles, UsersRound } from "lucide-react";
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { productService } from "@/lib/platform/product-service";
 import { authApi } from "@/lib/api/auth";
 import { ApiClientError } from "@/lib/api/client";
@@ -79,19 +80,51 @@ export function NewsletterState({ mode }: { mode: "confirmed" | "unsubscribe" })
   return <PublicShell><section className="focused-state"><span className="focused-state__icon"><Mail /></span><h1>{mode === "confirmed" || complete ? (mode === "confirmed" ? "Your subscription is confirmed" : "You are unsubscribed") : "Unsubscribe from Oreno updates?"}</h1><p>{mode === "confirmed" ? "We’ll send occasional product and hiring updates to your confirmed address." : complete ? "No further newsletter messages will be sent to this address." : "Account and security messages are not affected."}</p>{mode === "unsubscribe" && !complete && <button className="is-danger" type="button" onClick={() => setComplete(true)}>Confirm unsubscribe</button>}<Link href="/">Return to Oreno</Link></section></PublicShell>;
 }
 
-export function AuthJourney({ flow, initialToken = "" }: { flow: string; initialToken?: string }) {
+export function AuthJourney({
+  flow,
+  initialToken = "",
+  initialNext,
+  initialStep,
+  oauthCreated = false,
+}: {
+  flow: string;
+  initialToken?: string;
+  initialNext?: string;
+  initialStep?: string;
+  oauthCreated?: boolean;
+}) {
+  const router = useRouter();
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const [needsCode, setNeedsCode] = useState(false);
+  const [needsCode, setNeedsCode] = useState(initialStep === "two-factor");
   const [urlToken, setUrlToken] = useState(initialToken);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const next = initialNext?.startsWith("/") && !initialNext.startsWith("//") ? initialNext : "/talent";
+
+  useEffect(() => {
+    if (flow !== "oauth-callback") return;
+    if (initialStep === "two-factor") {
+      return;
+    }
+    authApi.current()
+      .then(({ user }) => {
+        const stored = window.sessionStorage.getItem("oreno:oauth-next");
+        window.sessionStorage.removeItem("oreno:oauth-next");
+        const fallback = oauthCreated ? "/talent/onboarding" : "/talent";
+        router.replace(user.registrationIntent === "TALENT" ? stored || fallback : "/company");
+      })
+      .catch((cause) => setError(cause instanceof Error ? cause.message : "OAuth sign-in could not be completed."));
+  }, [flow, initialStep, oauthCreated, router]);
+
   const copy: Record<string, { title: string; body: string; button: string }> = {
     "talent-signup": { title: "Create your talent profile", body: "Join Oreno to discover roles and present your experience.", button: "Create account" },
     "talent-login": { title: "Welcome back", body: "Log in to manage applications, interviews and work.", button: "Log in" },
-    "verify-email": { title: "Verify your email", body: "Enter the verification code sent to your email address.", button: "Verify email" },
+    "verify-email": { title: "Verify your email", body: "Use the secure token from your Oreno verification link.", button: "Verify email" },
     "forgot-password": { title: "Recover your account", body: "We’ll send a secure password reset link if the address is recognised.", button: "Send reset link" },
-    "reset-password": { title: "Choose a new password", body: "Use at least eight characters and avoid a previously used password.", button: "Reset password" },
+    "reset-password": { title: "Choose a new password", body: "Use at least 12 characters and avoid a previously used password.", button: "Reset password" },
     "accept-invitation": { title: "Join Oreno Technologies", body: "Richard Benson invited you to join as a Manager.", button: "Accept invitation" },
+    "oauth-callback": { title: "Finishing your sign-in", body: "Your secure Oreno session is being prepared.", button: "Continue" },
   };
   const current = copy[flow] ?? copy["talent-login"];
   const successHref = flow === "talent-signup" || flow === "verify-email" ? "/auth/talent-login" : flow === "talent-login" ? "/talent" : flow === "accept-invitation" ? "/company" : "/auth/talent-login";
@@ -105,9 +138,23 @@ export function AuthJourney({ flow, initialToken = "" }: { flow: string; initial
     const password = String(form.get("password") ?? "");
     const token = String(form.get("token") ?? urlToken);
     try {
-      if (flow === "talent-signup") await productService.createTalentAccount({ firstName: String(form.get("firstName")), lastName: String(form.get("lastName")), email, password });
+      if (flow === "oauth-callback" && needsCode) {
+        await authApi.completeTwoFactor(String(form.get("twoFactorCode") ?? ""));
+        const stored = window.sessionStorage.getItem("oreno:oauth-next");
+        window.sessionStorage.removeItem("oreno:oauth-next");
+        router.replace(stored || "/talent");
+        return;
+      }
+      if (flow === "talent-signup") {
+        if (!termsAccepted) throw new Error("Accept the terms and privacy policy to create an account.");
+        await productService.createTalentAccount({ firstName: String(form.get("firstName")), lastName: String(form.get("lastName")), email, password });
+      }
       else if (flow === "verify-email") await productService.verifyTalentEmail(token);
-      else if (flow === "talent-login") await authApi.login({ email, password, twoFactorCode: String(form.get("twoFactorCode") ?? "") || undefined });
+      else if (flow === "talent-login") {
+        await authApi.login({ email, password, twoFactorCode: String(form.get("twoFactorCode") ?? "") || undefined });
+        router.replace(next);
+        return;
+      }
       else if (flow === "forgot-password") await authApi.forgotPassword(email);
       else if (flow === "reset-password") await authApi.resetPassword(token, password);
       else if (flow === "accept-invitation") {
@@ -127,7 +174,28 @@ export function AuthJourney({ flow, initialToken = "" }: { flow: string; initial
     }
   }
 
-  return <PublicShell><section className="auth-journey"><span><Image src="/assets/figma/oreno-mark.svg" alt="" width={55} height={55} /></span>{submitted ? <div className="public-success"><CheckCircle2 /><h1>{flow === "accept-invitation" ? "Invitation accepted" : flow === "verify-email" ? "Email verified" : "Request completed"}</h1><p>{flow === "talent-signup" ? "Your account was created. Verify your email before building your professional profile." : "Your request was completed successfully."}</p><Link href={successHref}>Continue <ArrowRight /></Link></div> : <><h1>{current.title}</h1><p>{current.body}</p><form onSubmit={submit}>{flow === "accept-invitation" && <div className="invitation-summary"><UsersRound /><div><strong>Organisation invitation</strong><span>Sign in to accept workspace access</span></div></div>}{flow === "talent-signup" ? <div className="form-grid"><label>First name<input name="firstName" required /></label><label>Last name<input name="lastName" required /></label></div> : null}{["verify-email", "reset-password", "accept-invitation"].includes(flow) && <label>Secure token<input name="token" required value={urlToken} onChange={(event) => setUrlToken(event.target.value)} autoComplete="off" /></label>}{!["verify-email", "reset-password"].includes(flow) && <label>Email address<input name="email" type="email" required placeholder="name@example.com" /></label>}{["talent-login", "talent-signup", "reset-password", "accept-invitation"].includes(flow) && <label>{flow === "reset-password" ? "New password" : "Password"}<input name="password" type="password" required minLength={8} /></label>}{needsCode && <label>Two-factor code<input name="twoFactorCode" required autoComplete="one-time-code" inputMode="numeric" /></label>}{error && <FieldError id="auth-request-error">{error}</FieldError>}<button type="submit" disabled={submitting}>{submitting ? "Please wait…" : current.button} <ArrowRight /></button></form>{flow === "talent-login" && <p><Link href="/auth/forgot-password">Forgot password?</Link></p>}</>}</section></PublicShell>;
+  async function startOAuth(provider: "google" | "linkedin") {
+    setError("");
+    if (flow === "talent-signup" && !termsAccepted) {
+      setError("Accept the terms and privacy policy before continuing with a provider.");
+      return;
+    }
+    try {
+      await authApi.oauthStart(provider, {
+        mode: flow === "talent-signup" ? "talent_signup" : "login",
+        acceptTerms: flow === "talent-signup" ? termsAccepted : undefined,
+        next,
+      });
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "The provider sign-in could not be started.");
+    }
+  }
+
+  if (flow === "oauth-callback" && !needsCode) {
+    return <PublicShell><section className="focused-state"><h1>{error ? "Sign-in could not be completed" : current.title}</h1><p>{error || current.body}</p>{error && <Link href="/auth/talent-login">Return to talent login</Link>}</section></PublicShell>;
+  }
+
+  return <PublicShell><section className="auth-journey"><span><Image src="/assets/figma/oreno-mark.svg" alt="" width={55} height={55} /></span>{submitted ? <div className="public-success"><CheckCircle2 /><h1>{flow === "accept-invitation" ? "Invitation accepted" : flow === "verify-email" ? "Email verified" : "Request completed"}</h1><p>{flow === "talent-signup" ? "Your account was created. Verify your email before building your professional profile." : "Your request was completed successfully."}</p><Link href={successHref}>Continue <ArrowRight /></Link></div> : <><h1>{needsCode ? "Enter your two-factor code" : current.title}</h1><p>{needsCode ? "Use your authenticator app or a recovery code to finish signing in." : current.body}</p><form onSubmit={submit}>{flow === "accept-invitation" && <div className="invitation-summary"><UsersRound /><div><strong>Organisation invitation</strong><span>Sign in to accept workspace access</span></div></div>}{flow === "talent-signup" ? <div className="form-grid"><label>First name<input name="firstName" required /></label><label>Last name<input name="lastName" required /></label></div> : null}{["verify-email", "reset-password", "accept-invitation"].includes(flow) && <label>Secure token<input name="token" required value={urlToken} onChange={(event) => setUrlToken(event.target.value)} autoComplete="off" /></label>}{!needsCode && !["verify-email", "reset-password", "oauth-callback"].includes(flow) && <label>Email address<input name="email" type="email" required placeholder="name@example.com" autoComplete="email" /></label>}{!needsCode && ["talent-login", "talent-signup", "reset-password", "accept-invitation"].includes(flow) && <label>{flow === "reset-password" ? "New password" : "Password"}<input name="password" type="password" required minLength={12} autoComplete={flow === "talent-login" ? "current-password" : "new-password"} /></label>}{flow === "talent-signup" && <label className="auth-consent"><input type="checkbox" checked={termsAccepted} onChange={(event) => setTermsAccepted(event.target.checked)} /><span>I agree to the <Link href="/terms">terms</Link> and <Link href="/privacy-policy">privacy policy</Link>.</span></label>}{needsCode && <label>Two-factor code<input name="twoFactorCode" required autoComplete="one-time-code" inputMode="numeric" /></label>}{error && <FieldError id="auth-request-error">{error}</FieldError>}<button type="submit" disabled={submitting}>{submitting ? "Please wait…" : needsCode ? "Verify and continue" : current.button} <ArrowRight /></button>{["talent-login", "talent-signup"].includes(flow) && !needsCode && <><div className="auth-divider"><span>or continue with</span></div><div className="auth-providers"><button type="button" onClick={() => void startOAuth("google")}>Google</button><button type="button" onClick={() => void startOAuth("linkedin")}>LinkedIn</button></div></>}</form>{flow === "talent-login" && !needsCode && <div className="auth-links"><Link href="/auth/forgot-password">Forgot password?</Link><span>New to Oreno? <Link href={`/auth/talent-signup${initialNext ? `?next=${encodeURIComponent(next)}` : ""}`}>Create a talent account</Link></span></div>}{flow === "talent-signup" && <p>Already have an account? <Link href={`/auth/talent-login${initialNext ? `?next=${encodeURIComponent(next)}` : ""}`}>Talent login</Link></p>}</>}</section></PublicShell>;
 }
 
 export function SystemState({ type }: { type: "not-found" | "unauthorised" | "error" }) {

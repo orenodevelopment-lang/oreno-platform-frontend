@@ -35,6 +35,7 @@ import { CountUp } from "@/components/motion/CountUp";
 import { motionDurations, motionEasings } from "@/lib/motion/tokens";
 import { useApiRevision } from "@/lib/api/live-store";
 import { productService } from "@/lib/platform/product-service";
+import { Logo } from "@/components/Logo";
 
 const companyTitles: Record<string, string> = {
   "": "Dashboard",
@@ -116,7 +117,7 @@ function AuthScreen({ mode }: { mode: "login" | "signup" }) {
   return (
     <main className="auth-screen">
       <section className="auth-panel">
-        <Link className="auth-brand" href="/"><Image src="/assets/figma/oreno-mark.svg" alt="" width={46} height={46} /><span>reno</span></Link>
+        <Link className="auth-brand" href="/" aria-label="Oreno home"><Logo dark /></Link>
         <div className="auth-form-wrap">
           <h1>{isLogin ? "Welcome back!" : "Sign Up"}</h1>
           <p>{isLogin ? "Log in to continue building great teams" : "Get ready to supercharge your hiring process"}</p>
@@ -150,7 +151,7 @@ function OnboardingScreen({ step }: { step: string }) {
   return (
     <main className="onboarding-screen">
       <aside className="onboarding-sidebar">
-        <Link className="auth-brand auth-brand--light" href="/"><Image src="/assets/figma/oreno-mark.svg" alt="" width={46} height={46} /><span>reno</span></Link>
+        <Link className="auth-brand auth-brand--light" href="/" aria-label="Oreno home"><Logo /></Link>
         <div className="onboarding-steps">{onboardingSteps.map((item) => <Link key={item.key} className={`${item.key === current.key ? "is-active" : ""} ${item.number < current.number ? "is-done" : ""}`} href={`/company/onboarding/${item.key}`}><i>{item.number < current.number ? <Check /> : item.number}</i><span>{item.label}<small>Step {item.number} of 4</small></span></Link>)}</div>
       </aside>
       <section className="onboarding-main">

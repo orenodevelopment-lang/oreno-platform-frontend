@@ -14,13 +14,11 @@ test("motion tokens stay inside the approved timing ranges", () => {
   assert.ok(marketingMotion.roleDeleteMs >= 30 && marketingMotion.roleDeleteMs <= 80);
   assert.ok(marketingMotion.roleHoldMs >= 1200 && marketingMotion.roleHoldMs <= 2500);
 });
-
 test("reduced motion removes travel and stagger", () => {
   assert.equal(reducedMotion.distance, 0);
   assert.equal(reducedMotion.stagger, 0);
   assert.ok(reducedMotion.duration <= .1);
 });
-
 test("the global layer includes user motion preference safeguards", () => {
   const css = readFileSync(new URL("../app/motion.css", import.meta.url), "utf8");
   const provider = readFileSync(new URL("../components/motion/MotionProvider.tsx", import.meta.url), "utf8");
@@ -28,9 +26,8 @@ test("the global layer includes user motion preference safeguards", () => {
   assert.match(css, /animation-play-state:\s*paused/);
   assert.match(css, /workspace-ambient/);
   assert.match(provider, /reducedMotion="user"/);
-  assert.match(provider, /PointerFollower/);
+  assert.doesNotMatch(provider, /PointerFollower/);
 });
-
 test("the root layout tolerates extension attributes and exposes the Figma mark", () => {
   const layout = readFileSync(new URL("../app/layout.tsx", import.meta.url), "utf8");
   assert.match(layout, /suppressHydrationWarning/);
@@ -65,16 +62,4 @@ test("the homepage ships its narrative motion without the exported artboard tail
   assert.match(globalStyles, /\.navbar--fixed[\s\S]*?background:\s*var\(--ink\)/);
   assert.match(motionStyles, /\.navbar--fixed\s*\{\s*top:\s*0/);
   assert.match(globalStyles, /\.navbar__brand:hover \.oreno-logo/);
-});
-
-test("the desktop pointer uses a restrained branded trail", () => {
-  const pointer = readFileSync(new URL("../components/motion/PointerFollower.tsx", import.meta.url), "utf8");
-  const css = readFileSync(new URL("../app/motion.css", import.meta.url), "utf8");
-  assert.match(pointer, /pointer-follower--trail-four/);
-  assert.match(pointer, /pointer-follower--lead/);
-  assert.match(pointer, /event\.pointerType !== "mouse"/);
-  assert.match(pointer, /is-enabled/);
-  assert.match(css, /\.pointer-follower\s*\{[\s\S]*?width:\s*42px/);
-  assert.match(css, /\.pointer-follower--lead\.is-interactive[\s\S]*?var\(--pink\)/);
-  assert.doesNotMatch(css, /\.pointer-follower\s*\{\s*display:\s*none\s*!important/);
 });

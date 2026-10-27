@@ -247,7 +247,7 @@ export interface paths {
         };
         /**
          * Complete a federated sign-in
-         * @description Exchanges the authorization code, resolves or creates the local account, and sets the session cookies. `redirectTo` echoes the validated post-login destination.
+         * @description Exchanges the authorization code, resolves or creates the local account, sets the session cookies, and redirects the browser to the validated frontend callback URL.
          */
         get: operations["authOAuthCallback"];
         put?: never;
@@ -5588,6 +5588,7 @@ export interface operations {
                                 emailVerifiedAt: string | null;
                                 /** @enum {string} */
                                 status: "PENDING_VERIFICATION" | "ACTIVE" | "SUSPENDED" | "DEACTIVATED";
+                                registrationIntent: ("TALENT" | "COMPANY_OWNER") | null;
                                 firstName: string;
                                 lastName: string;
                                 displayName: string | null;
@@ -5776,6 +5777,8 @@ export interface operations {
         parameters: {
             query?: {
                 redirectTo?: string;
+                mode?: "login" | "talent_signup";
+                acceptTerms?: "true" | "false";
             };
             header?: never;
             path: {
@@ -5795,7 +5798,6 @@ export interface operations {
                         data: {
                             /** Format: uri */
                             authorizationUrl: string;
-                            state: string;
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -5822,28 +5824,12 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Signed in. Session and CSRF cookies are set on this response. */
-            200: {
+            /** @description Signed in. Session and CSRF cookies are set before redirecting to the frontend. */
+            303: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content: {
-                    "application/json": {
-                        data: {
-                            /** Format: uuid */
-                            userId: string;
-                            /** @description True when this callback created the local account. */
-                            created: boolean;
-                            /** @description True when the identity was linked to an existing account. */
-                            linked: boolean;
-                            redirectTo: string | null;
-                        };
-                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
-                        meta: {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
+                content?: never;
             };
             409: components["responses"]["Conflict"];
             422: components["responses"]["Unprocessable"];
@@ -5986,6 +5972,7 @@ export interface operations {
                                 emailVerifiedAt: string | null;
                                 /** @enum {string} */
                                 status: "PENDING_VERIFICATION" | "ACTIVE" | "SUSPENDED" | "DEACTIVATED";
+                                registrationIntent: ("TALENT" | "COMPANY_OWNER") | null;
                                 firstName: string;
                                 lastName: string;
                                 displayName: string | null;
@@ -6068,6 +6055,7 @@ export interface operations {
                                 emailVerifiedAt: string | null;
                                 /** @enum {string} */
                                 status: "PENDING_VERIFICATION" | "ACTIVE" | "SUSPENDED" | "DEACTIVATED";
+                                registrationIntent: ("TALENT" | "COMPANY_OWNER") | null;
                                 firstName: string;
                                 lastName: string;
                                 displayName: string | null;

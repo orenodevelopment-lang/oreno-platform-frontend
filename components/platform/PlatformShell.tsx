@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -25,6 +24,9 @@ import {
 import { useState, type ReactNode } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { WorkspaceAmbient } from "@/components/motion/WorkspaceAmbient";
+import { Logo } from "@/components/Logo";
+import { authApi } from "@/lib/api/auth";
+import { useRouter } from "next/navigation";
 
 type ShellKind = "company" | "talent";
 
@@ -82,6 +84,7 @@ export function PlatformShell({
   actionLabel?: string;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [notice, setNotice] = useState("");
   const navigation = kind === "company" ? companyNavigation : talentNavigation;
@@ -91,13 +94,17 @@ export function PlatformShell({
     window.setTimeout(() => setNotice(""), 2400);
   }
 
+  async function signOut() {
+    await authApi.logout();
+    router.replace("/auth/talent-login");
+  }
+
   return (
     <div className={`platform-shell platform-shell--${kind}`}>
       <aside className={`platform-sidebar ${open ? "platform-sidebar--open" : ""}`}>
         <div className="platform-sidebar__top">
           <Link href={kind === "company" ? "/company" : "/talent"} className="platform-brand" onClick={() => setOpen(false)}>
-            <Image src="/assets/figma/oreno-mark.svg" alt="" width={48} height={48} priority />
-            <span>reno</span>
+            <Logo />
           </Link>
           <button className="platform-sidebar__close" type="button" aria-label="Close navigation" onClick={() => setOpen(false)}>
             <X aria-hidden="true" />
@@ -120,10 +127,10 @@ export function PlatformShell({
             );
           })}
         </nav>
-        <Link className="platform-nav__link platform-nav__logout" href="/" onClick={() => setOpen(false)}>
+        <button className="platform-nav__link platform-nav__logout" type="button" onClick={() => { setOpen(false); void signOut(); }}>
           <LogOut aria-hidden="true" />
           <span>Log out</span>
-        </Link>
+        </button>
       </aside>
 
       <AnimatePresence>{open && <m.button className="platform-backdrop" aria-label="Close navigation" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setOpen(false)} />}</AnimatePresence>

@@ -2,9 +2,8 @@
 
 import { useApiRevision } from "@/lib/api/live-store";
 
-import Image from "next/image";
-import { Bookmark, BriefcaseBusiness, Building2, CalendarDays, Check, ChevronRight, Clock3, MapPin, Save, Search, Upload } from "lucide-react";
-import { useMemo, useState, type FormEvent } from "react";
+import { Bookmark, BriefcaseBusiness, Building2, CalendarDays, Check, ChevronRight, Clock3, MapPin, Search } from "lucide-react";
+import { useMemo, useState } from "react";
 import { jobs } from "@/lib/platform/mock-service";
 import { PlatformShell } from "./PlatformShell";
 import { ManagerGrid, MessagesView, TaskBoard } from "./SharedViews";
@@ -28,45 +27,11 @@ export function TalentApp({ segments }: { segments: string[] }) {
       {route === "tasks" && <TaskBoard />}
       {route === "team" && <ManagerGrid />}
       {route === "messages" && <MessagesView />}
-      {route === "settings" && <TalentSettings />}
+      {route === "settings" && <TalentProductScreen route="account" />}
       {route === "apply" && <JobsView />}
       {!titles[route] && <TalentProductScreen route={route} />}
     </PlatformShell>
   );
-}
-
-function TalentSettings() {
-  const [notice, setNotice] = useState("");
-  function save(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setNotice("Profile changes saved locally for this demo.");
-  }
-  return (
-    <form className="talent-settings" onSubmit={save}>
-      <section className="talent-settings__profile">
-        <Image src="/assets/figma/app/company-profile.png" alt="John Doe C." width={180} height={180} />
-        <button type="button"><Upload /> Change profile image</button>
-        <h2>John Doe C.</h2>
-        <p>React developer</p>
-      </section>
-      <section className="talent-settings__form">
-        <div className="form-grid">
-          <SettingField label="First Name" value="John" />
-          <SettingField label="Last Name" value="Doe C." />
-          <SettingField label="Email Address" value="john@oreno.team" type="email" />
-          <SettingField label="Phone Number" value="+234 (0)903-123-4567" />
-        </div>
-        <label className="form-field form-field--wide"><span>About</span><textarea defaultValue="Product-minded React developer focused on accessible, reliable web experiences." rows={7} /></label>
-        {notice && <p className="form-notice" role="status">{notice}</p>}
-        <button className="platform-primary" type="submit"><Save /> Save changes</button>
-      </section>
-      <aside className="talent-settings__blank" aria-label="Reserved profile panel" />
-    </form>
-  );
-}
-
-function SettingField({ label, value, type = "text" }: { label: string; value: string; type?: string }) {
-  return <label className="form-field"><span>{label}</span><input defaultValue={value} type={type} /></label>;
 }
 
 function JobsView() {
