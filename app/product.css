@@ -62,12 +62,13 @@
 
 /* Public product shell */
 .public-product-shell { min-height: 100vh; background: #fbfcfc; color: var(--app-copy); font-family: var(--font-poppins), sans-serif; }
-.public-product-nav { display: flex; height: 92px; align-items: center; gap: 44px; border-bottom: 1px solid rgba(255,255,255,.08); background: var(--app-ink); color: white; padding: 0 max(28px, calc((100vw - 1240px) / 2)); }
+.public-product-nav { position: relative; z-index: 90; display: flex; height: 92px; align-items: center; gap: 44px; border-bottom: 1px solid rgba(255,255,255,.08); background: var(--app-ink); color: white; padding: 0 max(28px, calc((100vw - 1240px) / 2)); }
 .public-product-brand { display: flex; width: 144px; align-items: center; }
 .public-product-brand .oreno-logo { transform: scale(.9); transform-origin: left center; }
 .public-product-nav nav { display: flex; gap: 28px; margin-left: auto; font-size: 14px; }
+.public-product-nav nav a { white-space: nowrap; }
 .public-product-nav nav a:hover { color: var(--app-teal); }
-.public-product-cta { display: inline-flex; min-height: 44px; align-items: center; border-radius: 22px; background: var(--app-pink); padding: 0 18px; font-size: 13px; }
+.public-product-cta { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: 9px; border: 0; border-radius: 22px; background: var(--app-pink); color: white; padding: 0 18px; font: inherit; font-size: 13px; white-space: nowrap; cursor: pointer; }
 .public-product-footer { display: grid; grid-template-columns: 240px 1fr auto; align-items: center; gap: 30px; background: #dfe4e3; padding: 70px max(28px, calc((100vw - 1240px) / 2)); }
 .public-product-footer .public-product-brand { color: var(--app-ink); }
 .public-product-footer p { max-width: 470px; margin: 0; color: #53605e; font-size: 13px; }
@@ -713,6 +714,7 @@
 @media (max-width: 900px) {
   .public-product-nav { padding-inline: 24px; }
   .public-product-nav nav { display: none; }
+  .public-product-hiring-menu { margin-left: auto; }
   .public-product-footer { grid-template-columns: 1fr; padding-inline: 24px; }
   .catalogue-hero { padding-inline: 24px; }
   .catalogue-hero h1 { font-size: 44px; }
@@ -741,6 +743,7 @@
   .product-toolbar label, .product-toolbar select { width: 100%; min-height: 48px; }
   .public-product-nav { height: 76px; }
   .public-product-cta { min-height: 40px; padding-inline: 13px; font-size: 11px; }
+  .public-product-hiring-menu .hiring-menu__panel { width: min(270px, calc(100vw - 32px)); }
   .public-product-brand { width: 128px; }
   .public-product-brand .oreno-logo { transform: scale(.8); }
   .catalogue-hero { min-height: 320px; padding-block: 55px; }

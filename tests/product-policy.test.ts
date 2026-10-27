@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { navigationLinks } from "../data/site-content.ts";
+import { hiringMenuLinks, navigationLinks } from "../data/site-content.ts";
 import {
   canTransitionApplication,
   canTransitionJob,
@@ -27,10 +27,18 @@ test("primary marketing navigation enters real product journeys", () => {
     navigationLinks.map(({ label, href }) => [label, href]),
     [
       ["Find jobs", "/jobs"],
+      ["Request a demo", "/request-demo"],
+    ],
+  );
+});
+
+test("start hiring menu includes company and talent account journeys", () => {
+  assert.deepEqual(
+    hiringMenuLinks.map(({ label, href }) => [label, href]),
+    [
+      ["Start hiring", "/company/signup"],
       ["Join as talent", "/auth/talent-signup"],
       ["Talent login", "/auth/talent-login"],
-      ["Start hiring", "/company/signup"],
-      ["Request a demo", "/request-demo"],
     ],
   );
 });

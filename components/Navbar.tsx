@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
+import { HiringMenu } from "@/components/HiringMenu";
 import { Logo } from "@/components/Logo";
 import { navigationLinks } from "@/data/site-content";
 import { m, useReducedMotion } from "motion/react";
@@ -62,19 +63,21 @@ export function Navbar({ fixed = false }: NavbarProps) {
           id="mobile-navigation"
           className={`navbar__links ${open ? "navbar__links--open" : ""}`}
         >
-          {navigationLinks.map((link) => {
+          {navigationLinks.map((link, index) => {
             const featured = "featured" in link && link.featured;
 
             return (
-              <Link
-                key={link.label}
-                href={link.href}
-                className={`navbar__link ${featured ? "navbar__link--featured" : ""}`}
-                onClick={() => setOpen(false)}
-              >
-                {link.label}
-                {featured ? <span className="navbar__link-arrow" aria-hidden="true">→</span> : null}
-              </Link>
+              <Fragment key={link.label}>
+                {index === 1 ? <HiringMenu variant="marketing" onNavigate={() => setOpen(false)} /> : null}
+                <Link
+                  href={link.href}
+                  className={`navbar__link ${featured ? "navbar__link--featured" : ""}`}
+                  onClick={() => setOpen(false)}
+                >
+                  {link.label}
+                  {featured ? <span className="navbar__link-arrow" aria-hidden="true">→</span> : null}
+                </Link>
+              </Fragment>
             );
           })}
         </div>

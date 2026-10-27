@@ -1,9 +1,12 @@
 export const navigationLinks = [
   { label: "Find jobs", href: "/jobs" },
-  { label: "Join as talent", href: "/auth/talent-signup" },
-  { label: "Talent login", href: "/auth/talent-login" },
-  { label: "Start hiring", href: "/company/signup" },
   { label: "Request a demo", href: "/request-demo", featured: true },
+] as const;
+
+export const hiringMenuLinks = [
+  { label: "Start hiring", href: "/company/signup", description: "Build your company team" },
+  { label: "Join as talent", href: "/auth/talent-signup", description: "Create your talent profile" },
+  { label: "Talent login", href: "/auth/talent-login", description: "Manage applications and work" },
 ] as const;
 
 export const talentSlides = [
