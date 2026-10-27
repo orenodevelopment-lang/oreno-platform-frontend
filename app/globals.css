@@ -82,6 +82,11 @@ a {
   font-family: var(--font-raleway), sans-serif;
 }
 
+.oreno-logo__animated-wordmark {
+  position: absolute;
+  inset: 0;
+}
+
 .oreno-logo__mark {
   position: absolute;
   left: 12px;

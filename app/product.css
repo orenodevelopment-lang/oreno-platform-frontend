@@ -180,7 +180,7 @@
 .focused-state button { min-height: 46px; border: 0; border-radius: 23px; background: #9c2c43; color: white; padding: 0 20px; }
 .focused-state > a { margin-top: 18px; color: var(--app-pink); font-size: 12px; }
 .auth-journey { width: min(520px, calc(100% - 40px)); min-height: 730px; margin: 0 auto; padding: 70px 0; text-align: center; }
-.auth-journey > span { display: grid; width: 82px; height: 82px; margin: 0 auto; place-items: center; border-radius: 50%; background: var(--app-ink); }
+.auth-journey__brand { width: 144px; height: 48px; margin: 0 auto; }
 .auth-journey h1 { margin: 23px 0 7px; font-size: 34px; }
 .auth-journey > p { color: var(--app-muted); font-size: 13px; }
 .auth-journey form { display: grid; gap: 16px; margin-top: 30px; border: 1px solid #e0e6e4; border-radius: 17px; background: white; padding: 28px; text-align: left; }

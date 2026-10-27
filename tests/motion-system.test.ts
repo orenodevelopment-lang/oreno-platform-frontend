@@ -35,6 +35,32 @@ test("the root layout tolerates extension attributes and exposes the Figma mark"
   assert.match(layout, /data-scroll-behavior="smooth"/);
 });
 
+test("the full wordmark animates and replays across application routes", () => {
+  const logo = readFileSync(new URL("../components/Logo.tsx", import.meta.url), "utf8");
+  const globalStyles = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
+  const motionStyles = readFileSync(new URL("../app/motion.css", import.meta.url), "utf8");
+  const publicProduct = readFileSync(new URL("../components/product/PublicProduct.tsx", import.meta.url), "utf8");
+  const shells = [
+    "../components/Navbar.tsx",
+    "../components/product/PublicShell.tsx",
+    "../components/platform/PlatformShell.tsx",
+    "../components/platform/CompanyApp.tsx",
+    "../components/platform-admin/AdminShell.tsx",
+    "../components/platform-admin/AdminAuth.tsx",
+  ];
+
+  assert.match(logo, /usePathname/);
+  assert.match(logo, /key=\{pathname\}/);
+  assert.match(logo, /\{"reno"\.split\(""\)/);
+  assert.match(globalStyles, /\.oreno-logo__animated-wordmark/);
+  assert.match(motionStyles, /\.oreno-logo__mark \{ animation: motion-logo-mark/);
+  assert.match(motionStyles, /\.oreno-logo__letter \{ animation: motion-logo-letter/);
+  assert.match(publicProduct, /auth-journey__brand"><Logo dark/);
+  assert.doesNotMatch(publicProduct, /<span><Image src="\/assets\/figma\/oreno-mark\.svg"/);
+  for (const shell of shells) {
+    assert.match(readFileSync(new URL(shell, import.meta.url), "utf8"), /<Logo/);
+  }
+});
 test("the homepage ships its narrative motion without the exported artboard tail", () => {
   const page = readFileSync(new URL("../app/page.tsx", import.meta.url), "utf8");
   const showcase = readFileSync(new URL("../components/ShowcaseSection.tsx", import.meta.url), "utf8");
