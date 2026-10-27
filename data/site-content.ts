@@ -5,6 +5,7 @@ export const navigationLinks = [
 
 export const hiringMenuLinks = [
   { label: "Start hiring", href: "/company/signup", description: "Build your company team" },
+  { label: "Company sign in", href: "/company/login", description: "Access your hiring workspace" },
   { label: "Join as talent", href: "/auth/talent-signup", description: "Create your talent profile" },
   { label: "Talent login", href: "/auth/talent-login", description: "Manage applications and work" },
 ] as const;

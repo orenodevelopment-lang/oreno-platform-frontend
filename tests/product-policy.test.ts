@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 import { hiringMenuLinks, navigationLinks } from "../data/site-content.ts";
 import {
@@ -37,10 +38,19 @@ test("start hiring menu includes company and talent account journeys", () => {
     hiringMenuLinks.map(({ label, href }) => [label, href]),
     [
       ["Start hiring", "/company/signup"],
+      ["Company sign in", "/company/login"],
       ["Join as talent", "/auth/talent-signup"],
       ["Talent login", "/auth/talent-login"],
     ],
   );
+
+  const hiringMenu = readFileSync(new URL("../components/HiringMenu.tsx", import.meta.url), "utf8");
+  const homepageNav = readFileSync(new URL("../components/Navbar.tsx", import.meta.url), "utf8");
+  const publicShell = readFileSync(new URL("../components/product/PublicShell.tsx", import.meta.url), "utf8");
+  assert.match(hiringMenu, /hiringMenuLinks\.map/);
+  assert.match(homepageNav, /<HiringMenu variant="marketing"/);
+  assert.match(publicShell, /<HiringMenu variant="public"/);
+  assert.doesNotMatch(publicShell.match(/<header[\s\S]*?<\/header>/)?.[0] ?? "", /Join as talent|Talent login/);
 });
 
 test("application state transitions reject skipped or terminal changes", () => {
