@@ -48,6 +48,10 @@ test("start hiring menu includes company and talent account journeys", () => {
   const homepageNav = readFileSync(new URL("../components/Navbar.tsx", import.meta.url), "utf8");
   const publicShell = readFileSync(new URL("../components/product/PublicShell.tsx", import.meta.url), "utf8");
   assert.match(hiringMenu, /hiringMenuLinks\.map/);
+  assert.match(hiringMenu, /onPointerEnter/);
+  assert.match(hiringMenu, /IDLE_ROTATION_MS/);
+  assert.match(hiringMenu, /AnimatePresence/);
+  assert.match(hiringMenu, /Oreno pathways/);
   assert.match(homepageNav, /<HiringMenu variant="marketing"/);
   assert.match(publicShell, /<HiringMenu variant="public"/);
   assert.doesNotMatch(publicShell.match(/<header[\s\S]*?<\/header>/)?.[0] ?? "", /Join as talent|Talent login/);

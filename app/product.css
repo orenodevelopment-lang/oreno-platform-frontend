@@ -743,7 +743,9 @@
   .product-toolbar label, .product-toolbar select { width: 100%; min-height: 48px; }
   .public-product-nav { height: 76px; }
   .public-product-cta { min-height: 40px; padding-inline: 13px; font-size: 11px; }
-  .public-product-hiring-menu .hiring-menu__panel { width: min(270px, calc(100vw - 32px)); }
+  .public-product-hiring-trigger { min-width: 150px; }
+  .public-product-hiring-trigger .hiring-menu__trigger-label { min-width: 94px; }
+  .public-product-hiring-menu .hiring-menu__panel { width: min(312px, calc(100vw - 32px)); }
   .public-product-brand { width: 128px; }
   .public-product-brand .oreno-logo { transform: scale(.8); }
   .catalogue-hero { min-height: 320px; padding-block: 55px; }
