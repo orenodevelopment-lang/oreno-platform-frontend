@@ -81,3 +81,22 @@ test("password policy requires length, letters and numbers", () => {
   assert.equal(validatePassword("longpassword"), false);
   assert.equal(validatePassword("oreno2026"), true);
 });
+
+test("browser transport fails closed in production and keeps operation retry keys stable", () => {
+  const source = readFileSync(new URL("../lib/api/client.ts", import.meta.url), "utf8");
+  assert.match(source, /API_CONFIGURATION_ERROR/);
+  assert.match(source, /NEXT_PUBLIC_ORENO_API_URL is missing/);
+  assert.match(source, /idempotencyKey \?\? requestId\(\)/);
+  assert.match(source, /for \(let attempt = 0; attempt <= retries/);
+  assert.match(source, /X-Organisation-Id/);
+});
+
+test("talent applications upload a real CV and show managed screening progress", () => {
+  const service = readFileSync(new URL("../lib/platform/product-service.ts", import.meta.url), "utf8");
+  const screens = readFileSync(new URL("../components/product/TalentProductScreens.tsx", import.meta.url), "utf8");
+  assert.match(service, /category:\s*"CV"/);
+  assert.match(service, /attachments:\s*\[\{ fileId: cv\.id, kind: "CV"/);
+  assert.match(service, /\/screening\/information/);
+  assert.match(screens, /Application received — awaiting Oreno screening/);
+  assert.match(screens, /Oreno screening timeline/);
+});

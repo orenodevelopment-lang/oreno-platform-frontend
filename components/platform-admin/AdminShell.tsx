@@ -26,6 +26,7 @@ const navSections: Array<{ title: string; items: NavItem[] }> = [
   { title: "Talent & hiring", items: [
     { href: "/platform-admin/talent-review", label: "Talent review", icon: <ClipboardCheck />, permission: "vetting:view" },
     { href: "/platform-admin/jobs", label: "Job moderation", icon: <BriefcaseBusiness />, permission: "jobs:view" },
+    { href: "/platform-admin/screening", label: "Recruitment screening", icon: <ShieldCheck />, permission: "screening:view" },
     { href: "/platform-admin/applications", label: "Applications", icon: <FileText />, permission: "hiring:view" },
   ] },
   { title: "Operations", items: [
@@ -47,6 +48,7 @@ export const adminPageMeta: Record<string, { title: string; description: string 
   "access/roles": { title: "Admin roles", description: "Exact platform permissions and administrator assignments" },
   "talent-review": { title: "Talent review", description: "Vetting queues, evidence, and human decisions" },
   jobs: { title: "Job moderation", description: "Review reports and apply platform listing policy" },
+  screening: { title: "Recruitment screening", description: "Human CV review, Oreno interviews, approval, and explicit employer release" },
   applications: { title: "Applications & placements", description: "Cross-platform hiring and workforce linkage" },
   placements: { title: "Placements", description: "Confirmed placements and linked staff assignments" },
   replacements: { title: "Replacement requests", description: "Policy-based eligibility and operations decisions" },

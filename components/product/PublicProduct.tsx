@@ -76,9 +76,26 @@ export function PublicLeadForm({ kind }: { kind: "demo" | "contact" }) {
   return <PublicShell><section className="public-form-page"><div><span className="product-eyebrow">{kind === "demo" ? "Company teams" : "Contact Oreno"}</span><h1>{kind === "demo" ? "See how Oreno can support your next hire" : "Tell us how we can help"}</h1><p>{kind === "demo" ? "Share a little about your team and the roles you need." : "Choose a topic and leave a message. We’ll confirm that the request was received."}</p><ul className="public-check-list"><li><CheckCircle2 /> Curated talent and explainable matching</li><li><CheckCircle2 /> Hiring workflow and onboarding support</li><li><CheckCircle2 /> Tasks, teams and compensation visibility</li></ul></div>{submitted ? <div className="public-success" role="status"><CheckCircle2 /><h2>Request received</h2><p>Thanks. Your submission has been recorded.</p><Link href="/">Return to the homepage</Link></div> : <form onSubmit={submit} noValidate><label>Full name<input name="name" aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "lead-name-error" : undefined} />{errors.name && <FieldError id="lead-name-error">{errors.name}</FieldError>}</label><label>{kind === "demo" ? "Work email" : "Email address"}<input name="email" type="email" aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? "lead-email-error" : undefined} />{errors.email && <FieldError id="lead-email-error">{errors.email}</FieldError>}</label>{kind === "demo" ? <><label>Company<input name="company" required /></label><label>Team size<select name="teamSize"><option>1–10</option><option>11–50</option><option>51–200</option><option>201+</option></select></label></> : <label>Topic<select name="topic"><option>Hiring</option><option>Talent support</option><option>Partnership</option><option>Other</option></select></label>}<label>Message<textarea name="message" rows={6} /></label>{errors.form && <FieldError id="lead-form-error">{errors.form}</FieldError>}<button type="submit" disabled={submitting}>{submitting ? "Sending…" : "Send request"} <ArrowRight /></button></form>}</section></PublicShell>;
 }
 
-export function NewsletterState({ mode }: { mode: "confirmed" | "unsubscribe" }) {
-  const [complete, setComplete] = useState(mode === "confirmed");
-  return <PublicShell><section className="focused-state"><span className="focused-state__icon"><Mail /></span><h1>{mode === "confirmed" || complete ? (mode === "confirmed" ? "Your subscription is confirmed" : "You are unsubscribed") : "Unsubscribe from Oreno updates?"}</h1><p>{mode === "confirmed" ? "We’ll send occasional product and hiring updates to your confirmed address." : complete ? "No further newsletter messages will be sent to this address." : "Account and security messages are not affected."}</p>{mode === "unsubscribe" && !complete && <button className="is-danger" type="button" onClick={() => setComplete(true)}>Confirm unsubscribe</button>}<Link href="/">Return to Oreno</Link></section></PublicShell>;
+export function NewsletterState({ mode, token }: { mode: "confirm" | "unsubscribe"; token: string }) {
+  const [state, setState] = useState<"loading" | "ready" | "complete" | "error">(mode === "confirm" ? (token ? "loading" : "error") : "ready");
+  const [error, setError] = useState(token ? "" : "This subscription link is missing its token.");
+
+  useEffect(() => {
+    if (mode !== "confirm" || !token) return;
+    productService.confirmNewsletter(token)
+      .then(() => setState("complete"))
+      .catch((cause: unknown) => { setError(cause instanceof Error ? cause.message : "This confirmation link is invalid or expired."); setState("error"); });
+  }, [mode, token]);
+
+  async function unsubscribe() {
+    if (!token) { setError("This unsubscribe link is missing its token."); setState("error"); return; }
+    setState("loading");
+    try { await productService.unsubscribeNewsletter(token); setState("complete"); }
+    catch (cause) { setError(cause instanceof Error ? cause.message : "This unsubscribe link is invalid or expired."); setState("error"); }
+  }
+
+  const complete = state === "complete";
+  return <PublicShell><section className="focused-state"><span className="focused-state__icon"><Mail /></span><h1>{state === "loading" ? "Checking your link…" : state === "error" ? "We couldn’t update your subscription" : complete ? (mode === "confirm" ? "Your subscription is confirmed" : "You are unsubscribed") : "Unsubscribe from Oreno updates?"}</h1><p>{state === "error" ? error : complete ? (mode === "confirm" ? "We’ll send occasional product and hiring updates to your confirmed address." : "No further newsletter messages will be sent to this address.") : "Account and security messages are not affected."}</p>{mode === "unsubscribe" && state === "ready" && <button className="is-danger" type="button" onClick={unsubscribe}>Confirm unsubscribe</button>}<Link href="/">Return to Oreno</Link></section></PublicShell>;
 }
 
 export function AuthJourney({

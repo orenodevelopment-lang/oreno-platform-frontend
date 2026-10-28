@@ -30,7 +30,26 @@ export interface LoginInput {
   deviceLabel?: string;
 }
 
+export interface CompanyRegistrationInput {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  organisationName: string;
+  acceptTerms: true;
+}
+
 export const authApi = {
+  registerCompany: (input: CompanyRegistrationInput) => apiRequest<{
+    userId: string;
+    accountType: "COMPANY_OWNER";
+    organisationId: string;
+    nextStep: "VERIFY_EMAIL";
+  }>("/api/v1/auth/register", {
+    method: "POST",
+    idempotent: true,
+    body: { accountType: "COMPANY_OWNER", ...input },
+  }),
   login: (input: LoginInput) => apiRequest<{ user: AuthContextResponse["user"]; session: { expiresAt: string } }>("/api/v1/auth/login", { method: "POST", body: input }),
   current: () => apiRequest<AuthContextResponse>("/api/v1/auth/me"),
   completeTwoFactor: (code: string) => apiRequest<{ authenticated: true }>("/api/v1/auth/2fa/challenge", { method: "POST", body: { code } }),
@@ -38,6 +57,7 @@ export const authApi = {
   confirmTwoFactorSetup: (code: string, setupToken: string) => apiRequest<{ enabled: true; recoveryCodes: string[] }>("/api/v1/auth/2fa/confirm", { method: "POST", body: { code, setupToken } }),
   disableTwoFactor: (password: string, code: string) => apiRequest<{ enabled: false }>("/api/v1/auth/2fa/disable", { method: "POST", body: { password, code } }),
   forgotPassword: (email: string) => apiRequest<{ accepted: true }>("/api/v1/auth/password/forgot", { method: "POST", body: { email } }),
+  resendVerification: (email: string) => apiRequest<{ accepted: true }>("/api/v1/auth/email/resend", { method: "POST", body: { email } }),
   resetPassword: (token: string, password: string) => apiRequest<{ reset: true }>("/api/v1/auth/password/reset", { method: "POST", body: { token, password } }),
   changePassword: (currentPassword: string, newPassword: string) => apiRequest<{ changed: true }>("/api/v1/auth/password/change", { method: "POST", body: { currentPassword, newPassword } }),
   sessions: () => apiRequest<{ sessions: Array<{ id: string; current: boolean; deviceLabel: string | null; lastSeenAt: string; expiresAt: string }> }>("/api/v1/auth/sessions"),

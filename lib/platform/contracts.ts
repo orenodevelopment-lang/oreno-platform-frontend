@@ -60,6 +60,7 @@ export interface PublicJobDetail extends PublicJobSummary {
 
 export interface JobRecord {
   id: string;
+  updatedAt?: string;
   title: string;
   department: string;
   openings: number;
@@ -68,10 +69,12 @@ export interface JobRecord {
   deadline: string;
   compensation: string;
   status: JobStatus;
+  description?: string;
 }
 
 export interface ApplicationRecord {
   id: string;
+  updatedAt?: string;
   candidateId: string;
   candidateName: string;
   jobId: string;
@@ -81,6 +84,25 @@ export interface ApplicationRecord {
   portfolio: string;
   coverNote: string;
   statusHistory: Array<{ status: ApplicationStatus; at: string; note?: string }>;
+  screeningStatus?: string;
+  screeningMessage?: string;
+  screeningUpdatedAt?: string;
+  releasedAt?: string;
+  employerScreeningSummary?: string;
+}
+
+export interface TalentScreeningRecord {
+  applicationId: string;
+  status: string;
+  updatedAt: string;
+  candidateMessage: string;
+  failureReason: string;
+  releasedAt: string;
+  company: string;
+  jobTitle: string;
+  timeline: Array<{ status: string; action: string; reason?: string; at: string }>;
+  informationRequests: Array<{ id: string; message: string; respondedAt?: string; createdAt: string }>;
+  interviews: Array<{ id: string; status: string; mode: string; startsAt: string; endsAt: string; timeZone: string; meetingUrl: string; location: string; feedback: string; outcome: string; updatedAt: string }>;
 }
 
 export interface MatchExplanation {
@@ -100,6 +122,7 @@ export interface ShortlistRecord {
 
 export interface InterviewRecord {
   id: string;
+  updatedAt?: string;
   applicationId: string;
   candidateName: string;
   jobTitle: string;
@@ -225,7 +248,7 @@ export interface DemoRequestInput { name: string; workEmail: string; company: st
 export interface ContactRequestInput { name: string; email: string; topic: string; message: string }
 export interface InvitationAcceptanceInput { token: string; firstName: string; lastName: string; password: string }
 export interface JobStatusTransitionInput { jobId: string; status: JobStatus; reason?: string }
-export interface ApplicationCreateInput { jobId: string; mode: "quick" | "standard"; coverNote?: string; answers?: Record<string, string> }
+export interface ApplicationCreateInput { jobId: string; mode: "quick" | "standard"; cvFile: File; coverNote?: string; answers?: Record<string, string> }
 export interface InterviewUpsertInput { applicationId: string; startsAt: string; durationMinutes: number; participants: string[]; meetingUrl: string }
 export interface InterviewOutcomeInput { interviewId: string; outcome: "Advance" | "Hold" | "Reject"; notes: string }
 export interface OfferDecisionInput { offerId: string; decision: "accept" | "reject"; note?: string }

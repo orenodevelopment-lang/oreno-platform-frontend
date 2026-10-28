@@ -2,7 +2,8 @@ import type { AdminPermission, AdminRole } from "./contracts.ts";
 
 const allPermissions: AdminPermission[] = [
   "overview:view", "companies:view", "companies:manage", "users:view", "users:manage", "admins:manage",
-  "vetting:view", "vetting:decide", "jobs:view", "jobs:moderate", "hiring:view", "replacements:manage",
+  "vetting:view", "vetting:decide", "jobs:view", "jobs:moderate", "hiring:view",
+  "screening:view", "screening:review", "screening:release", "replacements:manage",
   "support:view", "support:manage", "payments:view", "payments:review", "announcements:view",
   "announcements:manage", "configuration:view", "configuration:manage", "analytics:view", "exports:create",
   "audit:view", "audit:export", "system:view", "system:retry", "account:manage",
@@ -11,7 +12,7 @@ const allPermissions: AdminPermission[] = [
 export const adminRolePermissions: Record<AdminRole, AdminPermission[]> = {
   "Platform Owner": allPermissions,
   "Operations Admin": allPermissions.filter((permission) => !["admins:manage", "audit:export"].includes(permission)),
-  "Talent Reviewer": ["overview:view", "vetting:view", "vetting:decide", "jobs:view", "hiring:view", "account:manage"],
+  "Talent Reviewer": ["overview:view", "vetting:view", "vetting:decide", "jobs:view", "hiring:view", "screening:view", "screening:review", "account:manage"],
   "Support Agent": ["overview:view", "companies:view", "users:view", "hiring:view", "support:view", "support:manage", "account:manage"],
   "Finance Admin": ["overview:view", "companies:view", "payments:view", "payments:review", "analytics:view", "exports:create", "audit:view", "account:manage"],
   "Read-only Analyst": ["overview:view", "companies:view", "users:view", "vetting:view", "jobs:view", "hiring:view", "support:view", "payments:view", "announcements:view", "configuration:view", "analytics:view", "audit:view", "system:view", "account:manage"],
@@ -31,6 +32,7 @@ export const platformAdminRoutes = [
   "/platform-admin/talent-review",
   "/platform-admin/talent-review/ibrahim-diallo",
   "/platform-admin/jobs",
+  "/platform-admin/screening",
   "/platform-admin/applications",
   "/platform-admin/placements",
   "/platform-admin/replacements",
@@ -52,6 +54,7 @@ const routePermissions: Array<{ prefix: string; permission: AdminPermission }> =
   { prefix: "access/roles", permission: "admins:manage" },
   { prefix: "talent-review", permission: "vetting:view" },
   { prefix: "jobs", permission: "jobs:view" },
+  { prefix: "screening", permission: "screening:view" },
   { prefix: "applications", permission: "hiring:view" },
   { prefix: "placements", permission: "hiring:view" },
   { prefix: "replacements", permission: "hiring:view" },
@@ -102,6 +105,8 @@ export const adminApiRoutes = {
   jobs: "/api/v1/admin/jobs",
   jobModeration: (id: string) => `/api/v1/admin/jobs/${id}/moderation`,
   applications: "/api/v1/admin/applications",
+  screening: "/api/v1/admin/screening/applications",
+  screeningApplication: (id: string) => `/api/v1/admin/screening/applications/${id}`,
   placements: "/api/v1/admin/placements",
   replacements: "/api/v1/admin/replacements",
   support: "/api/v1/admin/support",

@@ -12,12 +12,18 @@ export interface ApiRequestOptions extends Omit<RequestInit, "body"> {
   body?: BodyInit | object | null;
   query?: Record<string, QueryValue>;
   idempotent?: boolean;
+  idempotencyKey?: string;
+  organisationId?: string;
+  retries?: number;
+  direct?: boolean;
+  allowErrorStatuses?: number[];
   raw?: boolean;
 }
 
 const unsafeMethods = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 
-export const API_BASE_URL = (process.env.NEXT_PUBLIC_ORENO_API_URL ?? "http://localhost:4000")
+const configuredApiBaseUrl = process.env.NEXT_PUBLIC_ORENO_API_URL?.trim();
+export const API_BASE_URL = (configuredApiBaseUrl || (process.env.NODE_ENV === "production" ? "" : "http://localhost:4000"))
   .replace(/\/$/, "");
 export const CSRF_COOKIE_NAME = process.env.NEXT_PUBLIC_ORENO_CSRF_COOKIE ?? "oreno_csrf";
 export const CSRF_HEADER_NAME = process.env.NEXT_PUBLIC_ORENO_CSRF_HEADER ?? "x-oreno-csrf";
@@ -54,6 +60,13 @@ function requestId() {
 }
 
 function urlFor(path: string, query?: Record<string, QueryValue>) {
+  if (!API_BASE_URL && !path.startsWith("http")) {
+    throw new ApiClientError({
+      status: 0,
+      code: "API_CONFIGURATION_ERROR",
+      message: "Oreno cannot connect because NEXT_PUBLIC_ORENO_API_URL is missing from this production deployment.",
+    });
+  }
   const url = new URL(path.startsWith("http") ? path : `${API_BASE_URL}${path}`);
   Object.entries(query ?? {}).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== "") url.searchParams.set(key, String(value));
@@ -76,12 +89,24 @@ function dispatch(name: string, detail?: unknown) {
 }
 
 export async function apiRequest<T>(path: string, options: ApiRequestOptions = {}): Promise<T> {
+  const {
+    body: inputBody,
+    query,
+    idempotent,
+    idempotencyKey,
+    organisationId,
+    retries = idempotent ? 1 : 0,
+    direct,
+    allowErrorStatuses = [],
+    raw,
+    ...requestInit
+  } = options;
   const method = (options.method ?? "GET").toUpperCase();
   const headers = new Headers(options.headers);
   headers.set("Accept", "application/json");
-  headers.set("X-Request-Id", requestId());
+  if (organisationId) headers.set("X-Organisation-Id", organisationId);
 
-  let body = options.body as BodyInit | null | undefined;
+  let body = inputBody as BodyInit | null | undefined;
   if (body && !(body instanceof FormData) && !(body instanceof Blob) && typeof body !== "string") {
     headers.set("Content-Type", "application/json");
     body = JSON.stringify(body);
@@ -89,21 +114,42 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
   if (unsafeMethods.has(method)) {
     const csrf = readCookie(CSRF_COOKIE_NAME);
     if (csrf) headers.set(CSRF_HEADER_NAME, decodeURIComponent(csrf));
-    if (options.idempotent) headers.set("Idempotency-Key", requestId());
+    if (idempotent || idempotencyKey) headers.set("Idempotency-Key", idempotencyKey ?? requestId());
   }
 
-  const response = await fetch(urlFor(path, options.query), {
-    ...options,
-    method,
-    body,
-    headers,
-    credentials: "include",
-    cache: options.cache ?? "no-store",
-  });
+  let response: Response | undefined;
+  let lastNetworkError: unknown;
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    headers.set("X-Request-Id", requestId());
+    try {
+      response = await fetch(urlFor(path, query), {
+        ...requestInit,
+        method,
+        body,
+        headers,
+        credentials: "include",
+        cache: options.cache ?? "no-store",
+      });
+      if (![502, 503, 504].includes(response.status) || allowErrorStatuses.includes(response.status) || attempt === retries) break;
+    } catch (cause) {
+      lastNetworkError = cause;
+      if (attempt === retries) break;
+    }
+  }
 
-  if (options.raw) return response as T;
+  if (!response) {
+    const error = new ApiClientError({
+      status: 0,
+      code: "NETWORK_ERROR",
+      message: lastNetworkError instanceof Error ? lastNetworkError.message : "The Oreno API could not be reached.",
+    });
+    dispatch("oreno:api-error", error);
+    throw error;
+  }
+
+  if (raw) return response as T;
   const payload = response.status === 204 ? undefined : await response.json().catch(() => undefined);
-  if (!response.ok) {
+  if (!response.ok && !allowErrorStatuses.includes(response.status)) {
     const source = payload && typeof payload === "object" && "error" in payload
       ? (payload as { error: JsonRecord }).error
       : {};
@@ -119,6 +165,7 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
     throw error;
   }
 
+  if (direct) return payload as T;
   const envelope = payload as ApiEnvelope<T> | undefined;
   return envelope?.data as T;
 }

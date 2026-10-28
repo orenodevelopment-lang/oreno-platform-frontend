@@ -18,6 +18,9 @@ export type AdminPermission =
   | "jobs:view"
   | "jobs:moderate"
   | "hiring:view"
+  | "screening:view"
+  | "screening:review"
+  | "screening:release"
   | "replacements:manage"
   | "support:view"
   | "support:manage"
@@ -123,6 +126,52 @@ export interface AdminHiringRecord {
   appliedAt: string;
   stage: string;
   status: "Pending" | "Interview" | "Offer" | "Placed" | "Rejected";
+}
+
+export type ApplicationScreeningStatus =
+  | "PENDING_CV_REVIEW"
+  | "CV_REVIEW_IN_PROGRESS"
+  | "ADDITIONAL_INFO_REQUIRED"
+  | "CV_APPROVED"
+  | "INTERVIEW_SCHEDULED"
+  | "INTERVIEW_COMPLETED"
+  | "FINAL_REVIEW_PENDING"
+  | "APPROVED_FOR_SUBMISSION"
+  | "RELEASED_TO_COMPANY"
+  | "NOT_SELECTED"
+  | "WITHDRAWN"
+  | "CANCELLED";
+
+export interface ScreeningQueueRecord {
+  id: string;
+  applicationId: string;
+  updatedAt: string;
+  status: ApplicationScreeningStatus;
+  talent: string;
+  email: string;
+  job: string;
+  company: string;
+  organisationId: string;
+  submittedAt: string;
+  dueAt: string | null;
+  assignee: string | null;
+  currentCvFileId: string;
+}
+
+export interface ScreeningDetailRecord extends ScreeningQueueRecord {
+  coverLetter: string;
+  requirements: string[];
+  answers: Array<{ question: string; answer: string }>;
+  skills: string[];
+  cv: { id: string; name: string; mimeType: string; sizeBytes: number; status: string } | null;
+  cvReviews: Array<{ id: string; decision: string; reviewer: string; createdAt: string; candidateFeedback: string | null; employerSummary: string | null }>;
+  interviews: Array<{ id: string; status: string; mode: string; startsAt: string; endsAt: string; timeZone: string; meetingUrl: string | null; outcome: string | null; updatedAt: string }>;
+  informationRequests: Array<{ id: string; message: string; responseText: string | null; respondedAt: string | null; createdAt: string }>;
+  history: Array<{ id: string; action: string; fromStatus: string | null; toStatus: string; reason: string | null; actor: string; createdAt: string }>;
+  employerSummary: string | null;
+  candidateMessage: string | null;
+  approvedAt: string | null;
+  releasedAt: string | null;
 }
 
 export interface AdminPlacementRecord {

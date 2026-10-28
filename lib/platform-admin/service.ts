@@ -23,6 +23,9 @@ import type {
   PlatformMetric,
   PolicyRecord,
   ServiceHealthRecord,
+  ScreeningDetailRecord,
+  ScreeningQueueRecord,
+  ApplicationScreeningStatus,
   SupportCaseRecord,
   VettingQueueRecord,
 } from "./contracts";
@@ -74,10 +77,70 @@ function application(rowValue: unknown): AdminHiringRecord {
   return { id: textValue(row.id), talent: personName(asRecord(talent.user)), job: textValue(job.title), company: textValue(organisation.name), appliedAt: dateLabel(row.submittedAt), stage: titleCase(row.status), status: ({ Submitted: "Pending", "Under Review": "Pending", Shortlisted: "Pending", Interviewing: "Interview", "Offer Pending": "Offer", Accepted: "Placed", Rejected: "Rejected", Withdrawn: "Rejected" }[titleCase(row.status)] ?? "Pending") as AdminHiringRecord["status"] };
 }
 
+function screeningQueue(rowValue: unknown): ScreeningQueueRecord {
+  const row = asRecord(rowValue);
+  const applicationRow = asRecord(row.application);
+  const job = asRecord(applicationRow.job);
+  const organisation = asRecord(job.organisation);
+  const talent = asRecord(applicationRow.talentProfile);
+  const candidate = asRecord(talent.user);
+  const reviewer = asRecord(row.assignedReviewer);
+  const applicationId = textValue(row.applicationId);
+  const version = textValue(row.updatedAt);
+  if (applicationId && version) updatedAt.set(`screening:${applicationId}`, version);
+  return {
+    id: textValue(row.id),
+    applicationId,
+    updatedAt: version,
+    status: textValue(row.status, "PENDING_CV_REVIEW") as ApplicationScreeningStatus,
+    talent: personName(candidate),
+    email: textValue(candidate.email),
+    job: textValue(job.title),
+    company: textValue(organisation.name),
+    organisationId: textValue(applicationRow.organisationId) || textValue(organisation.id),
+    submittedAt: dateLabel(applicationRow.submittedAt),
+    dueAt: row.dueAt ? dateLabel(row.dueAt) : null,
+    assignee: row.assignedReviewer ? personName(reviewer) : null,
+    currentCvFileId: textValue(row.currentCvFileId),
+  };
+}
+
+function screeningDetail(rowValue: unknown): ScreeningDetailRecord {
+  const row = asRecord(rowValue);
+  const base = screeningQueue(row);
+  const applicationRow = asRecord(row.application);
+  const job = asRecord(applicationRow.job);
+  const talent = asRecord(applicationRow.talentProfile);
+  const cvReviews = asArray(row.cvReviews).map(asRecord);
+  const reviewedFile = asRecord(cvReviews.find((item) => textValue(item.fileId) === base.currentCvFileId)?.file ?? cvReviews[0]?.file);
+  return {
+    ...base,
+    coverLetter: textValue(applicationRow.coverLetter),
+    requirements: asArray(job.requirements).map((item) => textValue(asRecord(item).description) || textValue(asRecord(item).label)).filter(Boolean),
+    answers: asArray(applicationRow.answers).map((item) => { const answer = asRecord(item); return { question: textValue(answer.question) || textValue(answer.questionKey), answer: textValue(answer.answer) }; }),
+    skills: asArray(talent.skills).map((item) => textValue(asRecord(asRecord(item).skill).name)).filter(Boolean),
+    cv: Object.keys(reviewedFile).length ? { id: textValue(reviewedFile.id), name: textValue(reviewedFile.originalName), mimeType: textValue(reviewedFile.mimeType), sizeBytes: numberValue(reviewedFile.sizeBytes), status: textValue(reviewedFile.status) } : null,
+    cvReviews: cvReviews.map((item) => ({ id: textValue(item.id), decision: textValue(item.decision), reviewer: personName(asRecord(item.reviewer)), createdAt: dateLabel(item.createdAt), candidateFeedback: textValue(item.candidateVisibleFeedback) || null, employerSummary: textValue(item.employerSafeSummary) || null })),
+    interviews: asArray(row.interviews).map((item) => { const interview = asRecord(item); return { id: textValue(interview.id), status: textValue(interview.status), mode: textValue(interview.mode), startsAt: textValue(interview.scheduledStartAt), endsAt: textValue(interview.scheduledEndAt), timeZone: textValue(interview.timeZone), meetingUrl: textValue(interview.meetingUrl) || null, outcome: textValue(interview.outcome) || null, updatedAt: textValue(interview.updatedAt) }; }),
+    informationRequests: asArray(row.informationRequests).map((item) => { const request = asRecord(item); return { id: textValue(request.id), message: textValue(request.message), responseText: textValue(request.responseText) || null, respondedAt: request.respondedAt ? dateLabel(request.respondedAt) : null, createdAt: dateLabel(request.createdAt) }; }),
+    history: asArray(row.history).map((item) => { const entry = asRecord(item); return { id: textValue(entry.id), action: textValue(entry.action), fromStatus: textValue(entry.fromStatus) || null, toStatus: textValue(entry.toStatus), reason: textValue(entry.reason) || null, actor: entry.actor ? personName(asRecord(entry.actor)) : "System", createdAt: dateLabel(entry.createdAt) }; }),
+    employerSummary: textValue(row.employerSummary) || null,
+    candidateMessage: textValue(row.candidateMessage) || null,
+    approvedAt: row.approvedAt ? dateLabel(row.approvedAt) : null,
+    releasedAt: row.releasedToCompanyAt ? dateLabel(row.releasedToCompanyAt) : null,
+  };
+}
+
+function screeningExpectedAt(applicationId: string) {
+  const value = updatedAt.get(`screening:${applicationId}`);
+  if (!value) throw new Error("Refresh this screening before recording a decision.");
+  return value;
+}
+
 function operationRows() {
   return liveValue<{ services: ServiceHealthRecord[]; jobs: FailedJobRecord[] }>("admin:operations", { services: [], jobs: [] }, async () => {
     const [health, operations] = await Promise.all([
-      apiRequest<Record<string, unknown>>("/health/ready"),
+      apiRequest<Record<string, unknown>>("/health/ready", { direct: true, allowErrorStatuses: [503] }),
       apiRequest<Record<string, unknown>>("/api/v1/admin/operations", { query: pageQuery(1, 100) }),
     ]);
     const queues = asRecord(operations.queues);
@@ -117,6 +180,58 @@ export const platformAdminService = {
   getVettingCase: (id: string) => platformAdminService.listVettingQueue().find((item) => item.id === id) ?? { id, slug: id, talentName: "Loading…", skills: [], submittedAt: "", ageHours: 0, assignee: null, priority: "Medium", status: "In review" },
   listJobs: (): ModeratedJobRecord[] => resourceList("admin:jobs", "jobs", "/api/v1/admin/jobs", (value) => { const row = track(asRecord(value)); return { id: textValue(row.id), slug: textValue(row.id), title: textValue(row.title), company: textValue(asRecord(row.organisation).name), hiringManager: textValue(row.hiringManagerId, "Unassigned"), postedAt: dateLabel(row.publishedAt ?? row.createdAt), applications: numberValue(asRecord(row._count).applications), reportCount: 0, status: row.moderationStatus === "FLAGGED" ? "Flagged" : row.moderationStatus === "REMOVED" ? "Removed" : row.status === "PAUSED" ? "Paused" : row.status === "CLOSED" ? "Closed" : row.moderationStatus === "NOT_REVIEWED" ? "Moderation" : "Published" }; }),
   listApplications: () => resourceList("admin:applications", "applications", "/api/v1/admin/applications", application),
+  listScreenings: (filters: { status?: string; q?: string } = {}): ScreeningQueueRecord[] => {
+    const key = `admin:screening:${filters.status ?? "all"}:${filters.q ?? ""}`;
+    return liveValue(key, [], async () => {
+      const response = await apiRequest<Record<string, unknown>>("/api/v1/admin/screening/applications", { query: pageQuery(1, 100, filters) });
+      return asArray(response.items).map(screeningQueue);
+    });
+  },
+  getScreening: (applicationId: string): ScreeningDetailRecord => liveValue(
+    `admin:screening-detail:${applicationId}`,
+    { id: "", applicationId, updatedAt: "", status: "PENDING_CV_REVIEW", talent: "Loading…", email: "", job: "", company: "", organisationId: "", submittedAt: "", dueAt: null, assignee: null, currentCvFileId: "", coverLetter: "", requirements: [], answers: [], skills: [], cv: null, cvReviews: [], interviews: [], informationRequests: [], history: [], employerSummary: null, candidateMessage: null, approvedAt: null, releasedAt: null },
+    async () => screeningDetail((await apiRequest<{ screening: unknown }>(`/api/v1/admin/screening/applications/${applicationId}`)).screening),
+  ),
+  assignScreening: async (applicationId: string, reviewerId: string, reason: string) => {
+    await apiRequest(`/api/v1/admin/screening/applications/${applicationId}/assign`, { method: "POST", body: { reviewerId, expectedUpdatedAt: screeningExpectedAt(applicationId), reason } });
+    invalidateLive("admin:screening"); invalidateLive(`admin:screening-detail:${applicationId}`);
+    return accepted("Screening reviewer assigned and recorded in history.");
+  },
+  reviewScreeningCv: async (applicationId: string, decision: "APPROVED" | "NOT_SELECTED" | "REQUEST_INFORMATION", reason: string, candidateFeedback?: string, employerSummary?: string) => {
+    await apiRequest(`/api/v1/admin/screening/applications/${applicationId}/cv-review`, { method: "POST", body: { decision, expectedUpdatedAt: screeningExpectedAt(applicationId), reason, rubric: { jobCriteriaReviewed: true, submittedCvReviewed: true }, privateNotes: reason, candidateVisibleFeedback: candidateFeedback || null, employerSafeSummary: employerSummary || null } });
+    invalidateLive("admin:screening"); invalidateLive(`admin:screening-detail:${applicationId}`);
+    return accepted("Human CV decision recorded and audited.");
+  },
+  requestScreeningInformation: async (applicationId: string, message: string, reason: string) => {
+    await apiRequest(`/api/v1/admin/screening/applications/${applicationId}/request-info`, { method: "POST", body: { expectedUpdatedAt: screeningExpectedAt(applicationId), reason, message } });
+    invalidateLive("admin:screening"); invalidateLive(`admin:screening-detail:${applicationId}`);
+    return accepted("Information request sent to the applicant.");
+  },
+  scheduleScreeningInterview: async (applicationId: string, input: { interviewerId: string; mode: string; startsAt: string; endsAt: string; timeZone: string; meetingUrl?: string; reason: string }) => {
+    await apiRequest(`/api/v1/admin/screening/applications/${applicationId}/interviews`, { method: "POST", body: { expectedUpdatedAt: screeningExpectedAt(applicationId), reason: input.reason, interviewerId: input.interviewerId, mode: input.mode, scheduledStartAt: input.startsAt, scheduledEndAt: input.endsAt, timeZone: input.timeZone, meetingUrl: input.meetingUrl || null } });
+    invalidateLive("admin:screening"); invalidateLive(`admin:screening-detail:${applicationId}`);
+    return accepted("Oreno screening interview scheduled.");
+  },
+  decideScreeningInterview: async (applicationId: string, interviewId: string, expectedUpdatedAt: string, outcome: "PASSED" | "FAILED" | "ON_HOLD" | "NEEDS_FOLLOWUP", reason: string, candidateFeedback?: string) => {
+    await apiRequest(`/api/v1/admin/screening/interviews/${interviewId}/outcome`, { method: "POST", body: { expectedUpdatedAt, reason, outcome, rubric: { roleEvidenceDiscussed: true, humanInterviewCompleted: true }, privateNotes: reason, candidateVisibleFeedback: candidateFeedback || null } });
+    invalidateLive("admin:screening"); invalidateLive(`admin:screening-detail:${applicationId}`);
+    return accepted("Oreno interview outcome recorded.");
+  },
+  decideScreeningFinal: async (applicationId: string, decision: "APPROVED" | "NOT_SELECTED" | "ON_HOLD", reason: string, candidateMessage?: string, employerSummary?: string) => {
+    await apiRequest(`/api/v1/admin/screening/applications/${applicationId}/final-decision`, { method: "POST", body: { expectedUpdatedAt: screeningExpectedAt(applicationId), reason, decision, candidateMessage: candidateMessage || null, employerSummary: employerSummary || null } });
+    invalidateLive("admin:screening"); invalidateLive(`admin:screening-detail:${applicationId}`);
+    return accepted(decision === "APPROVED" ? "Candidate approved for company submission; release is still required." : "Final screening decision recorded.");
+  },
+  releaseScreening: async (applicationId: string, organisationId: string, reason: string) => {
+    await apiRequest(`/api/v1/admin/screening/applications/${applicationId}/release`, { method: "POST", idempotent: true, body: { expectedUpdatedAt: screeningExpectedAt(applicationId), reason, organisationId, confirmation: true } });
+    invalidateLive("admin:screening"); invalidateLive(`admin:screening-detail:${applicationId}`); invalidateLive("admin:applications");
+    return accepted("Candidate explicitly forwarded to the correct company.");
+  },
+  openScreeningCv: async (applicationId: string) => {
+    const result = await apiRequest<{ downloadUrl: string }>(`/api/v1/admin/screening/applications/${applicationId}/cv/download`, { method: "POST" });
+    if (!result.downloadUrl) throw new Error("The secure CV link was not returned.");
+    window.open(result.downloadUrl, "_blank", "noopener,noreferrer");
+  },
   listPlacements: (): AdminPlacementRecord[] => resourceList("admin:placements", "placements", "/api/v1/admin/placements", (value) => { const row = asRecord(value); return { id: textValue(row.id), talent: personName(asRecord(asRecord(row.talentProfile).user)), job: textValue(row.title), company: textValue(asRecord(row.organisation).name), startDate: dateLabel(row.startDate), replacementEligible: row.replacementEligibleUntil ? new Date(textValue(row.replacementEligibleUntil)) > new Date() : false, staffLead: textValue(asRecord(row.staffAssignment).employeeCode, "Unassigned") }; }),
   listReplacementRequests: (): AdminReplacementRecord[] => resourceList("admin:replacements", "replacements", "/api/v1/admin/replacements", (value) => { const row = track(asRecord(value)); const placement = asRecord(row.placement); return { id: textValue(row.id), company: textValue(asRecord(row.organisation).name), talent: personName(asRecord(asRecord(placement.talentProfile).user)), role: textValue(placement.title), requestedAt: dateLabel(row.requestedAt ?? row.createdAt), eligibility: row.eligible === true ? "Eligible" : row.eligible === false ? "Not eligible" : "Review required", status: row.status === "RESOLVED" ? "Resolved" : row.status === "UNDER_REVIEW" ? "Under review" : "Requested" }; }),
   listSupportCases: (): SupportCaseRecord[] => resourceList("admin:support", "cases", "/api/v1/admin/support", (value) => { const row = track(asRecord(value)); return { id: textValue(row.id), slug: textValue(row.id), type: titleCase(row.category), subject: textValue(row.subject), company: textValue(asRecord(row.organisation).name) || null, talent: personName(asRecord(row.createdBy)) || null, assignee: row.assignedTo ? personName(row.assignedTo) : null, priority: row.priority === "URGENT" ? "High" : titleCase(row.priority, "Medium") as SupportCaseRecord["priority"], status: row.status === "RESOLVED" || row.status === "CLOSED" ? "Resolved" : row.status === "ESCALATED" ? "Escalated" : "Open", slaAgeHours: numberValue(row.slaAgeHours, 0), createdAt: dateLabel(row.createdAt) }; }),

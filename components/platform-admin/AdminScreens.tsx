@@ -19,6 +19,7 @@ import {
   AdminButton, AdminCard, AdminConfirmDialog, AdminKpi, AdminNotice, AdminSelect,
   AdminStateBoundary, AdminStatus, AdminTable, AdminTabs, AdminToast, AdminToolbar,
 } from "./AdminUI";
+import { ScreeningScreens } from "./ScreeningScreens";
 
 type ScreenProps = { route: string; roleSlug?: string; session: AdminSession; state?: AsyncState | null };
 type PendingAction = { title: string; target: string; description: string; confirmLabel: string; danger?: boolean; run: (reason: string) => Promise<AdminActionResult> };
@@ -205,6 +206,7 @@ export function AdminScreens(props: ScreenProps) {
   if (props.route === "access/roles") return <AdminRoles {...props} />;
   if (root === "talent-review") return <TalentReview {...props} detailSlug={detail} />;
   if (root === "jobs") return <Jobs {...props} />;
+  if (root === "screening") return <ScreeningScreens {...props} />;
   if (["applications", "placements", "replacements"].includes(root)) return <Hiring {...props} />;
   if (root === "support") return <Support {...props} detailSlug={detail} />;
   if (root === "payments") return <Payments {...props} />;

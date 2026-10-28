@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   ArrowRight,
@@ -36,6 +37,8 @@ import { motionDurations, motionEasings } from "@/lib/motion/tokens";
 import { useApiRevision } from "@/lib/api/live-store";
 import { productService } from "@/lib/platform/product-service";
 import { Logo } from "@/components/Logo";
+import { authApi } from "@/lib/api/auth";
+import { ApiClientError } from "@/lib/api/client";
 
 const companyTitles: Record<string, string> = {
   "": "Dashboard",
@@ -108,11 +111,67 @@ function CompanyRoute({ route }: { route: string }) {
 
 function AuthScreen({ mode }: { mode: "login" | "signup" }) {
   const isLogin = mode === "login";
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [notice, setNotice] = useState("");
-  function submit(event: FormEvent<HTMLFormElement>) {
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [requiresTwoFactor, setRequiresTwoFactor] = useState(false);
+
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setNotice(isLogin ? "Demo login successful. Opening dashboard…" : "Demo account created. Continue to your profile.");
+    setNotice("");
+    setError("");
+    setSubmitting(true);
+    const form = new FormData(event.currentTarget);
+    const email = String(form.get("email") ?? "").trim();
+    const password = String(form.get("password") ?? "");
+    try {
+      if (isLogin) {
+        await authApi.login({
+          email,
+          password,
+          twoFactorCode: String(form.get("twoFactorCode") ?? "").trim() || undefined,
+          deviceLabel: "Oreno web",
+        });
+        const { context } = await authApi.current();
+        if (!context.organisationId || context.organisationRole === "TALENT") {
+          throw new Error("This account does not have access to a company workspace.");
+        }
+        const requested = new URLSearchParams(window.location.search).get("next");
+        const next = requested?.startsWith("/company") && !requested.startsWith("//") ? requested : "/company";
+        setNotice("Signed in. Opening your workspace…");
+        router.replace(next);
+      } else {
+        await authApi.registerCompany({
+          email,
+          password,
+          firstName: String(form.get("firstName") ?? "").trim(),
+          lastName: String(form.get("lastName") ?? "").trim(),
+          organisationName: String(form.get("organisationName") ?? "").trim(),
+          acceptTerms: true,
+        });
+        router.push("/auth/verify-email?created=true");
+      }
+    } catch (cause) {
+      if (cause instanceof ApiClientError && cause.code === "TWO_FACTOR_REQUIRED") {
+        setRequiresTwoFactor(true);
+        setError("Enter the code from your authenticator app to continue.");
+      } else {
+        setError(cause instanceof Error ? cause.message : "The account request could not be completed.");
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function startProvider(provider: "google" | "linkedin") {
+    setError("");
+    try {
+      await authApi.oauthStart(provider, { mode: "login", next: "/company" });
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Provider sign-in could not be started.");
+    }
   }
   return (
     <main className="auth-screen">
@@ -121,15 +180,18 @@ function AuthScreen({ mode }: { mode: "login" | "signup" }) {
         <div className="auth-form-wrap">
           <h1>{isLogin ? "Welcome back!" : "Sign Up"}</h1>
           <p>{isLogin ? "Log in to continue building great teams" : "Get ready to supercharge your hiring process"}</p>
-          <div className="auth-socials"><button type="button"><b>G</b> {isLogin ? "Log in" : "Sign up"} with Google</button><button type="button"><b>in</b> {isLogin ? "Log in" : "Sign up"} with LinkedIn</button></div>
-          <div className="auth-divider"><span>or continue with email</span></div>
+          {isLogin && <><div className="auth-socials"><button type="button" onClick={() => startProvider("google")}><b>G</b> Log in with Google</button><button type="button" onClick={() => startProvider("linkedin")}><b>in</b> Log in with LinkedIn</button></div><div className="auth-divider"><span>or continue with email</span></div></>}
           <form onSubmit={submit}>
-            <label>Email address<input type="email" required placeholder="name@company.com" /></label>
-            <label>Password<span className="password-input"><input type={showPassword ? "text" : "password"} required minLength={6} placeholder="Enter your password" /><button type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword((current) => !current)}>{showPassword ? <EyeOff /> : <Eye />}</button></span></label>
+            {!isLogin && <><label>First name<input name="firstName" required autoComplete="given-name" /></label><label>Last name<input name="lastName" required autoComplete="family-name" /></label><label>Company name<input name="organisationName" required minLength={2} autoComplete="organization" /></label></>}
+            <label>Email address<input name="email" type="email" required autoComplete="email" placeholder="name@company.com" /></label>
+            <label>Password<span className="password-input"><input name="password" type={showPassword ? "text" : "password"} required minLength={12} autoComplete={isLogin ? "current-password" : "new-password"} placeholder="Enter your password" /><button type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword((current) => !current)}>{showPassword ? <EyeOff /> : <Eye />}</button></span></label>
+            {requiresTwoFactor && <label>Authenticator code<input name="twoFactorCode" inputMode="numeric" autoComplete="one-time-code" minLength={6} maxLength={32} required /></label>}
             {isLogin && <div className="auth-options"><label><input type="checkbox" /> Remember me</label><Link href="/auth/forgot-password">Forgot password?</Link></div>}
-            <button className="auth-submit" type="submit">{isLogin ? "Log in" : "Sign up"}<ArrowRight /></button>
+            {!isLogin && <label className="auth-options"><input name="acceptTerms" type="checkbox" required /> I agree to Oreno’s Terms and Privacy policy.</label>}
+            <button className="auth-submit" type="submit" disabled={submitting}>{submitting ? "Please wait…" : isLogin ? "Log in" : "Sign up"}<ArrowRight /></button>
           </form>
           {notice && <p className="form-notice" role="status">{notice}</p>}
+          {error && <p className="field-error" role="alert">{error}</p>}
           <p className="auth-switch">{isLogin ? "Don't have an account?" : "Already have an account?"} <Link href={isLogin ? "/company/signup" : "/company/login"}>{isLogin ? "Sign up" : "Log in"}</Link></p>
           {!isLogin && <small>By signing up, you agree to our <a href="#terms">Terms</a> and <a href="#privacy">Privacy policy</a>.</small>}
         </div>
@@ -164,20 +226,83 @@ function OnboardingScreen({ step }: { step: string }) {
 }
 
 function OnboardingForm({ step }: { step: string }) {
+  const router = useRouter();
+  const onboarding = productService.getCompanyOnboarding();
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
   const next = step === "personal" ? "company" : step === "company" ? "managers" : step === "managers" ? "accounts" : "done";
+
+  async function save(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!onboarding.updatedAt) {
+      setError("Your saved onboarding progress is still loading. Please try again in a moment.");
+      return;
+    }
+    setSaving(true);
+    setError("");
+    const form = new FormData(event.currentTarget);
+    try {
+      if (step === "personal") {
+        await productService.updateCompanyOnboarding({
+          step: "PERSONAL",
+          expectedUpdatedAt: onboarding.updatedAt,
+          firstName: String(form.get("firstName") ?? "").trim(),
+          lastName: String(form.get("lastName") ?? "").trim(),
+          phone: String(form.get("phone") ?? "").trim() || null,
+          timeZone: String(form.get("timeZone") ?? "Africa/Lagos"),
+          countryCode: String(form.get("countryCode") ?? "").trim().toUpperCase() || null,
+          jobTitle: String(form.get("jobTitle") ?? "").trim() || null,
+        });
+      } else if (step === "company") {
+        await productService.updateCompanyOnboarding({
+          step: "COMPANY",
+          expectedUpdatedAt: onboarding.updatedAt,
+          name: String(form.get("name") ?? "").trim(),
+          primaryContactEmail: String(form.get("primaryContactEmail") ?? "").trim(),
+          companySize: String(form.get("companySize") ?? "").trim() || null,
+          industry: String(form.get("industry") ?? "").trim() || null,
+          websiteUrl: String(form.get("websiteUrl") ?? "").trim() || null,
+          timeZone: String(form.get("timeZone") ?? "Africa/Lagos"),
+          countryCode: String(form.get("countryCode") ?? "").trim().toUpperCase() || null,
+        });
+      } else if (step === "managers") {
+        const email = String(form.get("email") ?? "").trim();
+        if (email) {
+          await productService.inviteCompanyMember({
+            email,
+            firstName: String(form.get("firstName") ?? "").trim(),
+            lastName: String(form.get("lastName") ?? "").trim(),
+            role: String(form.get("role")) === "HR_USER" ? "HR_USER" : "MANAGER",
+            message: String(form.get("message") ?? "").trim() || undefined,
+          });
+        }
+        await productService.updateCompanyOnboarding({ step: "MANAGERS", expectedUpdatedAt: onboarding.updatedAt, skipped: !email });
+      } else {
+        await productService.updateCompanyOnboarding({ step: "ACCOUNTS", expectedUpdatedAt: onboarding.updatedAt, acknowledged: true });
+        await productService.completeCompanyOnboarding();
+      }
+      router.push(next === "done" ? "/company/onboarding/complete" : `/company/onboarding/${next}`);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "This onboarding step could not be saved.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
   return (
-    <form className="onboarding-form" onSubmit={(event) => event.preventDefault()}>
-      {step === "personal" && <><div className="form-grid"><Field label="First name" defaultValue="Richard" /><Field label="Last name" defaultValue="Benson" /><Field label="Email address" type="email" defaultValue="richard@company.com" /><Field label="Phone number" defaultValue="+234 (0)903-123-4567" /><Field label="Role" defaultValue="Super admin" /><Field label="Location" defaultValue="Lagos, Nigeria" /></div><PhotoUpload /></>}
-      {step === "company" && <><div className="form-grid"><Field label="Company name" defaultValue="Oreno Technologies" /><Field label="Company email" type="email" defaultValue="hello@oreno.co" /><Field label="Company size" defaultValue="20–50 employees" /><Field label="Industry" defaultValue="Technology" /><Field label="Website" defaultValue="https://oreno.co" /><Field label="Location" defaultValue="Lagos, Nigeria" /></div><div className="onboarding-note"><strong>Company workspace</strong><p>This information helps tailor your hiring and team-management experience.</p></div></>}
-      {step === "managers" && <><div className="form-grid"><Field label="Manager's first name" defaultValue="Sarima" /><Field label="Manager's last name" defaultValue="Chiorlu" /><Field label="Work email" type="email" defaultValue="sarima@company.com" /><Field label="Role" defaultValue="Human resource" /></div><button className="inline-add" type="button"><Plus /> Add another manager</button></>}
-      {step === "accounts" && <><div className="form-grid"><Field label="Bank name" defaultValue="First Bank" /><Field label="Account number" defaultValue="0123456789" /><Field label="Account name" defaultValue="Oreno Technologies" /><Field label="Currency" defaultValue="NGN — Nigerian Naira" /></div><div className="onboarding-note"><CircleDollarSign /><div><strong>Secure payment setup</strong><p>Banking details stay behind the mock service boundary in this demo.</p></div></div></>}
-      <footer className="onboarding-form__footer">{step === "managers" && <Link href="/company/onboarding/accounts">Skip for now</Link>}<Link className="onboarding-next" href={next === "done" ? "/company/onboarding/complete" : `/company/onboarding/${next}`}>Save and continue <ArrowRight /></Link></footer>
+    <form className="onboarding-form" key={`${step}:${onboarding.updatedAt}`} onSubmit={save}>
+      {step === "personal" && <><div className="form-grid"><Field name="firstName" label="First name" defaultValue={onboarding.firstName} required /><Field name="lastName" label="Last name" defaultValue={onboarding.lastName} required /><Field name="phone" label="Phone number" /><Field name="jobTitle" label="Role or job title" /><Field name="timeZone" label="Time zone" defaultValue={onboarding.timeZone} required /><Field name="countryCode" label="Country code" defaultValue={onboarding.countryCode} required /></div><PhotoUpload /></>}
+      {step === "company" && <><div className="form-grid"><Field name="name" label="Company name" defaultValue={onboarding.name} required /><Field name="primaryContactEmail" label="Company email" type="email" defaultValue={onboarding.primaryContactEmail} required /><Field name="companySize" label="Company size" defaultValue={onboarding.companySize} /><Field name="industry" label="Industry" defaultValue={onboarding.industry} /><Field name="websiteUrl" label="Website" type="url" defaultValue={onboarding.websiteUrl} /><Field name="timeZone" label="Time zone" defaultValue={onboarding.timeZone} required /><Field name="countryCode" label="Country code" defaultValue={onboarding.countryCode} required /></div><div className="onboarding-note"><strong>Company workspace</strong><p>This information is saved to your organisation and can be updated later by authorised members.</p></div></>}
+      {step === "managers" && <><p>Invite an initial manager now, or continue without one and invite members later.</p><div className="form-grid"><Field name="firstName" label="Manager's first name" /><Field name="lastName" label="Manager's last name" /><Field name="email" label="Work email" type="email" /><label className="form-field"><span>Workspace role</span><select name="role" defaultValue="MANAGER"><option value="MANAGER">Manager</option><option value="HR_USER">HR user</option></select></label></div><label className="form-field form-field--wide"><span>Invitation message</span><textarea name="message" rows={4} /></label></>}
+      {step === "accounts" && <div className="onboarding-note"><CircleDollarSign /><div><strong>Compensation records only</strong><p>Oreno records pay agreements and external payment outcomes. It does not collect banking credentials or move money during workspace setup.</p></div></div>}
+      {error && <p className="field-error" role="alert">{error}</p>}
+      <footer className="onboarding-form__footer"><button className="onboarding-next" type="submit" disabled={saving || !onboarding.updatedAt}>{saving ? "Saving…" : next === "done" ? "Complete setup" : "Save and continue"} <ArrowRight /></button></footer>
     </form>
   );
 }
 
-function Field({ label, defaultValue = "", type = "text", placeholder }: { label: string; defaultValue?: string; type?: string; placeholder?: string }) {
-  return <label className="form-field"><span>{label}</span><input type={type} defaultValue={defaultValue} placeholder={placeholder} /></label>;
+function Field({ label, name, defaultValue = "", type = "text", placeholder, required = false }: { label: string; name?: string; defaultValue?: string; type?: string; placeholder?: string; required?: boolean }) {
+  return <label className="form-field"><span>{label}</span><input name={name} type={type} defaultValue={defaultValue} placeholder={placeholder} required={required} /></label>;
 }
 
 function PhotoUpload() {
@@ -261,7 +386,10 @@ function RoleForm() {
 
 function ManagerForm() {
   const [notice, setNotice] = useState("");
-  return <form className="wide-form manager-form" onSubmit={(event) => { event.preventDefault(); setNotice("Manager invitation prepared in this demo."); }}><header><Link href="/company/managers"><ArrowLeft /> Back</Link><div><h2>Add a manager</h2><p>Invite a manager to your Oreno workspace.</p></div></header><div className="form-grid"><Field label="First name" placeholder="First name" /><Field label="Last name" placeholder="Last name" /><Field label="Email address" type="email" placeholder="name@company.com" /><Field label="Phone number" placeholder="+234" /><Field label="Role" placeholder="Select role" /><Field label="Department" placeholder="Select department" /></div><label className="form-field form-field--wide"><span>Personal message</span><textarea rows={6} placeholder="Add a note to the invitation" /></label>{notice && <p className="form-notice">{notice}</p>}<button className="platform-primary" type="submit"><Mail /> Send request</button></form>;
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  async function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); const form = new FormData(event.currentTarget); setSubmitting(true); setNotice(""); setError(""); try { await productService.inviteCompanyMember({ firstName: String(form.get("firstName") ?? ""), lastName: String(form.get("lastName") ?? ""), email: String(form.get("email") ?? ""), role: String(form.get("role")) === "HR_USER" ? "HR_USER" : "MANAGER", message: String(form.get("message") ?? "") || undefined }); setNotice("Invitation sent."); event.currentTarget.reset(); } catch (cause) { setError(cause instanceof Error ? cause.message : "The invitation could not be sent."); } finally { setSubmitting(false); } }
+  return <form className="wide-form manager-form" onSubmit={submit}><header><Link href="/company/access/invitations"><ArrowLeft /> Back</Link><div><h2>Invite a workspace member</h2><p>The invitation grants only the selected organisation role.</p></div></header><div className="form-grid"><Field name="firstName" label="First name" placeholder="First name" required /><Field name="lastName" label="Last name" placeholder="Last name" required /><Field name="email" label="Email address" type="email" placeholder="name@company.com" required /><label className="form-field"><span>Role</span><select name="role" defaultValue="MANAGER"><option value="MANAGER">Manager</option><option value="HR_USER">HR user</option></select></label></div><label className="form-field form-field--wide"><span>Personal message</span><textarea name="message" rows={6} placeholder="Add a note to the invitation" /></label>{notice && <p className="form-notice" role="status">{notice}</p>}{error && <p className="field-error" role="alert">{error}</p>}<button className="platform-primary" type="submit" disabled={submitting}><Mail /> {submitting ? "Sending…" : "Send invitation"}</button></form>;
 }
 
 function ManagerProfile({ tab }: { tab: "profile" | "team" }) {

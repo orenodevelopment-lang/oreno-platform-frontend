@@ -247,7 +247,7 @@ export interface paths {
         };
         /**
          * Complete a federated sign-in
-         * @description Exchanges the authorization code, resolves or creates the local account, sets the session cookies, and redirects the browser to the validated frontend callback URL.
+         * @description Accepts either an authorization code or a provider error, verifies and consumes the signed state, and redirects to the validated frontend URL. Successful sign-in sets the session cookies; failures redirect with controlled OAuth error parameters and never create a session.
          */
         get: operations["authOAuthCallback"];
         put?: never;
@@ -1432,6 +1432,66 @@ export interface paths {
          * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
          */
         post: operations["catalogPostApiV1TalentsMeOffersOfferIdRespond"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/talents/me/applications/{applicationId}/screening": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * GET /api/v1/talents/me/applications/{applicationId}/screening
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        get: operations["catalogGetApiV1TalentsMeApplicationsApplicationIdScreening"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/talents/me/applications/{applicationId}/screening/information": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * POST /api/v1/talents/me/applications/{applicationId}/screening/information
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        post: operations["catalogPostApiV1TalentsMeApplicationsApplicationIdScreeningInformation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/talents/me/screening-interviews": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * GET /api/v1/talents/me/screening-interviews
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        get: operations["catalogGetApiV1TalentsMeScreeningInterviews"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -5058,6 +5118,266 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/screening/applications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * GET /api/v1/admin/screening/applications
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        get: operations["catalogGetApiV1AdminScreeningApplications"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/screening/applications/{applicationId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * GET /api/v1/admin/screening/applications/{applicationId}
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        get: operations["catalogGetApiV1AdminScreeningApplicationsApplicationId"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/screening/applications/{applicationId}/cv/download": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * POST /api/v1/admin/screening/applications/{applicationId}/cv/download
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        post: operations["catalogPostApiV1AdminScreeningApplicationsApplicationIdCvDownload"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/screening/applications/{applicationId}/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * GET /api/v1/admin/screening/applications/{applicationId}/history
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        get: operations["catalogGetApiV1AdminScreeningApplicationsApplicationIdHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/screening/applications/{applicationId}/assign": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * POST /api/v1/admin/screening/applications/{applicationId}/assign
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        post: operations["catalogPostApiV1AdminScreeningApplicationsApplicationIdAssign"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/screening/applications/{applicationId}/cv-review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * POST /api/v1/admin/screening/applications/{applicationId}/cv-review
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        post: operations["catalogPostApiV1AdminScreeningApplicationsApplicationIdCvReview"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/screening/applications/{applicationId}/request-info": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * POST /api/v1/admin/screening/applications/{applicationId}/request-info
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        post: operations["catalogPostApiV1AdminScreeningApplicationsApplicationIdRequestInfo"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/screening/applications/{applicationId}/interviews": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * POST /api/v1/admin/screening/applications/{applicationId}/interviews
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        post: operations["catalogPostApiV1AdminScreeningApplicationsApplicationIdInterviews"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/screening/interviews/{interviewId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * PATCH /api/v1/admin/screening/interviews/{interviewId}
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        patch: operations["catalogPatchApiV1AdminScreeningInterviewsInterviewId"];
+        trace?: never;
+    };
+    "/api/v1/admin/screening/interviews/{interviewId}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * POST /api/v1/admin/screening/interviews/{interviewId}/cancel
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        post: operations["catalogPostApiV1AdminScreeningInterviewsInterviewIdCancel"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/screening/interviews/{interviewId}/outcome": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * POST /api/v1/admin/screening/interviews/{interviewId}/outcome
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        post: operations["catalogPostApiV1AdminScreeningInterviewsInterviewIdOutcome"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/screening/applications/{applicationId}/final-decision": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * POST /api/v1/admin/screening/applications/{applicationId}/final-decision
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        post: operations["catalogPostApiV1AdminScreeningApplicationsApplicationIdFinalDecision"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/screening/applications/{applicationId}/release": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * POST /api/v1/admin/screening/applications/{applicationId}/release
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        post: operations["catalogPostApiV1AdminScreeningApplicationsApplicationIdRelease"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/replacements": {
         parameters: {
             query?: never;
@@ -5813,8 +6133,16 @@ export interface operations {
     authOAuthCallback: {
         parameters: {
             query: {
-                code: string;
+                code?: string;
                 state: string;
+                error?: string;
+                error_description?: string;
+                error_uri?: string;
+                iss?: string;
+                scope?: string;
+                authuser?: string;
+                prompt?: string;
+                hd?: string;
             };
             header?: never;
             path: {
@@ -5824,14 +6152,14 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Signed in. Session and CSRF cookies are set before redirecting to the frontend. */
+            /** @description Redirected to the frontend after success or to a controlled OAuth failure state. */
             303: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            409: components["responses"]["Conflict"];
+            404: components["responses"]["NotFound"];
             422: components["responses"]["Unprocessable"];
         };
     };
@@ -7050,8 +7378,7 @@ export interface operations {
                         question: string;
                         answer: string;
                     }[];
-                    /** @default [] */
-                    attachments?: {
+                    attachments: {
                         /** Format: uuid */
                         fileId: string;
                         /** @enum {string} */
@@ -7245,8 +7572,7 @@ export interface operations {
                         question: string;
                         answer: string;
                     }[];
-                    /** @default [] */
-                    attachments?: {
+                    attachments: {
                         /** Format: uuid */
                         fileId: string;
                         /** @enum {string} */
@@ -9310,6 +9636,174 @@ export interface operations {
                             } & {
                                 [key: string]: unknown;
                             }) | null;
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogGetApiV1TalentsMeApplicationsApplicationIdScreening: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                applicationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            screening: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogPostApiV1TalentsMeApplicationsApplicationIdScreeningInformation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                applicationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: date-time */
+                    expectedUpdatedAt: string;
+                    responseText?: string | null;
+                    responseFileId?: string | null;
+                };
+            };
+        };
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            screening: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            /** @description Resource created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            screening: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogGetApiV1TalentsMeScreeningInterviews: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            interviews: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {
@@ -22734,6 +23228,930 @@ export interface operations {
                     "application/json": {
                         data: {
                             case: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogGetApiV1AdminScreeningApplications: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                status?: "PENDING_CV_REVIEW" | "CV_REVIEW_IN_PROGRESS" | "ADDITIONAL_INFO_REQUIRED" | "CV_APPROVED" | "INTERVIEW_SCHEDULED" | "INTERVIEW_COMPLETED" | "FINAL_REVIEW_PENDING" | "APPROVED_FOR_SUBMISSION" | "RELEASED_TO_COMPANY" | "NOT_SELECTED" | "WITHDRAWN" | "CANCELLED";
+                assignedReviewerId?: string;
+                organisationId?: string;
+                jobId?: string;
+                q?: string;
+                submittedFrom?: string;
+                submittedTo?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            items: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
+                            counts: {
+                                [key: string]: number;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogGetApiV1AdminScreeningApplicationsApplicationId: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                applicationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            screening: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogPostApiV1AdminScreeningApplicationsApplicationIdCvDownload: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                applicationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            /** Format: uri */
+                            downloadUrl: string;
+                            /** Format: date-time */
+                            expiresAt: string;
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            /** @description Resource created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            /** Format: uri */
+                            downloadUrl: string;
+                            /** Format: date-time */
+                            expiresAt: string;
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogGetApiV1AdminScreeningApplicationsApplicationIdHistory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                applicationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            history: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogPostApiV1AdminScreeningApplicationsApplicationIdAssign: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                applicationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: date-time */
+                    expectedUpdatedAt: string;
+                    reason: string;
+                    /** Format: uuid */
+                    reviewerId: string;
+                    dueAt?: string | null;
+                };
+            };
+        };
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            screening: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            /** @description Resource created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            screening: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogPostApiV1AdminScreeningApplicationsApplicationIdCvReview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                applicationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: date-time */
+                    expectedUpdatedAt: string;
+                    reason: string;
+                    /** @enum {string} */
+                    decision: "APPROVED" | "NOT_SELECTED" | "REQUEST_INFORMATION";
+                    rubric: {
+                        [key: string]: string | number | boolean | null;
+                    };
+                    privateNotes?: string | null;
+                    candidateVisibleFeedback?: string | null;
+                    employerSafeSummary?: string | null;
+                };
+            };
+        };
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            screening: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            /** @description Resource created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            screening: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogPostApiV1AdminScreeningApplicationsApplicationIdRequestInfo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                applicationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: date-time */
+                    expectedUpdatedAt: string;
+                    reason: string;
+                    message: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            screening: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            /** @description Resource created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            screening: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogPostApiV1AdminScreeningApplicationsApplicationIdInterviews: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                applicationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: date-time */
+                    expectedUpdatedAt: string;
+                    reason: string;
+                    /** Format: uuid */
+                    interviewerId: string;
+                    /** @enum {string} */
+                    mode: "VIDEO" | "PHONE" | "ONSITE";
+                    /** Format: date-time */
+                    scheduledStartAt: string;
+                    /** Format: date-time */
+                    scheduledEndAt: string;
+                    timeZone: string;
+                    meetingUrl?: string | null;
+                    location?: string | null;
+                };
+            };
+        };
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            screening: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            /** @description Resource created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            screening: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogPatchApiV1AdminScreeningInterviewsInterviewId: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                interviewId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: date-time */
+                    expectedUpdatedAt: string;
+                    reason: string;
+                    /** Format: date-time */
+                    scheduledStartAt?: string;
+                    /** Format: date-time */
+                    scheduledEndAt?: string;
+                    timeZone?: string;
+                    meetingUrl?: string | null;
+                    location?: string | null;
+                };
+            };
+        };
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            interview: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogPostApiV1AdminScreeningInterviewsInterviewIdCancel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                interviewId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: date-time */
+                    expectedUpdatedAt: string;
+                    reason: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            interview: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            /** @description Resource created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            interview: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogPostApiV1AdminScreeningInterviewsInterviewIdOutcome: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                interviewId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: date-time */
+                    expectedUpdatedAt: string;
+                    reason: string;
+                    /** @enum {string} */
+                    outcome: "PASSED" | "FAILED" | "ON_HOLD" | "NEEDS_FOLLOWUP";
+                    rubric: {
+                        [key: string]: string | number | boolean | null;
+                    };
+                    privateNotes?: string | null;
+                    candidateVisibleFeedback?: string | null;
+                };
+            };
+        };
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            screening: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            /** @description Resource created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            screening: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogPostApiV1AdminScreeningApplicationsApplicationIdFinalDecision: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                applicationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: date-time */
+                    expectedUpdatedAt: string;
+                    reason: string;
+                    /** @enum {string} */
+                    decision: "APPROVED" | "NOT_SELECTED" | "ON_HOLD";
+                    candidateMessage?: string | null;
+                    employerSummary?: string | null;
+                };
+            };
+        };
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            screening: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            /** @description Resource created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            screening: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogPostApiV1AdminScreeningApplicationsApplicationIdRelease: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                applicationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: date-time */
+                    expectedUpdatedAt: string;
+                    reason: string;
+                    /** Format: uuid */
+                    organisationId: string;
+                    /** @constant */
+                    confirmation: true;
+                };
+            };
+        };
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            screening: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            /** @description Resource created. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            screening: {
                                 id?: string;
                                 status?: string;
                                 /** Format: date-time */
