@@ -8,8 +8,21 @@ export function liveOnly() {
   return process.env.E2E_LIVE === "true";
 }
 
-export function credentials(kind: "talent" | "company" | "admin") {
-  const prefix = `E2E_${kind.toUpperCase()}`;
+export type AccountKind = "talent" | "company" | "admin" | "candidateA" | "candidateB" | "candidateC" | "reviewer" | "releaseApprover";
+
+const accountPrefixes: Record<AccountKind, string> = {
+  talent: "E2E_TALENT",
+  company: "E2E_COMPANY",
+  admin: "E2E_ADMIN",
+  candidateA: "E2E_CANDIDATE_A",
+  candidateB: "E2E_CANDIDATE_B",
+  candidateC: "E2E_CANDIDATE_C",
+  reviewer: "E2E_REVIEWER",
+  releaseApprover: "E2E_RELEASE_APPROVER",
+};
+
+export function credentials(kind: AccountKind) {
+  const prefix = accountPrefixes[kind];
   const email = process.env[`${prefix}_EMAIL`];
   const password = process.env[`${prefix}_PASSWORD`];
   const twoFactorCode = process.env[`${prefix}_TWO_FACTOR_CODE`];
@@ -24,9 +37,9 @@ export async function browserApi<T>(page: Page, path: string, init: RequestInit 
   }, { url: `${apiUrl}${path}`, init }) as Promise<{ status: number; headers: Record<string, string>; payload: T }>;
 }
 
-export async function login(page: Page, kind: "talent" | "company" | "admin") {
+export async function login(page: Page, kind: AccountKind) {
   const account = credentials(kind);
-  expect(account, `Configure E2E_${kind.toUpperCase()}_EMAIL and _PASSWORD`).toBeTruthy();
+  expect(account, `Configure ${accountPrefixes[kind]}_EMAIL and _PASSWORD`).toBeTruthy();
   await page.goto("/");
   const result = await browserApi(page, "/api/v1/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...account, deviceLabel: "Playwright production verification" }) });
   expect(result.status, JSON.stringify(result.payload)).toBe(200);
