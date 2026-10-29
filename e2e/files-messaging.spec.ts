@@ -25,7 +25,7 @@ test.describe("file transport and realtime messaging", () => {
   test("opens Socket.IO from the real frontend origin", async ({ page }) => {
     const socket = page.waitForEvent("websocket", (ws) => ws.url().startsWith(apiUrl.replace(/^http/, "ws")) && ws.url().includes("socket.io"));
     await page.goto("/talent/messages");
-    await expect(page.getByRole("heading", { name: "Conversations" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Messages" }).first()).toBeVisible();
     await expect(await socket).toBeTruthy();
   });
 });

@@ -234,10 +234,11 @@ export interface CompanyTeamMemberRecord {
 
 export interface TaskDetailRecord {
   id: string;
+  updatedAt: string;
   title: string;
   description: string;
   status: string;
-  priority: "Low" | "Medium" | "High";
+  priority: "Low" | "Medium" | "High" | "Urgent";
   startDate: string;
   dueDate: string;
   assignees: string[];

@@ -33,14 +33,12 @@ test("primary marketing navigation enters real product journeys", () => {
   );
 });
 
-test("start hiring menu includes company and talent account journeys", () => {
+test("homepage hiring menu is restricted to company account journeys", () => {
   assert.deepEqual(
     hiringMenuLinks.map(({ label, href }) => [label, href]),
     [
       ["Start hiring", "/company/signup"],
       ["Company sign in", "/company/login"],
-      ["Join as talent", "/auth/talent-signup"],
-      ["Talent login", "/auth/talent-login"],
     ],
   );
 
@@ -49,12 +47,46 @@ test("start hiring menu includes company and talent account journeys", () => {
   const publicShell = readFileSync(new URL("../components/product/PublicShell.tsx", import.meta.url), "utf8");
   assert.match(hiringMenu, /hiringMenuLinks\.map/);
   assert.match(hiringMenu, /onPointerEnter/);
-  assert.match(hiringMenu, /IDLE_ROTATION_MS/);
   assert.match(hiringMenu, /AnimatePresence/);
-  assert.match(hiringMenu, /Oreno pathways/);
+  assert.match(hiringMenu, /Company workspace/);
+  assert.doesNotMatch(hiringMenu, /Join as talent|Talent login/);
   assert.match(homepageNav, /<HiringMenu variant="marketing"/);
   assert.match(publicShell, /<HiringMenu variant="public"/);
   assert.doesNotMatch(publicShell.match(/<header[\s\S]*?<\/header>/)?.[0] ?? "", /Join as talent|Talent login/);
+});
+
+test("dashboard session guards keep their shells visible while validating", () => {
+  const talentGate = readFileSync(new URL("../components/TalentSessionGate.tsx", import.meta.url), "utf8");
+  const companyGate = readFileSync(new URL("../components/CompanySessionGate.tsx", import.meta.url), "utf8");
+  for (const source of [talentGate, companyGate]) {
+    assert.match(source, /\{children\}/);
+    assert.match(source, /workspace-session__progress/);
+    assert.doesNotMatch(source, /Checking your (?:Oreno )?account|auth-session-loading/);
+  }
+});
+
+test("OAuth unknown accounts have a controlled explicit signup path", () => {
+  const auth = readFileSync(new URL("../components/product/PublicProduct.tsx", import.meta.url), "utf8");
+  assert.match(auth, /account_not_found/);
+  assert.match(auth, /No Oreno account was found/);
+  assert.match(auth, /mode: "talent_signup"/);
+  assert.match(auth, /termsAccepted/);
+  assert.match(auth, /Create a talent account with/);
+});
+
+test("chat exposes persistent controls and omits unsupported calling controls", () => {
+  const chat = readFileSync(new URL("../components/platform/MessagingWorkspace.tsx", import.meta.url), "utf8");
+  const messaging = readFileSync(new URL("../lib/api/messaging.ts", import.meta.url), "utf8");
+  assert.match(chat, /Start conversation/);
+  assert.match(chat, /typing:start/);
+  assert.match(chat, /message:read/);
+  assert.match(chat, /Retry/);
+  assert.match(chat, /archiveConversation/);
+  assert.match(chat, /leaveConversation/);
+  assert.doesNotMatch(chat, /Video|Phone|Audio/);
+  assert.match(messaging, /MESSAGE_ATTACHMENT/);
+  assert.match(messaging, /25 MB or smaller/);
+  assert.match(messaging, /nextCursor/);
 });
 
 test("application state transitions reject skipped or terminal changes", () => {

@@ -4202,6 +4202,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/conversations/contacts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * GET /api/v1/conversations/contacts
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        get: operations["catalogGetApiV1ConversationsContacts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/conversations/{conversationId}": {
         parameters: {
             query?: never;
@@ -20337,6 +20357,48 @@ export interface operations {
                             } & {
                                 [key: string]: unknown;
                             };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogGetApiV1ConversationsContacts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            contacts: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
                         };
                         /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
                         meta: {

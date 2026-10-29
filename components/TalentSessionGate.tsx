@@ -1,18 +1,30 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { authApi } from "@/lib/api/auth";
+
+let authorised = false;
+let sessionRequest: ReturnType<typeof authApi.current> | undefined;
+
+function resolveSession() {
+  sessionRequest ??= authApi.current().catch((error) => {
+    sessionRequest = undefined;
+    throw error;
+  });
+  return sessionRequest;
+}
 
 export function TalentSessionGate({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [ready, setReady] = useState(false);
+  const nextRef = useRef(`${pathname}${searchParams.size ? `?${searchParams.toString()}` : ""}`);
+  const [ready, setReady] = useState(authorised);
 
   useEffect(() => {
     let active = true;
-    authApi.current()
+    resolveSession()
       .then(({ user, context }) => {
         if (!active) return;
         if (!context.mfaSatisfied) {
@@ -23,19 +35,16 @@ export function TalentSessionGate({ children }: { children: ReactNode }) {
           router.replace(context.organisationId ? "/company" : "/");
           return;
         }
+        authorised = true;
         setReady(true);
       })
       .catch(() => {
         if (!active) return;
-        const query = searchParams.toString();
-        const next = `${pathname}${query ? `?${query}` : ""}`;
-        router.replace(`/auth/talent-login?next=${encodeURIComponent(next)}`);
+        authorised = false;
+        router.replace(`/auth/talent-login?next=${encodeURIComponent(nextRef.current)}`);
       });
     return () => { active = false; };
-  }, [pathname, router, searchParams]);
+  }, [router]);
 
-  if (!ready) {
-    return <main className="auth-session-loading" role="status" aria-live="polite">Checking your Oreno account…</main>;
-  }
-  return children;
+  return <div className="workspace-session" data-session-ready={ready ? "true" : "false"}>{children}{!ready && <div className="workspace-session__progress" role="status" aria-live="polite"><span aria-hidden="true" />Verifying your account…</div>}</div>;
 }

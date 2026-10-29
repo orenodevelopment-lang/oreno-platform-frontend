@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import "./platform.css";
@@ -38,6 +38,12 @@ export const metadata: Metadata = {
     icon: [{ url: "/assets/figma/oreno-mark.svg", type: "image/svg+xml" }],
     shortcut: "/assets/figma/oreno-mark.svg",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

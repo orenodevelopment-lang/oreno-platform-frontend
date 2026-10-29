@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, BadgeCheck, BriefcaseBusiness, CheckCircle2, Clock3, Mail, MapPin, Search, ShieldCheck, Sparkles, UsersRound } from "lucide-react";
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { productService } from "@/lib/platform/product-service";
 import { authApi } from "@/lib/api/auth";
@@ -11,6 +11,10 @@ import { ApiClientError } from "@/lib/api/client";
 import { DataStateBoundary, FieldError, StatusChip } from "./ProductUI";
 import { Logo } from "@/components/Logo";
 import { PublicShell } from "./PublicShell";
+
+const subscribeToOAuthDestination = () => () => undefined;
+const readOAuthDestination = () => window.sessionStorage.getItem("oreno:oauth-next") || "/talent";
+const readServerOAuthDestination = () => "/talent";
 
 export function PublicTalentCatalogue({ profileId }: { profileId?: string }) {
   const talents = productService.listPublicTalents();
@@ -104,12 +108,18 @@ export function AuthJourney({
   initialNext,
   initialStep,
   oauthCreated = false,
+  oauthStatus,
+  oauthProvider,
+  oauthReason,
 }: {
   flow: string;
   initialToken?: string;
   initialNext?: string;
   initialStep?: string;
   oauthCreated?: boolean;
+  oauthStatus?: string;
+  oauthProvider?: string;
+  oauthReason?: string;
 }) {
   const router = useRouter();
   const [submitted, setSubmitted] = useState(false);
@@ -118,22 +128,23 @@ export function AuthJourney({
   const [needsCode, setNeedsCode] = useState(initialStep === "two-factor");
   const [urlToken, setUrlToken] = useState(initialToken);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const oauthDestination = useSyncExternalStore(subscribeToOAuthDestination, readOAuthDestination, readServerOAuthDestination);
   const next = initialNext?.startsWith("/") && !initialNext.startsWith("//") ? initialNext : "/talent";
 
   useEffect(() => {
     if (flow !== "oauth-callback") return;
+    if (oauthStatus === "failed") return;
     if (initialStep === "two-factor") {
       return;
     }
     authApi.current()
       .then(({ user }) => {
-        const stored = window.sessionStorage.getItem("oreno:oauth-next");
         window.sessionStorage.removeItem("oreno:oauth-next");
         const fallback = oauthCreated ? "/talent/onboarding" : "/talent";
-        router.replace(user.registrationIntent === "TALENT" ? stored || fallback : "/company");
+        router.replace(user.registrationIntent === "TALENT" ? oauthDestination || fallback : "/company");
       })
       .catch((cause) => setError(cause instanceof Error ? cause.message : "OAuth sign-in could not be completed."));
-  }, [flow, initialStep, oauthCreated, router]);
+  }, [flow, initialStep, oauthCreated, oauthDestination, oauthStatus, router]);
 
   const copy: Record<string, { title: string; body: string; button: string }> = {
     "talent-signup": { title: "Create your talent profile", body: "Join Oreno to discover roles and present your experience.", button: "Create account" },
@@ -209,8 +220,31 @@ export function AuthJourney({
     }
   }
 
+  async function createWithProvider() {
+    if (oauthProvider !== "google" && oauthProvider !== "linkedin") return;
+    if (!termsAccepted) {
+      setError("Accept the terms and privacy policy before creating your account.");
+      return;
+    }
+    setError("");
+    setSubmitting(true);
+    try {
+      await authApi.oauthStart(oauthProvider, { mode: "talent_signup", acceptTerms: true, next: "/talent/onboarding" });
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Provider sign-up could not be started.");
+      setSubmitting(false);
+    }
+  }
+
   if (flow === "oauth-callback" && !needsCode) {
-    return <PublicShell><section className="focused-state"><h1>{error ? "Sign-in could not be completed" : current.title}</h1><p>{error || current.body}</p>{error && <Link href="/auth/talent-login">Return to talent login</Link>}</section></PublicShell>;
+    if (oauthStatus === "failed" && oauthReason === "account_not_found") {
+      const companyFlow = oauthDestination.startsWith("/company");
+      const providerLabel = oauthProvider === "linkedin" ? "LinkedIn" : "Google";
+      return <PublicShell><section className="focused-state oauth-account-not-found"><h1>No Oreno account was found</h1><p>That {providerLabel} account is not connected to an existing Oreno account.</p>{companyFlow ? <div className="focused-state__actions"><Link href="/company/signup">Create a company account</Link><Link href="/company/login">Return to company sign in</Link></div> : <><label className="auth-consent"><input type="checkbox" checked={termsAccepted} onChange={(event) => setTermsAccepted(event.target.checked)} /><span>I agree to the <Link href="/terms">terms</Link> and <Link href="/privacy-policy">privacy policy</Link>.</span></label>{error && <FieldError id="oauth-signup-error">{error}</FieldError>}<div className="focused-state__actions"><button type="button" disabled={submitting || !termsAccepted} onClick={() => void createWithProvider()}>{submitting ? "Opening provider…" : `Create a talent account with ${providerLabel}`}</button><Link href="/auth/talent-login">Use another account</Link></div></>}</section></PublicShell>;
+    }
+    const failureCopy: Record<string, string> = { invalid_state: "This sign-in request expired or has already been used. Start again from Oreno.", invalid_response: "The provider returned an incomplete sign-in response.", invalid_issuer: "The sign-in response came from an unexpected provider.", provider_error: "The provider did not complete sign-in.", authentication_failed: "We could not complete sign-in with that provider." };
+    const controlledError = oauthStatus === "failed" ? failureCopy[oauthReason ?? ""] ?? "We could not complete sign-in." : error;
+    return <PublicShell><section className="focused-state"><h1>{controlledError ? "Sign-in could not be completed" : current.title}</h1><p>{controlledError || current.body}</p>{controlledError && <Link href="/auth/talent-login">Return to talent login</Link>}</section></PublicShell>;
   }
 
   return <PublicShell><section className="auth-journey"><div className="auth-journey__brand"><Logo dark /></div>{submitted ? <div className="public-success"><CheckCircle2 /><h1>{flow === "accept-invitation" ? "Invitation accepted" : flow === "verify-email" ? "Email verified" : "Request completed"}</h1><p>{flow === "talent-signup" ? "Your account was created. Verify your email before building your professional profile." : "Your request was completed successfully."}</p><Link href={successHref}>Continue <ArrowRight /></Link></div> : <><h1>{needsCode ? "Enter your two-factor code" : current.title}</h1><p>{needsCode ? "Use your authenticator app or a recovery code to finish signing in." : current.body}</p><form onSubmit={submit}>{flow === "accept-invitation" && <div className="invitation-summary"><UsersRound /><div><strong>Organisation invitation</strong><span>Sign in to accept workspace access</span></div></div>}{flow === "talent-signup" ? <div className="form-grid"><label>First name<input name="firstName" required /></label><label>Last name<input name="lastName" required /></label></div> : null}{["verify-email", "reset-password", "accept-invitation"].includes(flow) && <label>Secure token<input name="token" required value={urlToken} onChange={(event) => setUrlToken(event.target.value)} autoComplete="off" /></label>}{!needsCode && !["verify-email", "reset-password", "oauth-callback"].includes(flow) && <label>Email address<input name="email" type="email" required placeholder="name@example.com" autoComplete="email" /></label>}{!needsCode && ["talent-login", "talent-signup", "reset-password", "accept-invitation"].includes(flow) && <label>{flow === "reset-password" ? "New password" : "Password"}<input name="password" type="password" required minLength={12} autoComplete={flow === "talent-login" ? "current-password" : "new-password"} /></label>}{flow === "talent-signup" && <label className="auth-consent"><input type="checkbox" checked={termsAccepted} onChange={(event) => setTermsAccepted(event.target.checked)} /><span>I agree to the <Link href="/terms">terms</Link> and <Link href="/privacy-policy">privacy policy</Link>.</span></label>}{needsCode && <label>Two-factor code<input name="twoFactorCode" required autoComplete="one-time-code" inputMode="numeric" /></label>}{error && <FieldError id="auth-request-error">{error}</FieldError>}<button type="submit" disabled={submitting}>{submitting ? "Please wait…" : needsCode ? "Verify and continue" : current.button} <ArrowRight /></button>{["talent-login", "talent-signup"].includes(flow) && !needsCode && <><div className="auth-divider"><span>or continue with</span></div><div className="auth-providers"><button type="button" onClick={() => void startOAuth("google")}>Google</button><button type="button" onClick={() => void startOAuth("linkedin")}>LinkedIn</button></div></>}</form>{flow === "talent-login" && !needsCode && <div className="auth-links"><Link href="/auth/forgot-password">Forgot password?</Link><span>New to Oreno? <Link href={`/auth/talent-signup${initialNext ? `?next=${encodeURIComponent(next)}` : ""}`}>Create a talent account</Link></span></div>}{flow === "talent-signup" && <p>Already have an account? <Link href={`/auth/talent-login${initialNext ? `?next=${encodeURIComponent(next)}` : ""}`}>Talent login</Link></p>}</>}</section></PublicShell>;

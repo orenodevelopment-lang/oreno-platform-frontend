@@ -1,6 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const baseURL = process.env.E2E_WEB_URL ?? "http://127.0.0.1:3000";
+const browserChannel = process.env.E2E_BROWSER_CHANNEL;
 
 export default defineConfig({
   testDir: "./e2e",
@@ -13,7 +14,7 @@ export default defineConfig({
     baseURL,
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
-    video: "retain-on-failure",
+    video: process.env.E2E_DISABLE_VIDEO === "true" ? "off" : "retain-on-failure",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"], ...(browserChannel ? { channel: browserChannel } : {}) } }],
 });

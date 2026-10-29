@@ -14,14 +14,13 @@ import {
   Network,
   Plus,
   Settings,
-  ShieldCheck,
   UserRound,
   UserRoundPlus,
   UsersRound,
   WalletCards,
   X,
 } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { WorkspaceAmbient } from "@/components/motion/WorkspaceAmbient";
 import { Logo } from "@/components/Logo";
@@ -39,18 +38,26 @@ type NavItem = {
 
 const companyNavigation: NavItem[] = [
   { href: "/company", label: "Home", icon: House },
-  { label: "Your Business", heading: true },
+  { label: "Your business", heading: true },
+  { href: "/company/organisation", label: "Organisation", icon: Network },
+  { href: "/company/access", label: "Members & access", icon: UsersRound },
   { href: "/company/team-members", label: "Team members", icon: UsersRound },
   { href: "/company/departments", label: "Department", icon: Network },
-  { href: "/company/roles", label: "Roles", icon: BriefcaseBusiness },
-  { href: "/company/managers", label: "Managers", icon: UserRound },
-  { href: "/company/salaries", label: "Salaries", icon: WalletCards },
-  { href: "/company/messages", label: "Message", icon: MessageSquare },
+  { href: "/company/teams", label: "Teams", icon: UsersRound },
   { label: "Hiring", heading: true },
-  { href: "/company/hiring", label: "Talent hire", icon: UserRoundPlus },
+  { href: "/company/jobs", label: "Jobs", icon: BriefcaseBusiness },
+  { href: "/company/discover", label: "Discover talent", icon: UserRoundPlus },
+  { href: "/company/applications", label: "Applications", icon: ClipboardList },
+  { href: "/company/interviews", label: "Interviews", icon: UserRound },
+  { href: "/company/offers", label: "Offers", icon: WalletCards },
+  { label: "Work", heading: true },
+  { href: "/company/tasks", label: "Tasks", icon: ClipboardList },
+  { href: "/company/time", label: "Time entries", icon: CircleHelp },
   { href: "/company/performance", label: "Performance", icon: CircleHelp },
+  { href: "/company/compensation", label: "Compensation", icon: WalletCards },
+  { href: "/company/messages", label: "Messages", icon: MessageSquare },
   { label: "Account", heading: true },
-  { href: "/company/settings", label: "Settings", icon: Settings },
+  { href: "/company/preferences", label: "Preferences", icon: Settings },
 ];
 
 const talentNavigation: NavItem[] = [
@@ -86,22 +93,36 @@ export function PlatformShell({
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [notice, setNotice] = useState("");
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const sidebarRef = useRef<HTMLElement>(null);
   const navigation = kind === "company" ? companyNavigation : talentNavigation;
 
-  function announce(message: string) {
-    setNotice(message);
-    window.setTimeout(() => setNotice(""), 2400);
-  }
+  useEffect(() => {
+    if (!open) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const focusable = sidebarRef.current?.querySelector<HTMLElement>("a, button");
+    focusable?.focus();
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setOpen(false);
+      menuButtonRef.current?.focus();
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [open]);
 
   async function signOut() {
     await authApi.logout();
-    router.replace("/auth/talent-login");
+    router.replace(kind === "company" ? "/company/login" : "/auth/talent-login");
   }
 
   return (
     <div className={`platform-shell platform-shell--${kind}`}>
-      <aside className={`platform-sidebar ${open ? "platform-sidebar--open" : ""}`}>
+      <aside ref={sidebarRef} className={`platform-sidebar ${open ? "platform-sidebar--open" : ""}`}>
         <div className="platform-sidebar__top">
           <Link href={kind === "company" ? "/company" : "/talent"} className="platform-brand" onClick={() => setOpen(false)}>
             <Logo />
@@ -137,20 +158,20 @@ export function PlatformShell({
 
       <div className="platform-main">
         <header className="platform-topbar">
-          <button className="platform-menu" type="button" aria-label="Open navigation" onClick={() => setOpen(true)}>
+          <button ref={menuButtonRef} className="platform-menu" type="button" aria-label="Open navigation" onClick={() => setOpen(true)}>
             <Menu aria-hidden="true" />
           </button>
           <h1>{title}</h1>
           <div className="platform-topbar__actions">
             {actionLabel && (
-              <button className="platform-primary" type="button" onClick={() => announce(`${actionLabel} flow opened for this demo.`)}>
+              <Link className="platform-primary" href={kind === "company" ? "/company/discover" : "/talent/jobs"}>
                 {actionLabel === "Add task" && <Plus aria-hidden="true" />}
                 {actionLabel}
-              </button>
+              </Link>
             )}
-            <button type="button" className="platform-icon-button" aria-label="Work" onClick={() => announce("No new work alerts.")}>
+            <Link className="platform-icon-button" aria-label="Work" href={kind === "company" ? "/company/tasks" : "/talent/tasks"}>
               <BriefcaseBusiness aria-hidden="true" />
-            </button>
+            </Link>
             <Link className="platform-icon-button platform-notification" aria-label="Notifications" href={kind === "company" ? "/company/notifications" : "/talent/notifications"}>
               <Bell aria-hidden="true" />
             </Link>
@@ -163,9 +184,6 @@ export function PlatformShell({
           <WorkspaceAmbient tone={kind} />
           {children}
         </main>
-      </div>
-      <div className={`platform-toast ${notice ? "is-visible" : ""}`} role="status" aria-live="polite">
-        <ShieldCheck aria-hidden="true" /> {notice}
       </div>
     </div>
   );
