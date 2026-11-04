@@ -16,11 +16,11 @@ test("route manifest covers all three user surfaces", () => {
   assert.ok(publicProductRoutes.includes("/talent-catalogue"));
   assert.ok(publicProductRoutes.includes("/auth/reset-password"));
   assert.ok(companyProductRoutes.includes("/company/applications"));
-  assert.ok(companyProductRoutes.includes("/company/team-members/john-doe"));
+  assert.ok(companyProductRoutes.includes("/company/team/:staffAssignmentId"));
   assert.ok(companyProductRoutes.includes("/company/compensation/payments"));
   assert.ok(talentProductRoutes.includes("/talent/profile/experience"));
   assert.ok(talentProductRoutes.includes("/talent/account/security"));
-  assert.ok(talentProductRoutes.includes("/talent/offers/offer-chibuokem"));
+  assert.ok(talentProductRoutes.includes("/talent/offers/:offerId"));
 });
 
 test("primary marketing navigation enters real product journeys", () => {
@@ -60,7 +60,7 @@ test("dashboard session guards keep their shells visible while validating", () =
   const companyGate = readFileSync(new URL("../components/CompanySessionGate.tsx", import.meta.url), "utf8");
   for (const source of [talentGate, companyGate]) {
     assert.match(source, /\{children\}/);
-    assert.match(source, /workspace-session__progress/);
+    assert.match(source, /WorkspaceSessionGate/);
     assert.doesNotMatch(source, /Checking your (?:Oreno )?account|auth-session-loading/);
   }
 });

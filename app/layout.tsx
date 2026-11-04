@@ -5,6 +5,7 @@ import "./platform.css";
 import "./product.css";
 import "./motion.css";
 import "./admin.css";
+import { WorkspaceSessionProvider } from "@/components/WorkspaceSessionProvider";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 
 const raleway = localFont({
@@ -49,7 +50,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" data-scroll-behavior="smooth" className={`${raleway.variable} ${poppins.variable}`}>
-      <body suppressHydrationWarning><MotionProvider>{children}</MotionProvider></body>
+      <body suppressHydrationWarning><WorkspaceSessionProvider><MotionProvider>{children}</MotionProvider></WorkspaceSessionProvider></body>
     </html>
   );
 }

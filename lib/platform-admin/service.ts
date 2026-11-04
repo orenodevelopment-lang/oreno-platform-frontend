@@ -40,7 +40,7 @@ function track(row: Record<string, unknown>) {
   return row;
 }
 
-function roleName(value: unknown): AdminRole {
+export function roleName(value: unknown): AdminRole {
   const role = titleCase(value, "Read only analyst");
   const known: AdminRole[] = ["Platform Owner", "Operations Admin", "Talent Reviewer", "Support Agent", "Finance Admin", "Read-only Analyst"];
   return known.find((item) => item.toLowerCase().replace(/-/g, " ") === role.toLowerCase().replace(/-/g, " ")) ?? "Read-only Analyst";

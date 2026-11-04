@@ -954,6 +954,50 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/talents/me/saved-jobs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * GET /api/v1/talents/me/saved-jobs
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        get: operations["catalogGetApiV1TalentsMeSavedJobs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/talents/me/saved-jobs/{itemId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * PUT /api/v1/talents/me/saved-jobs/{itemId}
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        put: operations["catalogPutApiV1TalentsMeSavedJobsItemId"];
+        post?: never;
+        /**
+         * DELETE /api/v1/talents/me/saved-jobs/{itemId}
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        delete: operations["catalogDeleteApiV1TalentsMeSavedJobsItemId"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/talents/me/account": {
         parameters: {
             query?: never;
@@ -3982,6 +4026,26 @@ export interface paths {
          * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
          */
         get: operations["catalogGetApiV1OrganisationsOrganisationIdDashboard"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/files": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * GET /api/v1/files
+         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
+         */
+        get: operations["catalogGetApiV1Files"];
         put?: never;
         post?: never;
         delete?: never;
@@ -8040,6 +8104,117 @@ export interface operations {
             422: components["responses"]["Unprocessable"];
         };
     };
+    catalogGetApiV1TalentsMeSavedJobs: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            savedJobs: ({
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogPutApiV1TalentsMeSavedJobsItemId: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                itemId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            savedJob: {
+                                id?: string;
+                                status?: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
+    catalogDeleteApiV1TalentsMeSavedJobsItemId: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                itemId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Resource removed. */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
     catalogGetApiV1TalentsMeAccount: {
         parameters: {
             query?: never;
@@ -11230,6 +11405,7 @@ export interface operations {
                 "application/json": {
                     /** Format: date-time */
                     expectedUpdatedAt: string;
+                    logoFileId?: string | null;
                     name?: string;
                     legalName?: string | null;
                     industry?: string | null;
@@ -19647,6 +19823,54 @@ export interface operations {
             422: components["responses"]["Unprocessable"];
         };
     };
+    catalogGetApiV1Files: {
+        parameters: {
+            query?: {
+                page?: number;
+                pageSize?: number;
+                organisationId?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Request completed. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            files: ({
+                                id?: string;
+                                status: string;
+                                /** Format: date-time */
+                                createdAt?: string;
+                                /** Format: date-time */
+                                updatedAt?: string;
+                                originalName: string;
+                                mimeType: string;
+                            } & {
+                                [key: string]: unknown;
+                            })[];
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            422: components["responses"]["Unprocessable"];
+        };
+    };
     catalogPostApiV1FilesUploads: {
         parameters: {
             query?: never;
@@ -19965,7 +20189,7 @@ export interface operations {
             query?: {
                 page?: number;
                 pageSize?: number;
-                unreadOnly?: boolean;
+                unreadOnly?: "true" | "false";
             };
             header?: never;
             path?: never;
@@ -20109,7 +20333,8 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": {
-                    eventKey: string;
+                    /** @enum {string} */
+                    eventKey: "job.published" | "application.status_changed" | "interview.scheduled" | "offer.sent" | "message.sent" | "task.assigned" | "time.entry_submitted" | "time.timesheet_approved" | "time.timesheet_rejected" | "payment.status_changed";
                     enabled: boolean;
                 };
             };
@@ -20248,7 +20473,7 @@ export interface operations {
             query?: {
                 cursor?: string;
                 limit?: number;
-                archived?: boolean;
+                archived?: "true" | "false";
             };
             header?: never;
             path?: never;

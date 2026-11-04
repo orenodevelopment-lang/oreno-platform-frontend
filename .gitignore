@@ -8,3 +8,6 @@ out/
 .tmp-*/
 .tmp-crops/
 design/figma/*.png
+
+test-results/
+playwright-report/

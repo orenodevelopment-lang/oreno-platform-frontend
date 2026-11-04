@@ -50,9 +50,9 @@ export const authApi = {
     idempotent: true,
     body: { accountType: "COMPANY_OWNER", ...input },
   }),
-  login: (input: LoginInput) => apiRequest<{ user: AuthContextResponse["user"]; session: { expiresAt: string } }>("/api/v1/auth/login", { method: "POST", body: input }),
+  login: async (input: LoginInput) => { const result = await apiRequest<{ user: AuthContextResponse["user"]; session: { expiresAt: string } }>("/api/v1/auth/login", { method: "POST", body: input }); window.dispatchEvent(new Event("oreno:auth-changed")); return result; },
   current: () => apiRequest<AuthContextResponse>("/api/v1/auth/me"),
-  completeTwoFactor: (code: string) => apiRequest<{ authenticated: true }>("/api/v1/auth/2fa/challenge", { method: "POST", body: { code } }),
+  completeTwoFactor: async (code: string) => { const result = await apiRequest<{ authenticated: true }>("/api/v1/auth/2fa/challenge", { method: "POST", body: { code } }); window.dispatchEvent(new Event("oreno:auth-changed")); return result; },
   startTwoFactorSetup: () => apiRequest<{ secret: string; otpauthUrl: string; setupToken: string }>("/api/v1/auth/2fa/setup", { method: "POST" }),
   confirmTwoFactorSetup: (code: string, setupToken: string) => apiRequest<{ enabled: true; recoveryCodes: string[] }>("/api/v1/auth/2fa/confirm", { method: "POST", body: { code, setupToken } }),
   disableTwoFactor: (password: string, code: string) => apiRequest<{ enabled: false }>("/api/v1/auth/2fa/disable", { method: "POST", body: { password, code } }),
@@ -65,6 +65,7 @@ export const authApi = {
   logout: async () => {
     await apiRequest<void>("/api/v1/auth/logout", { method: "POST" });
     invalidateLive();
+    window.dispatchEvent(new Event("oreno:session-expired"));
   },
   oauthStart: async (
     provider: "google" | "linkedin",

@@ -840,3 +840,76 @@
 @media (prefers-reduced-motion: reduce) {
   .platform-sidebar, .platform-toast { transition: none; }
 }
+
+.workspace-skeleton {padding:24px;display:grid;gap:18px}.workspace-skeleton span {display:block;height:72px;border-radius:12px;background:linear-gradient(100deg,#eef5f3,#f8faf9,#eef5f3);background-size:200% 100%;animation:workspace-shimmer 1.5s infinite}.workspace-skeleton span:first-child {width:65%;height:24px}@keyframes workspace-shimmer {to {background-position:-200% 0}}@media(prefers-reduced-motion:reduce){.workspace-skeleton span {animation:none}}
+
+.workspace-table{max-width:100%;overflow-x:auto}.workspace-table table{width:100%;border-collapse:collapse;text-align:left}.workspace-table th,.workspace-table td{padding:12px;border-bottom:1px solid #dbe7e3;overflow-wrap:anywhere}.workspace-table button,.workspace-table a{display:inline-block;margin:4px;padding:8px;min-height:44px}.workspace-pagination{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:18px 0}.security-secret{display:block;overflow-wrap:anywhere}.form-field select[multiple]{min-height:120px}.product-form-card button,.detail-card button{min-height:44px}.messages-workspace{height:calc(100dvh - 160px);min-height:360px}@media(max-width:767px){.messages-workspace{height:calc(100dvh - 120px)}.platform-nav__link{min-height:44px}.platform-main,.platform-content{min-width:0}.form-grid{grid-template-columns:1fr}}
+
+.message-file{max-width:100%;overflow-wrap:anywhere}.message-file img{display:block;max-width:100%;height:auto;object-fit:contain;border-radius:12px}.message-file button{white-space:normal;overflow-wrap:anywhere}.workspace-table{max-width:100%;overflow-x:auto}.workspace-table td{overflow-wrap:anywhere}.messages-workspace__chat{min-height:0}.conversation-composer{overflow-y:auto;max-height:100dvh}
+
+/* Auth frames 541:794 / 541:1041: same visual system for talent and company. */
+.auth-screen--figma {grid-template-columns:minmax(0,1fr) minmax(0,1fr);min-height:max(100svh,1024px);font-family:var(--font-poppins),sans-serif;color:#080808;}
+.auth-screen--figma .auth-panel {min-height:1024px;padding:70px 60px 52px 70px;display:flex;flex-direction:column;align-items:center;}
+.auth-screen--figma .auth-brand {height:60px;width:180px;justify-content:center;flex-shrink:0;}
+.auth-screen--figma .auth-brand .oreno-logo {font-size:42px;}
+.auth-screen--figma .auth-form-wrap {width:100%;max-width:590px;margin:59px auto 0;background:rgba(224,242,240,.2);padding:33px 55px 26px;min-height:725px;}
+.auth-screen--figma .auth-form-wrap h1 {font-family:var(--font-raleway),sans-serif;font-size:32px;font-weight:700;line-height:1.35;text-align:center;margin:0;}
+.auth-screen--figma .auth-form-wrap > p:first-of-type {font-size:20px;line-height:30px;text-align:center;color:#080808;margin:0 -30px 30px;}
+.auth-screen--figma .auth-socials {grid-template-columns:1fr;gap:30px;}
+.auth-screen--figma .auth-socials button {height:68px;border:0;border-radius:12px;background:#26baa4;color:#fff;font-size:20px;transition:transform var(--motion-feedback),filter var(--motion-feedback);}
+.auth-screen--figma .auth-socials button:not(:disabled):hover {filter:brightness(1.05);transform:translateY(-2px);}
+.auth-screen--figma .auth-socials button:disabled {cursor:not-allowed;opacity:.65;}
+.auth-screen--figma .auth-divider {margin:18px 0 25px;gap:10px;font-size:12px;line-height:18px;color:rgba(8,8,8,.6);}
+.auth-screen--figma .auth-divider::before,.auth-screen--figma .auth-divider::after {display:none;}
+.auth-screen--figma .auth-divider img {min-width:0;flex:1;height:.5px;object-fit:fill;}
+.auth-screen--figma .auth-divider span {flex-shrink:0;}
+.auth-screen--figma form {gap:15px;}
+.auth-screen--figma form label {position:relative;display:grid;gap:8px;font-size:14px;}
+.auth-screen--figma input:not([type=checkbox]) {height:68px;background:rgba(224,242,240,.4);border:.5px solid rgba(8,8,8,.6);border-radius:12px;padding:0 20px;font-size:20px;color:#080808;}
+.auth-screen--figma input::placeholder {color:rgba(8,8,8,.6);opacity:1;}
+.auth-screen--figma .password-input input {padding-right:55px;}
+.auth-screen--figma .password-input button {top:13px;}
+.auth-screen--figma .auth-options {font-size:16px;margin-top:-8px;margin-bottom:16px;gap:14px;}
+.auth-screen--figma .auth-options label,.auth-screen--figma .auth-consent {display:flex;align-items:flex-start;gap:8px;font-size:14px;}
+.auth-screen--figma input[type=checkbox] {width:16px;height:16px;flex-shrink:0;margin:4px 0 0;accent-color:#166c5f;}
+.auth-screen--figma .auth-options a {margin-left:auto;}
+.auth-screen--figma .auth-submit {height:68px;border-radius:12px;background:#091c19;color:white;font-size:24px;font-weight:600;margin-top:15px;}
+.auth-screen--figma .auth-switch {font-size:16px;line-height:24px;text-align:left;margin:30px 0 0;color:#080808;}
+.auth-screen--figma .auth-switch a,.auth-screen--figma .auth-consent a,.auth-legal a {color:#166c5f;font-weight:600;}
+.auth-screen--figma .auth-legal {width:100%;max-width:650px;margin:22px 0 0;font-size:14px;line-height:24px;}
+.auth-screen--figma .auth-art {padding:0;min-height:1024px;background:#091c19;position:relative;overflow:hidden;}
+.auth-screen--figma .auth-art__petal-slot {position:absolute;width:625px;height:625px;top:663px;left:50%;margin:0;z-index:0;}
+.auth-screen--figma .auth-art__petal {position:absolute;top:0;left:0;transform:scale(2.083333);transform-origin:0 0;max-width:none;}
+.auth-screen--figma .auth-art__mask-slot {position:absolute;inset:0;width:auto;margin:0;z-index:1;}
+.auth-screen--figma .auth-art__mask {position:absolute;left:0;top:0;max-width:none;}
+.auth-screen--figma .auth-provider-note {font-size:12px;line-height:18px;color:#596260;margin:12px 0;text-align:left;}
+.auth-screen--figma .auth-back {border:0;background:transparent;color:#166c5f;justify-self:start;min-height:44px;}
+.auth-screen--figma .public-success {min-width:0;}
+@media (prefers-reduced-motion:no-preference) {
+ .auth-screen--figma .auth-form-wrap {animation:motion-step-enter var(--motion-route) var(--motion-ease) both;}
+ .auth-screen--figma .auth-art__petal-slot {animation:motion-float 13s ease-in-out infinite alternate;}
+ .auth-screen--figma .auth-art__mask-slot {animation:auth-art-drift 18s ease-in-out infinite alternate;transform-origin:top left;}
+ @keyframes auth-art-drift {from{transform:translateY(0)}to{transform:translateY(-14px)}}
+}
+@media (min-width:769px) and (max-width:1200px) {
+ .auth-screen--figma .auth-panel {padding:45px 24px;}
+ .auth-screen--figma .auth-form-wrap {padding:30px 28px;}
+ .auth-screen--figma .auth-form-wrap > p:first-of-type {margin-inline:0;font-size:17px;}
+ .auth-screen--figma .auth-options {font-size:13px;}
+}
+@media (max-width:768px) {
+ .auth-screen--figma {grid-template-columns:minmax(0,1fr);min-height:100svh;}
+ .auth-screen--figma .auth-panel {min-height:100svh;padding:28px 20px 36px;}
+ .auth-screen--figma .auth-art {display:none;}
+ .auth-screen--figma .auth-form-wrap {margin-top:28px;padding:28px 20px;min-height:0;max-width:520px;}
+ .auth-screen--figma .auth-form-wrap h1 {font-size:28px;}
+ .auth-screen--figma .auth-form-wrap > p:first-of-type {margin:4px 0 26px;font-size:16px;line-height:25px;}
+ .auth-screen--figma .auth-socials {gap:16px;}
+ .auth-screen--figma .auth-socials button,.auth-screen--figma input:not([type=checkbox]) {height:58px;font-size:16px;}
+ .auth-screen--figma .auth-submit {height:58px;font-size:20px;}
+ .auth-screen--figma .auth-options {font-size:12px;flex-wrap:wrap;gap:8px;margin-bottom:6px;}
+ .auth-screen--figma .auth-switch {font-size:14px;}
+ .auth-screen--figma .auth-legal {font-size:12px;max-width:520px;}
+ .auth-screen--figma .password-input button {top:8px;}
+}
+.auth-screen--figma .auth-brand .oreno-logo__animated-wordmark {transform:scale(1.32);transform-origin:center}.auth-screen--figma .auth-divider span {background:transparent}.auth-screen--figma .auth-form-wrap > p:first-of-type {margin-bottom:37px}

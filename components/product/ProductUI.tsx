@@ -26,7 +26,7 @@ const stateCopy: Record<AsyncState, { title: string; body: string; icon: typeof 
   error: { title: "We could not load this view", body: "The request failed safely. Try again or return later.", icon: AlertTriangle },
   denied: { title: "You do not have access", body: "Ask an organisation owner if you believe you need this information.", icon: ShieldAlert },
   archived: { title: "This record is archived", body: "It is available for history but cannot be changed.", icon: Archive },
-  success: { title: "Action completed", body: "Your change has been saved in this local product demo.", icon: CheckCircle2 },
+  success: { title: "Action completed", body: "Your change has been saved.", icon: CheckCircle2 },
 };
 
 export function DataStateBoundary({ children, empty = false, noResults = false, state: stateOverride }: { children: ReactNode; empty?: boolean; noResults?: boolean; state?: AsyncState | null }) {

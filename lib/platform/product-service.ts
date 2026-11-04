@@ -164,17 +164,21 @@ async function orgRequest<T>(suffix: string, options?: Parameters<typeof apiRequ
   });
 }
 
+async function fetchAllPages<T>(path:string, property:string, mapper:(value:unknown)=>T, organisationId?:string) {
+  const items:T[]=[];let page=1;
+  while(true){const result=await apiRequest<{data:Record<string,unknown>;meta?:{hasNextPage?:boolean}}>(path,{query:pageQuery(page,100),direct:true,organisationId});items.push(...asArray(result.data[property]).map(mapper));if(!result.meta?.hasNextPage)break;page++;}
+  return items;
+}
 function listResource<T>(key: string, property: string, path: string, mapper: (value: unknown) => T) {
   return liveValue<T[]>(key, [], async () => {
-    const result = await apiRequest<Record<string, unknown>>(path, { query: pageQuery() });
-    return asArray(result[property]).map(mapper);
+    return fetchAllPages(path,property,mapper);
   });
 }
 
 function orgListResource<T>(key: string, property: string, suffix: string, mapper: (value: unknown) => T) {
   return liveValue<T[]>(key, [], async () => {
-    const result = await orgRequest<Record<string, unknown>>(suffix, { query: pageQuery() });
-    return asArray(result[property]).map(mapper);
+    const id=await organisationId();
+    return fetchAllPages(`/api/v1/organisations/${id}${suffix}`,property,mapper,id);
   });
 }
 
