@@ -1113,9 +1113,23 @@
               "type": "string",
               "enum": [
                 "login",
-                "talent_signup"
+                "talent_signup",
+                "company_signup"
               ],
               "default": "login"
+            }
+          },
+          {
+            "name": "audience",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "talent",
+                "company"
+              ],
+              "default": "talent"
             }
           },
           {
@@ -1304,6 +1318,173 @@
           },
           "422": {
             "$ref": "#/components/responses/Unprocessable"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/oauth/company-registration": {
+      "get": {
+        "operationId": "authCompanyRegistrationDetails",
+        "summary": "Read browser-bound company signup details",
+        "tags": [
+          "auth"
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Pending signup and request proof; never cached.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "string",
+                          "format": "email"
+                        },
+                        "displayName": {
+                          "type": "string"
+                        },
+                        "requiresTwoFactor": {
+                          "type": "boolean"
+                        },
+                        "csrfToken": {
+                          "type": "string"
+                        },
+                        "expiresAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "required": [
+                        "email",
+                        "displayName",
+                        "requiresTwoFactor",
+                        "csrfToken",
+                        "expiresAt"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "meta": {
+                      "type": "object",
+                      "description": "Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields.",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "authCompleteCompanyRegistration",
+        "summary": "Complete a verified company OAuth signup",
+        "description": "Requires the HttpOnly signup cookie and x-oreno-registration-csrf header returned by the details endpoint. Existing accounts with MFA must supply a code. Consumes the signup once and creates owner membership atomically.",
+        "tags": [
+          "auth"
+        ],
+        "security": [],
+        "parameters": [
+          {
+            "name": "x-oreno-registration-csrf",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "lastName": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "organisationName": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 200
+                  },
+                  "acceptTerms": {
+                    "type": "boolean",
+                    "const": true
+                  },
+                  "twoFactorCode": {
+                    "type": "string",
+                    "minLength": 6,
+                    "maxLength": 32
+                  }
+                },
+                "required": [
+                  "firstName",
+                  "lastName",
+                  "organisationName",
+                  "acceptTerms"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Workspace created and normal session established.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "organisationId": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "next": {
+                          "type": "string",
+                          "const": "/company/onboarding/personal"
+                        }
+                      },
+                      "required": [
+                        "organisationId",
+                        "next"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "meta": {
+                      "type": "object",
+                      "description": "Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields.",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

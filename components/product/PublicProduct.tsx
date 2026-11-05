@@ -1,4 +1,5 @@
 "use client";
+import { CompanyOAuthCallback } from "@/components/auth/CompanyOAuthCallback";
 
 import { RememberEmail } from "@/components/auth/RememberEmail";
 import { AuthFrame, AuthProviders } from "@/components/auth/AuthFrame";
@@ -222,7 +223,7 @@ export function PublicJobs({ jobId }: { jobId?: string }) {
   const jobs = productService.listPublicJobs();
   if (jobId) return <PublicJobDetail id={jobId} />;
   return (
-    <PublicShell>
+    <PublicShell accountAudience="talent">
       <CatalogueHero kind="jobs" />
       <JobsCatalogue jobs={jobs} />
     </PublicShell>
@@ -646,6 +647,7 @@ export function AuthJourney({
   oauthStatus,
   oauthProvider,
   oauthReason,
+  oauthAudience, companySignup,
 }: {
   flow: string;
   initialToken?: string;
@@ -655,6 +657,7 @@ export function AuthJourney({
   oauthStatus?: string;
   oauthProvider?: string;
   oauthReason?: string;
+  oauthAudience?: string; companySignup?: string;
 }) {
   const router = useRouter();
   const [submitted, setSubmitted] = useState(false);
@@ -679,8 +682,9 @@ export function AuthJourney({
       ? initialNext
       : "/talent";
 
+  const companyCallback = flow === "oauth-callback" && (oauthAudience === "company" || companySignup === "pending" || oauthDestination.startsWith("/company"));
   useEffect(() => {
-    if (flow !== "oauth-callback") return;
+    if (flow !== "oauth-callback" || companyCallback) return;
     if (oauthStatus === "failed") return;
     if (initialStep === "two-factor") {
       return;
@@ -703,7 +707,7 @@ export function AuthJourney({
             : "OAuth sign-in could not be completed.",
         ),
       );
-  }, [flow, initialStep, oauthCreated, oauthDestination, oauthStatus, router]);
+  }, [flow, initialStep, oauthCreated, oauthDestination, oauthStatus, router, companyCallback]);
 
   const copy: Record<string, { title: string; body: string; button: string }> =
     {
@@ -884,6 +888,7 @@ export function AuthJourney({
     }
   }
 
+  if(companyCallback) return <CompanyOAuthCallback pending={companySignup === "pending"} status={oauthStatus} reason={oauthReason} provider={oauthProvider} step={initialStep}/>;
   if (flow === "talent-login" || flow === "talent-signup") {
     const signup = flow === "talent-signup";
     return (

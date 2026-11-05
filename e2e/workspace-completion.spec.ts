@@ -284,6 +284,7 @@ test("session survives navigation without another account guard and expiry redir
   await expect(
     page.getByRole("heading", { name: "Saved jobs", exact: true }).last(),
   ).toBeVisible();
+  await expect(page.getByText(/No saved jobs/i)).toBeVisible();
   const calls = store.authCalls;
   await page
     .getByRole("navigation", { name: "talent navigation" })

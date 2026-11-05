@@ -10,7 +10,7 @@ export function PageTransition({ children }: { children: ReactNode }) {
   return (
     <m.div
       className="motion-page"
-      key={pathname}
+      key={/^\/company(?:\/|$)/.test(pathname) && !/^\/company\/(login|signup|onboarding)(?:\/|$)/.test(pathname) ? "company-workspace" : /^\/talent(?:\/|$)/.test(pathname) ? "talent-workspace" : pathname}
       variants={pageVariants}
       initial="initial"
       animate="enter"

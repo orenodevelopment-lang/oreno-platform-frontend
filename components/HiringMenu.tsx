@@ -8,11 +8,13 @@ import { hiringMenuLinks } from "@/data/site-content";
 type HiringMenuProps = {
   variant: "marketing" | "public";
   onNavigate?: () => void;
+  audience?: "company" | "talent";
 };
 
 const HOVER_CLOSE_DELAY_MS = 180;
 
-export function HiringMenu({ variant, onNavigate }: HiringMenuProps) {
+export function HiringMenu({ variant, onNavigate, audience = "company" }: HiringMenuProps) {
+  const links = audience === "talent" ? [{href:"/auth/talent-login?next=%2Fjobs",label:"Talent login",description:"Manage your applications and work"},{href:"/auth/talent-signup?next=%2Fjobs",label:"Join as talent",description:"Create your Oreno talent account"}] : hiringMenuLinks;
   const [open, setOpen] = useState(false);
   const menuId = useId();
   const reduceMotion = Boolean(useReducedMotion());
@@ -59,7 +61,7 @@ export function HiringMenu({ variant, onNavigate }: HiringMenuProps) {
   const triggerClass = variant === "marketing"
     ? "navbar__link navbar__hiring-trigger"
     : "public-product-cta public-product-hiring-trigger";
-  const previewLink = hiringMenuLinks.find((link) => link.href === "/company/login") ?? hiringMenuLinks[0];
+  const previewLink = links.find((link) => link.href.includes("login")) ?? links[0];
   const labelMotion = reduceMotion
     ? { duration: 0.01 }
     : { duration: 0.24, ease: "easeOut" as const };
@@ -95,7 +97,7 @@ export function HiringMenu({ variant, onNavigate }: HiringMenuProps) {
         aria-expanded={open}
         aria-controls={menuId}
         aria-haspopup="menu"
-        aria-label="Open company account menu"
+        aria-label={"Open "+audience+" account menu"}
         onPointerDown={(event) => {
           lastPointerTypeRef.current = event.pointerType;
         }}
@@ -129,7 +131,7 @@ export function HiringMenu({ variant, onNavigate }: HiringMenuProps) {
             id={menuId}
             className="hiring-menu__panel"
             role="menu"
-            aria-label="Company account options"
+            aria-label={audience+" account options"}
             initial={reduceMotion ? false : { opacity: 0, y: -8, scale: 0.96, rotateX: -5 }}
             animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
             exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -7, scale: 0.975 }}
@@ -138,9 +140,9 @@ export function HiringMenu({ variant, onNavigate }: HiringMenuProps) {
           >
             <div className="hiring-menu__eyebrow" aria-hidden="true">
               <span />
-              Company workspace
+              {audience === "company" ? "Company workspace" : "Your talent account"}
             </div>
-            {hiringMenuLinks.map((link, index) => (
+            {links.map((link, index) => (
               <Link
                 key={link.href}
                 href={link.href}

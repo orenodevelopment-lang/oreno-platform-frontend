@@ -258,6 +258,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/oauth/company-registration": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read browser-bound company signup details */
+        get: operations["authCompanyRegistrationDetails"];
+        put?: never;
+        /**
+         * Complete a verified company OAuth signup
+         * @description Requires the HttpOnly signup cookie and x-oreno-registration-csrf header returned by the details endpoint. Existing accounts with MFA must supply a code. Consumes the signup once and creates owner membership atomically.
+         */
+        post: operations["authCompleteCompanyRegistration"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/logout": {
         parameters: {
             query?: never;
@@ -6181,7 +6202,8 @@ export interface operations {
         parameters: {
             query?: {
                 redirectTo?: string;
-                mode?: "login" | "talent_signup";
+                mode?: "login" | "talent_signup" | "company_signup";
+                audience?: "talent" | "company";
                 acceptTerms?: "true" | "false";
             };
             header?: never;
@@ -6245,6 +6267,84 @@ export interface operations {
             };
             404: components["responses"]["NotFound"];
             422: components["responses"]["Unprocessable"];
+        };
+    };
+    authCompanyRegistrationDetails: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Pending signup and request proof; never cached. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            /** Format: email */
+                            email: string;
+                            displayName: string;
+                            requiresTwoFactor: boolean;
+                            csrfToken: string;
+                            /** Format: date-time */
+                            expiresAt: string;
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    authCompleteCompanyRegistration: {
+        parameters: {
+            query?: never;
+            header: {
+                "x-oreno-registration-csrf": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    firstName: string;
+                    lastName: string;
+                    organisationName: string;
+                    /** @constant */
+                    acceptTerms: true;
+                    twoFactorCode?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Workspace created and normal session established. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: {
+                            /** Format: uuid */
+                            organisationId: string;
+                            /** @constant */
+                            next: "/company/onboarding/personal";
+                        };
+                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
+                        meta: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
         };
     };
     authLogout: {

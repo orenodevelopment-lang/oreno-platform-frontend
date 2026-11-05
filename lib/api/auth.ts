@@ -40,6 +40,8 @@ export interface CompanyRegistrationInput {
 }
 
 export const authApi = {
+ companyRegistration:()=>apiRequest<{email:string;displayName:string;requiresTwoFactor:boolean;csrfToken:string;expiresAt:string}>("/api/v1/auth/oauth/company-registration"),
+ completeCompanyRegistration:async(body:{firstName:string;lastName:string;organisationName:string;acceptTerms:true;twoFactorCode?:string},csrf:string)=>{const result=await apiRequest<{organisationId:string;next:string}>("/api/v1/auth/oauth/company-registration",{method:"POST",body,headers:{"x-oreno-registration-csrf":csrf}});window.dispatchEvent(new Event("oreno:auth-changed"));return result;},
   registerCompany: (input: CompanyRegistrationInput) => apiRequest<{
     userId: string;
     accountType: "COMPANY_OWNER";
@@ -69,7 +71,7 @@ export const authApi = {
   },
   oauthStart: async (
     provider: "google" | "linkedin",
-    options: { mode: "login" | "talent_signup"; acceptTerms?: boolean; next?: string },
+    options: { mode: "login" | "talent_signup" | "company_signup"; audience?: "company" | "talent"; acceptTerms?: boolean; next?: string },
   ) => {
     const redirectTo = new URL("/auth/oauth-callback", window.location.origin).toString();
     window.sessionStorage.setItem("oreno:oauth-next", options.next || "/talent");
@@ -77,6 +79,7 @@ export const authApi = {
       query: {
         redirectTo,
         mode: options.mode,
+        audience: options.audience ?? (options.next?.startsWith("/company") ? "company" : "talent"),
         acceptTerms: options.acceptTerms ? "true" : "false",
       },
     });

@@ -45,11 +45,12 @@ test("homepage hiring menu is restricted to company account journeys", () => {
   const hiringMenu = readFileSync(new URL("../components/HiringMenu.tsx", import.meta.url), "utf8");
   const homepageNav = readFileSync(new URL("../components/Navbar.tsx", import.meta.url), "utf8");
   const publicShell = readFileSync(new URL("../components/product/PublicShell.tsx", import.meta.url), "utf8");
-  assert.match(hiringMenu, /hiringMenuLinks\.map/);
+  assert.match(hiringMenu, /links\.map/);
   assert.match(hiringMenu, /onPointerEnter/);
   assert.match(hiringMenu, /AnimatePresence/);
   assert.match(hiringMenu, /Company workspace/);
-  assert.doesNotMatch(hiringMenu, /Join as talent|Talent login/);
+  assert.match(hiringMenu, /audience = "company"/);
+  assert.match(hiringMenu, /audience === "talent"/);
   assert.match(homepageNav, /<HiringMenu variant="marketing"/);
   assert.match(publicShell, /<HiringMenu variant="public"/);
   assert.doesNotMatch(publicShell.match(/<header[\s\S]*?<\/header>/)?.[0] ?? "", /Join as talent|Talent login/);

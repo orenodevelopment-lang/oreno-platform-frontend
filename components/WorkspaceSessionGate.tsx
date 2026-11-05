@@ -5,15 +5,15 @@ import { useWorkspaceSession } from "./WorkspaceSessionProvider";
 import { PlatformShell } from "./platform/PlatformShell";
 import { ApiClientError } from "@/lib/api/client";
 export function WorkspaceSkeleton() {
+  const pathname = usePathname();
+  const shape = pathname.endsWith("/messages") ? "messages" : /^\/(company|talent)$/.test(pathname) ? "cards" : "rows";
   return (
     <section
-      className="workspace-skeleton"
+      className={`workspace-skeleton workspace-skeleton--${shape}`}
       role="status"
       aria-label="Loading workspace"
     >
-      <span />
-      <span />
-      <span />
+      <span /><span /><span /><span /><span />
     </section>
   );
 }

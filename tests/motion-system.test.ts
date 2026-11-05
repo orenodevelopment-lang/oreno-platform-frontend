@@ -55,7 +55,7 @@ test("the full wordmark animates and replays across application routes", () => {
   assert.match(globalStyles, /\.oreno-logo__animated-wordmark/);
   assert.match(motionStyles, /\.oreno-logo__mark \{ animation: motion-logo-mark/);
   assert.match(motionStyles, /\.oreno-logo__letter \{ animation: motion-logo-letter/);
-  assert.match(publicProduct, /auth-journey__brand"><Logo dark/);
+  assert.match(publicProduct, /auth-journey__brand">\s*<Logo dark/);
   assert.doesNotMatch(publicProduct, /<span><Image src="\/assets\/figma\/oreno-mark\.svg"/);
   for (const shell of shells) {
     assert.match(readFileSync(new URL(shell, import.meta.url), "utf8"), /<Logo/);

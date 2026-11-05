@@ -20,7 +20,7 @@ import {
   WalletCards,
   X,
 } from "lucide-react";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { WorkspaceAmbient } from "@/components/motion/WorkspaceAmbient";
 import { Logo } from "@/components/Logo";
@@ -90,7 +90,19 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function PlatformShell({
+const ShellMounted = createContext(false);
+type ShellProps = {kind: ShellKind; title: string; children: ReactNode; actionLabel?: string};
+export function PlatformShell(props: ShellProps) {
+  const mounted = useContext(ShellMounted);
+  return mounted ? <>{props.children}</> : <ShellMounted.Provider value={true}><PlatformShellRoot {...props}/></ShellMounted.Provider>;
+}
+export function workspaceTitle(kind: ShellKind, pathname: string) {
+  const navigation = kind === "company" ? companyNavigation : talentNavigation;
+  const exact = navigation.find(item => item.href === pathname);
+  if(exact) return exact.label === "Home" ? "Dashboard" : exact.label;
+  return navigation.find(item => item.href && item.href !== '/' + kind && pathname.startsWith(item.href + '/'))?.label ?? "Workspace";
+}
+function PlatformShellRoot({
   kind,
   title,
   children,

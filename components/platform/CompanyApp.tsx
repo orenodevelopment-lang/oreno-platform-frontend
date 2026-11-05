@@ -110,6 +110,7 @@ function AuthScreen({ mode }: { mode: "login" | "signup" }) {
   const isLogin = mode === "login";
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [providerConsent,setProviderConsent]=useState(false);
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -191,13 +192,16 @@ function AuthScreen({ mode }: { mode: "login" | "signup" }) {
   async function startProvider(provider: "google" | "linkedin") {
     setError("");
     try {
-      await authApi.oauthStart(provider, { mode: "login", next: "/company" });
+      if(!isLogin&&!providerConsent){setError("Accept the terms and privacy policy before provider signup.");return;}
+      setSubmitting(true);
+      await authApi.oauthStart(provider, { mode: isLogin?"login":"company_signup", audience:"company", acceptTerms:!isLogin&&providerConsent, next: isLogin?"/company":"/company/onboarding/personal" });
     } catch (cause) {
       setError(
         cause instanceof Error
           ? cause.message
           : "Provider sign-in could not be started.",
       );
+      setSubmitting(false);
     }
   }
   return (
@@ -219,16 +223,11 @@ function AuthScreen({ mode }: { mode: "login" | "signup" }) {
       {!signupDetails && (
         <AuthProviders
           signup={!isLogin}
-          disabled={!isLogin || submitting}
+          disabled={submitting}
           onProvider={(provider) => void startProvider(provider)}
         />
       )}
-      {!isLogin && !signupDetails && (
-        <p className="auth-provider-note">
-          Company registration uses email. Google and LinkedIn sign-in are
-          available after your company account is created.
-        </p>
-      )}
+      {!isLogin&&!signupDetails&&<label className="auth-consent"><input type="checkbox" checked={providerConsent} onChange={e=>setProviderConsent(e.target.checked)}/><span>I agree to the <Link href="/terms">terms</Link> and <Link href="/privacy-policy">privacy policy</Link> before signing up with a provider.</span></label>}
       <form onSubmit={submit}>
         {!isLogin && signupDetails ? (
           <>

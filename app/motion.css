@@ -80,21 +80,24 @@ button:disabled { cursor: not-allowed; opacity: .62; }
   transform: translateX(6px);
 }
 
-.platform-brand img,
-.public-product-brand img,
-.auth-brand img {
+.oreno-logo,
+.platform-brand .oreno-logo,
+.public-product-brand .oreno-logo,
+.auth-brand .oreno-logo {
   transform-origin: center;
   transition: transform var(--motion-feedback) var(--motion-emphasized), filter var(--motion-feedback) ease;
 }
 
-.platform-brand:hover img,
-.platform-brand:focus-visible img,
-.public-product-brand:hover img,
-.public-product-brand:focus-visible img,
-.auth-brand:hover img,
-.auth-brand:focus-visible img {
-  filter: drop-shadow(0 7px 12px rgba(49,188,169,.22));
-  transform: rotate(14deg) scale(1.08);
+.oreno-logo:hover,
+a:focus-visible .oreno-logo,
+.platform-brand:hover .oreno-logo,
+.platform-brand:focus-visible .oreno-logo,
+.public-product-brand:hover .oreno-logo,
+.public-product-brand:focus-visible .oreno-logo,
+.auth-brand:hover .oreno-logo,
+.auth-brand:focus-visible .oreno-logo {
+  filter: drop-shadow(0 9px 16px rgba(37,186,164,.32));
+  transform: translateY(-3px) scale(1.055);
 }
 
 /* Public website ambient system */

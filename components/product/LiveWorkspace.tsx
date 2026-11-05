@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import {
+  ApiClientError,
   apiRequest,
   asArray,
   asRecord,
@@ -17,7 +18,9 @@ import {
   type ApiRequestOptions,
 } from "@/lib/api/client";
 import { authApi } from "@/lib/api/auth";
-import { invalidateLive } from "@/lib/api/live-store";
+import { useWorkspaceSession } from "@/components/WorkspaceSessionProvider";
+import { cacheResource, forgetResource, readResource, resourceGeneration } from "@/lib/api/resource-cache";
+import { invalidateLive, useApiRevision } from "@/lib/api/live-store";
 import { ProductPage, StatusChip } from "./ProductUI";
 import { WorkspaceSkeleton } from "@/components/WorkspaceSessionGate";
 
@@ -88,42 +91,106 @@ export async function workspaceList(
   }
 }
 export function useResource(scope: Scope, path: string, listKey?: string) {
-  const [data, setData] = useState<Row>({});
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
+  const { session } = useWorkspaceSession();
+  const revision = useApiRevision();
+  const key = JSON.stringify([
+    session?.user.id ?? "public",
+    session?.context.organisationId ?? "",
+    scope,
+    path,
+    listKey,
+  ]);
+  const [state, setState] = useState<{
+    key: string;
+    data: Row;
+    error: string;
+    loading: boolean;
+    loaded: boolean;
+  }>(() => {
+    const cached = readResource(key);
+    return {
+      key,
+      data: cached?.data ?? {},
+      error: "",
+      loading: !cached,
+      loaded: !!cached,
+    };
+  });
   const version = useRef(0);
-  const reload = useCallback(async () => {
-    const current = ++version.current;
-    setError("");
-    setLoading(true);
-    try {
-      const result = listKey
-        ? { [listKey]: await workspaceList(scope, path, listKey) }
-        : await workspaceRequest(scope, path);
-      if (current === version.current) setData(result);
-    } catch (cause) {
-      if (current === version.current)
-        setError(
-          cause instanceof Error
-            ? cause.message
-            : "The records could not be loaded.",
-        );
-    } finally {
-      if (current === version.current) setLoading(false);
-    }
-  }, [scope, path, listKey]);
+  const reload = useCallback(
+    async (force = true) => {
+      const current = ++version.current;
+      const generation = resourceGeneration();
+      const cached = readResource(key);
+      if (!force && cached && Date.now() - cached.at < 30_000) {
+        setState({
+          key,
+          data: cached.data,
+          error: "",
+          loading: false,
+          loaded: true,
+        });
+        return;
+      }
+      setState((previous) => ({
+        key,
+        data: previous.key === key ? previous.data : (cached?.data ?? {}),
+        error: "",
+        loading: true,
+        loaded: previous.key === key ? previous.loaded : !!cached,
+      }));
+      try {
+        const data = listKey
+          ? { [listKey]: await workspaceList(scope, path, listKey) }
+          : await workspaceRequest(scope, path);
+        if (generation !== resourceGeneration() || current !== version.current)
+          return;
+        cacheResource(key, data, generation);
+        if (current === version.current)
+          setState({ key, data, error: "", loading: false, loaded: true });
+      } catch (cause) {
+        if (current !== version.current || generation !== resourceGeneration())
+          return;
+        const denied =
+          cause instanceof ApiClientError && [401, 403].includes(cause.status);
+        if (denied) forgetResource(key);
+        setState((previous) => ({
+          ...previous,
+          ...(denied ? { data: {}, loaded: false } : {}),
+          error:
+            cause instanceof Error
+              ? cause.message
+              : "The records could not be loaded.",
+          loading: false,
+        }));
+      }
+    },
+    [key, scope, path, listKey],
+  );
   useEffect(() => {
     const tracker = version;
     let active = true;
     queueMicrotask(() => {
-      if (active) void reload();
+      if (active) void reload(false);
     });
     return () => {
       active = false;
       tracker.current++;
     };
-  }, [reload]);
-  return { data, error, loading, reload };
+  }, [reload, revision]);
+  const cached = readResource(key);
+  const current =
+    state.key === key
+      ? state
+      : {
+          key,
+          data: cached?.data ?? {},
+          error: "",
+          loading: !cached,
+          loaded: !!cached,
+        };
+  const forceReload = useCallback(() => reload(true), [reload]);
+  return { ...current, reload: forceReload };
 }
 type Choice = { value: string; label: string };
 export type Field = {
@@ -576,18 +643,12 @@ export function ResourceState({
   resource: ReturnType<typeof useResource>;
   children: ReactNode;
 }) {
-  return resource.loading ? (
-    <WorkspaceSkeleton />
-  ) : resource.error ? (
-    <div role="alert">
-      <p>{resource.error}</p>
-      <button type="button" onClick={() => void resource.reload()}>
-        Retry
-      </button>
-    </div>
-  ) : (
-    <>{children}</>
-  );
+  return <>
+    {resource.loading && !resource.loaded && <WorkspaceSkeleton/>}
+    {resource.loading && resource.loaded && <p className="workspace-refresh" role="status">Updating…</p>}
+    {resource.error && <div role="alert"><p>{resource.error}</p><button type="button" onClick={()=>void resource.reload()}>Retry</button></div>}
+    {resource.loaded && children}
+  </>;
 }
 
 const nameDescription = [

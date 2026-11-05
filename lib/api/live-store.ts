@@ -1,5 +1,6 @@
 "use client";
 
+import { clearResources } from "./resource-cache";
 import { useSyncExternalStore } from "react";
 
 interface Entry<T> {
@@ -67,6 +68,7 @@ export function setLiveValue<T>(key: string, value: T) {
 }
 
 export function invalidateLive(prefix?: string) {
+  clearResources();
   if (!prefix) entries.clear();
   else {
     for (const key of entries.keys()) if (key.startsWith(prefix)) entries.delete(key);
