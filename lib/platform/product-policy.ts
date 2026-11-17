@@ -23,7 +23,7 @@ export const companyProductRoutes = [
   "/company/performance/reviews/:reviewId",
   "/company/jobs/:jobId",
   "/company/jobs/:jobId/edit",
-  "/company/discover",
+  "/company/candidates/:personId",
   "/company/applications",
   "/company/applications/:applicationId",
   "/company/shortlists",
@@ -88,8 +88,6 @@ export const talentProductRoutes = [
 ] as const;
 
 export const publicProductRoutes = [
-  "/talent-catalogue",
-  "/talent-catalogue/:personId",
   "/jobs",
   "/jobs/:jobId",
   "/request-demo",

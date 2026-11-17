@@ -19,7 +19,6 @@ import type {
   PublicJobDetail,
   PublicJobSummary,
   PublicTalentProfile,
-  PublicTalentSummary,
   ReplacementRequestInput,
   ShortlistRecord,
   TalentAccountCreateInput,
@@ -33,7 +32,6 @@ import type {
   TimeEntryRecord,
 } from "./contracts";
 
-const emptyTalent: PublicTalentProfile = { id: "", name: "Loading…", discipline: "", seniority: "", location: "", rate: "", availability: "", skills: [], vetted: false, avatar: "/assets/figma/oreno-mark.svg", bio: "", experienceYears: 0, highlights: [], portfolio: [] };
 const emptyJob: PublicJobDetail = { id: "", company: "", title: "Loading…", location: "", employmentType: "", workplace: "", compensation: "", skills: [], postedAt: "", status: "Published", description: "", responsibilities: [], requirements: [], deadline: "" };
 const emptyApplication: ApplicationRecord = { id: "", updatedAt: "", candidateId: "", candidateName: "Loading…", jobId: "", jobTitle: "", appliedAt: "", status: "Submitted", portfolio: "", coverNote: "", statusHistory: [] };
 const emptyInterview: InterviewRecord = { id: "", applicationId: "", candidateName: "Loading…", jobTitle: "", startsAt: "", durationMinutes: 0, participants: [], meetingUrl: "", status: "Scheduled" };
@@ -255,8 +253,6 @@ export const productService = {
   }),
   resendCompanyInvitation: async (id: string) => { const result = await orgRequest(`/invitations/${id}/resend`, { method: "POST", body: { reason: "Resent by an authorised workspace member." } }); invalidateLive("org:invitations"); return result; },
   revokeCompanyInvitation: async (id: string) => { const result = await orgRequest(`/invitations/${id}/revoke`, { method: "POST", body: { reason: "Cancelled by an authorised workspace member." } }); invalidateLive("org:invitations"); return result; },
-  listPublicTalents: (): PublicTalentSummary[] => listResource("public:talents", "talents", "/api/v1/public/talents", mapTalent),
-  getPublicTalent: (id: string) => liveValue(`public:talent:${id}`, { ...emptyTalent, id }, async () => mapTalent((await apiRequest<{ profile: unknown }>(`/api/v1/public/talents/${id}`)).profile)),
   listPublicJobs: (): PublicJobSummary[] => listResource("public:jobs", "jobs", "/api/v1/public/jobs", mapJob),
   getPublicJob: (id: string) => liveValue(`public:job:${id}`, { ...emptyJob, id }, async () => mapJob((await apiRequest<{ job: unknown }>(`/api/v1/public/jobs/${id}`)).job)),
   listCompanyJobs: () => orgListResource("org:jobs", "jobs", "/jobs", mapCompanyJob),

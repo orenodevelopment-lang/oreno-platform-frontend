@@ -9,7 +9,7 @@ export function PublicShell({ children, accountAudience="company" }: { children:
     <div className="public-product-shell">
       <header className="public-product-nav">
         <Link className="public-product-brand" href="/" aria-label="Oreno home"><Logo /></Link>
-        <nav aria-label="Public navigation"><Link href="/jobs">Find jobs</Link><Link href="/talent-catalogue">Find talent</Link></nav>
+        <nav aria-label="Public navigation"><Link href="/jobs">Find jobs</Link></nav>
         <HiringMenu variant="public" audience={accountAudience} />
       </header>
       <main><WorkspaceAmbient tone="public" />{children}</main>

@@ -855,46 +855,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/talents": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * GET /api/v1/talents
-         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
-         */
-        get: operations["catalogGetApiV1Talents"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/talents/{profileId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * GET /api/v1/talents/{profileId}
-         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
-         */
-        get: operations["catalogGetApiV1TalentsProfileId"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/public/talents/skills/categories": {
         parameters: {
             query?: never;
@@ -935,7 +895,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/public/talents": {
+    "/api/v1/talents/{profileId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -943,30 +903,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * GET /api/v1/public/talents
+         * GET /api/v1/talents/{profileId}
          * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
          */
-        get: operations["catalogGetApiV1PublicTalents"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/public/talents/{profileId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * GET /api/v1/public/talents/{profileId}
-         * @description Uses the standard Oreno success/error envelopes. Request schemas come from the same Zod validators used by controllers. UUID path parameters identify write resources; tenant routes enforce organisation membership and permissions.
-         */
-        get: operations["catalogGetApiV1PublicTalentsProfileId"];
+        get: operations["catalogGetApiV1TalentsProfileId"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7919,105 +7859,6 @@ export interface operations {
             422: components["responses"]["Unprocessable"];
         };
     };
-    catalogGetApiV1Talents: {
-        parameters: {
-            query?: {
-                page?: number;
-                pageSize?: number;
-                q?: string;
-                skillIds?: string | string[];
-                seniority?: string;
-                countryCode?: string;
-                timeZone?: string;
-                availabilityStatus?: "AVAILABLE_NOW" | "AVAILABLE_FROM_DATE" | "UNAVAILABLE";
-                workArrangement?: "REMOTE" | "HYBRID" | "ONSITE";
-                employmentType?: "FULL_TIME" | "PART_TIME" | "CONTRACT";
-                minRate?: string;
-                maxRate?: string;
-                currency?: string;
-                sort?: "newest" | "experience_desc" | "rate_asc" | "rate_desc";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Request completed. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            talents: ({
-                                id?: string;
-                                status?: string;
-                                /** Format: date-time */
-                                createdAt?: string;
-                                /** Format: date-time */
-                                updatedAt?: string;
-                            } & {
-                                [key: string]: unknown;
-                            })[];
-                        };
-                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
-                        meta: {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-            400: components["responses"]["BadRequest"];
-            404: components["responses"]["NotFound"];
-            409: components["responses"]["Conflict"];
-            422: components["responses"]["Unprocessable"];
-        };
-    };
-    catalogGetApiV1TalentsProfileId: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                profileId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Request completed. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            profile: {
-                                id?: string;
-                                status?: string;
-                                /** Format: date-time */
-                                createdAt?: string;
-                                /** Format: date-time */
-                                updatedAt?: string;
-                            } & {
-                                [key: string]: unknown;
-                            };
-                        };
-                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
-                        meta: {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-            400: components["responses"]["BadRequest"];
-            404: components["responses"]["NotFound"];
-            409: components["responses"]["Conflict"];
-            422: components["responses"]["Unprocessable"];
-        };
-    };
     catalogGetApiV1PublicTalentsSkillsCategories: {
         parameters: {
             query?: never;
@@ -8105,63 +7946,7 @@ export interface operations {
             422: components["responses"]["Unprocessable"];
         };
     };
-    catalogGetApiV1PublicTalents: {
-        parameters: {
-            query?: {
-                page?: number;
-                pageSize?: number;
-                q?: string;
-                skillIds?: string | string[];
-                seniority?: string;
-                countryCode?: string;
-                timeZone?: string;
-                availabilityStatus?: "AVAILABLE_NOW" | "AVAILABLE_FROM_DATE" | "UNAVAILABLE";
-                workArrangement?: "REMOTE" | "HYBRID" | "ONSITE";
-                employmentType?: "FULL_TIME" | "PART_TIME" | "CONTRACT";
-                minRate?: string;
-                maxRate?: string;
-                currency?: string;
-                sort?: "newest" | "experience_desc" | "rate_asc" | "rate_desc";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Request completed. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: {
-                            talents: ({
-                                id?: string;
-                                status?: string;
-                                /** Format: date-time */
-                                createdAt?: string;
-                                /** Format: date-time */
-                                updatedAt?: string;
-                            } & {
-                                [key: string]: unknown;
-                            })[];
-                        };
-                        /** @description Always present; `{}` when there is nothing to add. Paginated list responses add `page` fields. */
-                        meta: {
-                            [key: string]: unknown;
-                        };
-                    };
-                };
-            };
-            400: components["responses"]["BadRequest"];
-            404: components["responses"]["NotFound"];
-            409: components["responses"]["Conflict"];
-            422: components["responses"]["Unprocessable"];
-        };
-    };
-    catalogGetApiV1PublicTalentsProfileId: {
+    catalogGetApiV1TalentsProfileId: {
         parameters: {
             query?: never;
             header?: never;
@@ -8199,6 +7984,7 @@ export interface operations {
                 };
             };
             400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorised"];
             404: components["responses"]["NotFound"];
             409: components["responses"]["Conflict"];
             422: components["responses"]["Unprocessable"];

@@ -34,7 +34,7 @@ export function HiringStepCard({
           <small>{location}</small>
         </div>
         {!partial ? (
-          <Link href="/talent-catalogue" className="talent-card__button">Hire talent</Link>
+          <Link href="/company/signup" className="talent-card__button">Start hiring</Link>
         ) : null}
       </div>
     </article>

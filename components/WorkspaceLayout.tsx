@@ -22,7 +22,7 @@ export function WorkspaceLayout({
     <PlatformShell
       kind={kind}
       title={workspaceTitle(kind, pathname)}
-      actionLabel={kind === "company" ? "Hire a talent" : undefined}
+      actionLabel={kind === "company" ? "Create job" : undefined}
     >
       <WorkspaceSessionGate kind={kind}>{children}</WorkspaceSessionGate>
     </PlatformShell>

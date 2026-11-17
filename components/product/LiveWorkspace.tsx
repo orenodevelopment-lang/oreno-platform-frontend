@@ -25,7 +25,7 @@ import { ProductPage, StatusChip } from "./ProductUI";
 import { WorkspaceSkeleton } from "@/components/WorkspaceSessionGate";
 
 export type Row = Record<string, unknown>;
-type Scope = "company" | "talent" | "account";
+type Scope = "company" | "talent" | "account" | "candidate";
 export function value(row: Row, key: string): string {
   const result = key
     .split(".")
@@ -61,12 +61,12 @@ export async function workspaceRequest<T = Row>(
   path: string,
   options: ApiRequestOptions = {},
 ): Promise<T> {
-  if (scope === "company") {
+  if (scope === "company" || scope === "candidate") {
     const { context } = await authApi.current();
     if (!context.organisationId)
       throw new Error("This account has no company workspace.");
     return apiRequest<T>(
-      `/api/v1/organisations/${context.organisationId}${path}`,
+      scope === "candidate" ? `/api/v1/talents${path}` : `/api/v1/organisations/${context.organisationId}${path}`,
       { ...options, organisationId: context.organisationId },
     );
   }
@@ -152,7 +152,7 @@ export function useResource(scope: Scope, path: string, listKey?: string) {
         if (current !== version.current || generation !== resourceGeneration())
           return;
         const denied =
-          cause instanceof ApiClientError && [401, 403].includes(cause.status);
+          cause instanceof ApiClientError && ([401, 403].includes(cause.status) || (scope === "candidate" && cause.status === 404));
         if (denied) forgetResource(key);
         setState((previous) => ({
           ...previous,

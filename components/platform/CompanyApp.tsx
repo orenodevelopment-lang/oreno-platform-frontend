@@ -1,4 +1,5 @@
 "use client";
+import { TermsConsent, focusTermsConsent } from "@/components/auth/TermsConsent";
 
 import { RememberEmail } from "@/components/auth/RememberEmail";
 import { AuthFrame, AuthProviders } from "@/components/auth/AuthFrame";
@@ -57,9 +58,9 @@ export function CompanyApp({ segments }: { segments: string[] }) {
   if (segments[0] === "onboarding")
     return <OnboardingScreen step={segments[1] ?? "personal"} />;
 
-  const actionLabel = "Hire a talent";
+  const actionLabel = "Create job";
   const inferredTitle =
-    companyProductTitles[route] ??
+    (route.startsWith("candidates/") ? "Candidate profile" : companyProductTitles[route]) ??
     (route.startsWith("jobs/")
       ? "Job detail"
       : route.startsWith("applications/")
@@ -92,7 +93,7 @@ function CompanyRoute({ route }: { route: string }) {
   if (!route) return <DashboardView />;
   if (route === "messages") return <MessagesView />;
   const aliases: Record<string, string> = {
-    talents: "discover",
+    talents: "applications",
     "team-members": "team",
     departments: "departments",
     roles: "jobs",
@@ -192,7 +193,7 @@ function AuthScreen({ mode }: { mode: "login" | "signup" }) {
   async function startProvider(provider: "google" | "linkedin") {
     setError("");
     try {
-      if(!isLogin&&!providerConsent){setError("Accept the terms and privacy policy before provider signup.");return;}
+      if(!isLogin&&!providerConsent){focusTermsConsent();setError("Accept the terms and privacy policy before provider signup.");return;}
       setSubmitting(true);
       await authApi.oauthStart(provider, { mode: isLogin?"login":"company_signup", audience:"company", acceptTerms:!isLogin&&providerConsent, next: isLogin?"/company":"/company/onboarding/personal" });
     } catch (cause) {
@@ -227,7 +228,7 @@ function AuthScreen({ mode }: { mode: "login" | "signup" }) {
           onProvider={(provider) => void startProvider(provider)}
         />
       )}
-      {!isLogin&&!signupDetails&&<label className="auth-consent"><input type="checkbox" checked={providerConsent} onChange={e=>setProviderConsent(e.target.checked)}/><span>I agree to the <Link href="/terms">terms</Link> and <Link href="/privacy-policy">privacy policy</Link> before signing up with a provider.</span></label>}
+      {!isLogin&&!signupDetails&&<TermsConsent checked={providerConsent} onChange={setProviderConsent} />}
       <form onSubmit={submit}>
         {!isLogin && signupDetails ? (
           <>
@@ -254,13 +255,7 @@ function AuthScreen({ mode }: { mode: "login" | "signup" }) {
                 autoComplete="organization"
               />
             </label>
-            <label className="auth-consent">
-              <input name="acceptTerms" type="checkbox" required />
-              <span>
-                I agree to Oreno’s <Link href="/terms">terms</Link> and{" "}
-                <Link href="/privacy-policy">privacy policy</Link>.
-              </span>
-            </label>
+            <TermsConsent required />
             <button
               className="auth-back"
               type="button"

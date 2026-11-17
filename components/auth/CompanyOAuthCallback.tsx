@@ -1,4 +1,5 @@
 "use client";
+import { TermsConsent } from "@/components/auth/TermsConsent";
 import Link from "next/link";
 import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
@@ -187,13 +188,7 @@ export function CompanyOAuthCallback({
               />
             </label>
           )}
-          <label className="auth-consent">
-            <input type="checkbox" required />
-            <span>
-              I agree to the <Link href="/terms">terms</Link> and{" "}
-              <Link href="/privacy-policy">privacy policy</Link>.
-            </span>
-          </label>
+          <TermsConsent required />
           <button className="auth-submit" disabled={busy}>
             {busy ? "Creating workspace…" : "Create company account"}
           </button>
@@ -219,17 +214,7 @@ export function CompanyOAuthCallback({
               </p>
               {["google", "linkedin"].includes(provider ?? "") ? (
                 <>
-                  <label className="auth-consent">
-                    <input
-                      type="checkbox"
-                      checked={consent}
-                      onChange={(e) => setConsent(e.target.checked)}
-                    />
-                    <span>
-                      I agree to the <Link href="/terms">terms</Link> and{" "}
-                      <Link href="/privacy-policy">privacy policy</Link>.
-                    </span>
-                  </label>
+                  <TermsConsent checked={consent} onChange={setConsent} />
                   <button
                     className="auth-submit"
                     disabled={busy || !consent}

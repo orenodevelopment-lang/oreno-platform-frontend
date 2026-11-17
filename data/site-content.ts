@@ -3,11 +3,6 @@ export const navigationLinks = [
   { label: "Request a demo", href: "/request-demo", featured: true },
 ] as const;
 
-export const hiringMenuLinks = [
-  { label: "Start hiring", href: "/company/signup", description: "Build your company team" },
-  { label: "Company sign in", href: "/company/login", description: "Access your hiring workspace" },
-] as const;
-
 export const talentSlides = [
   {
     role: "Data Analyst",

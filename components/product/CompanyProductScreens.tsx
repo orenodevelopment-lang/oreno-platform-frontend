@@ -1,12 +1,13 @@
 "use client";
+import { CandidateProfile } from "./CandidateProfile";
 
-import { OrganisationLogo, CompanyFiles, CompanyFile, ShortlistPicker, PerformancePeriod, PerformanceReview, CompanyReviews } from "./WorkspaceCompletion";
+import { OrganisationLogo, CompanyFiles, CompanyFile, PerformancePeriod, PerformanceReview, CompanyReviews } from "./WorkspaceCompletion";
 import Image from "next/image";
 import Link from "next/link";
 import { NewJob, JobLive, InviteMember, RolesLive, MembersLive, HiringApplicationChoice } from "./HiringActions";
 import { ResourceScreen, companyResources, NotificationsLive, PreferencesLive } from "./LiveWorkspace";
 import { TaskLive, TaskCalendarLive, ShortlistLive, MemberLive, OfferActions } from "./WorkspaceActions";
-import { ArrowRight, BadgeCheck, BriefcaseBusiness, CalendarDays, CheckCircle2, ChevronRight, ExternalLink, FileText, MessageSquare, Pause, Plus, Search, Send, ShieldCheck, Star, Trash2, UserRoundPlus, UsersRound } from "lucide-react";
+import { ArrowRight, BriefcaseBusiness, CalendarDays, CheckCircle2, ChevronRight, ExternalLink, FileText, MessageSquare, Pause, Plus, Search, Send, ShieldCheck, Star, Trash2, UserRoundPlus, UsersRound } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { productService } from "@/lib/platform/product-service";
 import type { ApplicationStatus, JobStatus } from "@/lib/platform/contracts";
@@ -18,7 +19,6 @@ export const companyProductTitles: Record<string, string> = {
   "access/invitations": "Member invitations",
   "access/roles": "Roles and permissions",
   jobs: "Jobs",
-  discover: "Discover talent",
   applications: "Applications",
   shortlists: "Shortlists",
   interviews: "Interviews",
@@ -36,6 +36,7 @@ export function CompanyOnboardingComplete() {
 }
 
 export function CompanyProductScreen({ route }: { route: string }) {
+  if (route.startsWith("candidates/")) return <CandidateProfile id={route.split("/")[1]} />;
   if (route === "files") return <CompanyFiles />;
   if (route.startsWith("files/")) return <CompanyFile id={route.split("/")[1]} />;
   if (route === "performance/reviews") return <CompanyReviews />;
@@ -55,7 +56,6 @@ export function CompanyProductScreen({ route }: { route: string }) {
   if (route === "access" || route.startsWith("access/")) return <AccessManagement active={route.split("/")[1] ?? "members"} />;
   if (route === "jobs") return <CompanyJobs />;
   if (route.startsWith("jobs/")) return <JobLive id={route.split("/")[1]} edit={route.split("/")[2] === "edit"} />;
-  if (route === "discover") return <CandidateDiscovery />;
   if (route === "applications") return <ApplicationsPipeline />;
   if (route.startsWith("applications/")) return <ApplicationDetail id={route.split("/")[1]} />;
   if (route === "interviews") return <Interviews />;
@@ -107,14 +107,6 @@ function CompanyJobs() {
   return <ProductPage eyebrow="Hiring" title="Jobs" description="Draft, publish and close roles while keeping public discovery aligned." actions={<Link className="platform-primary" href="/company/roles/new"><Plus /> Create job</Link>}>{transitionError && <span className="field-error" role="alert">{transitionError}</span>}<div className="product-toolbar"><label><Search /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search jobs" /></label><select value={status} onChange={(event) => setStatus(event.target.value)}><option>All statuses</option>{["Draft", "Published", "Paused", "Closed", "Archived"].map((item) => <option key={item}>{item}</option>)}</select></div><DataStateBoundary noResults={filtered.length === 0}><div className="company-job-grid">{filtered.map((job) => { const currentStatus = overrides[job.id] ?? job.status; return <article key={job.id}><header><span><BriefcaseBusiness /></span><StatusChip status={currentStatus} /></header><h3>{job.title}</h3><p>{job.department} · {job.openings} opening{job.openings === 1 ? "" : "s"}</p><dl><div><dt>Applicants</dt><dd>{job.applicants}</dd></div><div><dt>Deadline</dt><dd>{job.deadline}</dd></div><div><dt>Hiring manager</dt><dd>{job.hiringManager}</dd></div><div><dt>Compensation</dt><dd>{job.compensation}</dd></div></dl><footer><Link href={`/company/jobs/${job.id}`}>View details</Link>{currentStatus === "Published" ? <button type="button" onClick={() => setTransition({ id: job.id, status: "Paused" })}><Pause /> Pause</button> : currentStatus === "Draft" || currentStatus === "Paused" ? <button type="button" onClick={() => setTransition({ id: job.id, status: "Published" })}><CheckCircle2 /> Publish</button> : currentStatus !== "Archived" ? <button type="button" onClick={() => setTransition({ id: job.id, status: "Archived" })}>Archive</button> : null}</footer></article>; })}</div></DataStateBoundary><ConfirmDialog open={Boolean(transition)} title={`${transition?.status ?? "Change"} this job?`} description="This updates whether candidates can discover or apply to the role. The status change remains visible in history." confirmLabel={`Confirm ${transition?.status.toLowerCase() ?? "change"}`} tone={transition?.status === "Published" ? "positive" : "danger"} onCancel={() => setTransition(null)} onConfirm={confirmTransition} /></ProductPage>;
 }
 
-function CandidateDiscovery() {
-  const talents = productService.listPublicTalents();
-  const [query, setQuery] = useState("");
-  const [availability,setAvailability]=useState(""); const [location,setLocation]=useState("");
-  const filtered = talents.filter(talent=>(!availability||talent.availability.toLowerCase().includes(availability))&&(!location||talent.location.toLowerCase().includes(location.toLowerCase()))).filter((talent) => `${talent.name} ${talent.discipline} ${talent.skills.join(" ")}`.toLowerCase().includes(query.toLowerCase()));
-  return <ProductPage eyebrow="Hiring" title="Discover talent" description="Search vetted profiles and review transparent compatibility inputs. No automated hiring verdict is produced."><div className="product-toolbar"><label><Search /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search skills or discipline" /></label><select aria-label="Availability" value={availability} onChange={event=>setAvailability(event.target.value)}><option value="">Any availability</option><option value="available now">Available now</option></select><input aria-label="Location" placeholder="Filter by location" value={location} onChange={event=>setLocation(event.target.value)}/></div><DataStateBoundary noResults={filtered.length === 0}><div className="discovery-grid">{filtered.map((talent) => <article key={talent.id}><Image src={talent.avatar} alt="" width={90} height={90} /><div className="discovery-card__title">{talent.vetted && <span><BadgeCheck /> Vetted</span>}<h3>{talent.name}</h3><p>{talent.discipline}</p></div><ul>{talent.skills.map((skill) => <li key={skill}>{skill}</li>)}</ul><dl><div><dt>Availability</dt><dd>{talent.availability}</dd></div><div><dt>Rate</dt><dd>{talent.rate}</dd></div></dl><div className="match-explanation"><p>Review this candidate’s skills, availability and rate against your role requirements.</p></div><footer><Link href={`/talent-catalogue/${talent.id}`}>Open profile</Link><ShortlistPicker talentProfileId={talent.id} /></footer></article>)}</div></DataStateBoundary></ProductPage>;
-}
-
 const pipelineStatuses: ApplicationStatus[] = ["Submitted", "Under review", "Shortlisted", "Interviewing", "Offer pending"];
 function ApplicationsPipeline() {
   const records = productService.listApplications();
@@ -128,7 +120,7 @@ function ApplicationDetail({ id }: { id: string }) {
   const [error, setError] = useState("");
   const [updating, setUpdating] = useState(false);
   async function changeStatus(next: ApplicationStatus) { setUpdating(true); setError(""); try { await productService.updateApplicationStatus(id, next, `Changed to ${next} by an authorised company user.`); setStatus(next); } catch (cause) { setError(cause instanceof Error ? cause.message : "The application status could not be changed."); } finally { setUpdating(false); } }
-  return <ProductPage eyebrow="Application detail" title={record.candidateName} description={record.jobTitle} actions={<><button className="product-button-secondary" type="button" disabled={updating} onClick={() => changeStatus("Rejected")}>Reject</button><button className="platform-primary" type="button" disabled={updating} onClick={() => { window.location.assign(status === "Interviewing" ? "/company/offers/new" : "/company/interviews/new"); }}>{updating ? "Saving…" : status === "Interviewing" ? "Prepare offer" : "Schedule interview"}</button></>}>{error && <span className="field-error" role="alert">{error}</span>}<div className="application-detail"><aside><Image src="/assets/figma/app/company-profile.png" alt="" width={150} height={150} /><h3>{record.candidateName}</h3><StatusChip status={status} /><StatusChip status="Oreno screening completed" />{record.portfolio && <a href={record.portfolio.startsWith("http") ? record.portfolio : `https://${record.portfolio}`} target="_blank" rel="noreferrer">Portfolio <ExternalLink /></a>}<Link href="/company/messages"><MessageSquare /> Send message</Link></aside><main><section><h3>Application</h3><p>{record.coverNote}</p>{record.employerScreeningSummary && <div className="detail-card"><h4>Oreno screening summary</h4><p>{record.employerScreeningSummary}</p></div>}<dl className="detail-list"><div><dt>Applied</dt><dd>{record.appliedAt}</dd></div><div><dt>Forwarded by Oreno</dt><dd>{record.releasedAt ?? "Completed"}</dd></div><div><dt>Role</dt><dd>{record.jobTitle}</dd></div></dl></section><section><h3>Status history</h3><Timeline items={[...record.statusHistory.map((item) => ({ label: item.status, date: item.at, detail: item.note, complete: true })), ...(status !== record.status ? [{ label: status, date: "Just now", complete: true }] : [])]} /></section></main></div></ProductPage>;
+  return <ProductPage eyebrow="Application detail" title={record.candidateName} description={record.jobTitle} actions={<><button className="product-button-secondary" type="button" disabled={updating} onClick={() => changeStatus("Rejected")}>Reject</button><button className="platform-primary" type="button" disabled={updating} onClick={() => { window.location.assign(status === "Interviewing" ? "/company/offers/new" : "/company/interviews/new"); }}>{updating ? "Saving…" : status === "Interviewing" ? "Prepare offer" : "Schedule interview"}</button></>}>{error && <span className="field-error" role="alert">{error}</span>}<div className="application-detail"><aside><Image src="/assets/figma/app/company-profile.png" alt="" width={150} height={150} /><h3>{record.candidateName}</h3><StatusChip status={status} /><StatusChip status="Oreno screening completed" /><Link href={`/company/candidates/${record.candidateId}?applicationId=${record.id}`}>View full profile</Link>{record.portfolio && <a href={record.portfolio.startsWith("http") ? record.portfolio : `https://${record.portfolio}`} target="_blank" rel="noreferrer">Portfolio <ExternalLink /></a>}<Link href="/company/messages"><MessageSquare /> Send message</Link></aside><main><section><h3>Application</h3><p>{record.coverNote}</p>{record.employerScreeningSummary && <div className="detail-card"><h4>Oreno screening summary</h4><p>{record.employerScreeningSummary}</p></div>}<dl className="detail-list"><div><dt>Applied</dt><dd>{record.appliedAt}</dd></div><div><dt>Forwarded by Oreno</dt><dd>{record.releasedAt ?? "Completed"}</dd></div><div><dt>Role</dt><dd>{record.jobTitle}</dd></div></dl></section><section><h3>Status history</h3><Timeline items={[...record.statusHistory.map((item) => ({ label: item.status, date: item.at, detail: item.note, complete: true })), ...(status !== record.status ? [{ label: status, date: "Just now", complete: true }] : [])]} /></section></main></div></ProductPage>;
 }
 
 function Interviews() {

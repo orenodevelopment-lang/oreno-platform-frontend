@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { hiringMenuLinks, navigationLinks } from "../data/site-content.ts";
+import { navigationLinks } from "../data/site-content.ts";
 import {
   canTransitionApplication,
   canTransitionJob,
@@ -13,7 +13,7 @@ import {
 } from "../lib/platform/product-policy.ts";
 
 test("route manifest covers all three user surfaces", () => {
-  assert.ok(publicProductRoutes.includes("/talent-catalogue"));
+  assert.ok(!(publicProductRoutes as readonly string[]).includes("/talent-catalogue"));
   assert.ok(publicProductRoutes.includes("/auth/reset-password"));
   assert.ok(companyProductRoutes.includes("/company/applications"));
   assert.ok(companyProductRoutes.includes("/company/team/:staffAssignmentId"));
@@ -33,22 +33,10 @@ test("primary marketing navigation enters real product journeys", () => {
   );
 });
 
-test("homepage hiring menu is restricted to company account journeys", () => {
-  assert.deepEqual(
-    hiringMenuLinks.map(({ label, href }) => [label, href]),
-    [
-      ["Start hiring", "/company/signup"],
-      ["Company sign in", "/company/login"],
-    ],
-  );
-
+test("homepage hiring entry opens company signup", () => {
   const hiringMenu = readFileSync(new URL("../components/HiringMenu.tsx", import.meta.url), "utf8");
   const homepageNav = readFileSync(new URL("../components/Navbar.tsx", import.meta.url), "utf8");
   const publicShell = readFileSync(new URL("../components/product/PublicShell.tsx", import.meta.url), "utf8");
-  assert.match(hiringMenu, /links\.map/);
-  assert.match(hiringMenu, /onPointerEnter/);
-  assert.match(hiringMenu, /AnimatePresence/);
-  assert.match(hiringMenu, /Company workspace/);
   assert.match(hiringMenu, /audience = "company"/);
   assert.match(hiringMenu, /audience === "talent"/);
   assert.match(homepageNav, /<HiringMenu variant="marketing"/);

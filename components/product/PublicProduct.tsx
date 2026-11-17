@@ -1,19 +1,17 @@
 "use client";
+import { TermsConsent, focusTermsConsent } from "@/components/auth/TermsConsent";
 import { CompanyOAuthCallback } from "@/components/auth/CompanyOAuthCallback";
 
 import { RememberEmail } from "@/components/auth/RememberEmail";
 import { AuthFrame, AuthProviders } from "@/components/auth/AuthFrame";
-import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowLeft,
   ArrowRight,
   Eye,
   EyeOff,
-  BadgeCheck,
   BriefcaseBusiness,
   CheckCircle2,
-  Clock3,
   Mail,
   MapPin,
   Search,
@@ -23,7 +21,6 @@ import {
 } from "lucide-react";
 import {
   useEffect,
-  useMemo,
   useState,
   useSyncExternalStore,
   type FormEvent,
@@ -40,184 +37,6 @@ const subscribeToOAuthDestination = () => () => undefined;
 const readOAuthDestination = () =>
   window.sessionStorage.getItem("oreno:oauth-next") || "/talent";
 const readServerOAuthDestination = () => "/talent";
-
-export function PublicTalentCatalogue({ profileId }: { profileId?: string }) {
-  const talents = productService.listPublicTalents();
-  if (profileId) return <PublicTalentDetail id={profileId} />;
-  return (
-    <PublicShell>
-      <CatalogueHero kind="talent" />
-      <TalentCatalogueGrid talents={talents} />
-    </PublicShell>
-  );
-}
-
-function TalentCatalogueGrid({
-  talents,
-}: {
-  talents: ReturnType<typeof productService.listPublicTalents>;
-}) {
-  const [query, setQuery] = useState("");
-  const [discipline, setDiscipline] = useState("All disciplines");
-  const filtered = useMemo(
-    () =>
-      talents.filter(
-        (talent) =>
-          `${talent.name} ${talent.discipline} ${talent.skills.join(" ")}`
-            .toLowerCase()
-            .includes(query.toLowerCase()) &&
-          (discipline === "All disciplines" ||
-            talent.discipline === discipline),
-      ),
-    [talents, query, discipline],
-  );
-  return (
-    <section className="public-catalogue">
-      <div className="public-filterbar">
-        <label>
-          <Search />
-          <input
-            aria-label="Search talent"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search by skill or discipline"
-          />
-        </label>
-        <select
-          value={discipline}
-          onChange={(event) => setDiscipline(event.target.value)}
-          aria-label="Discipline"
-        >
-          <option>All disciplines</option>
-          {[...new Set(talents.map((talent) => talent.discipline))].map(
-            (item) => (
-              <option key={item}>{item}</option>
-            ),
-          )}
-        </select>
-        <select aria-label="Availability">
-          <option>Any availability</option>
-          <option>Available now</option>
-          <option>Within 2 weeks</option>
-        </select>
-      </div>
-      <DataStateBoundary noResults={filtered.length === 0}>
-        <div className="public-talent-grid">
-          {filtered.map((talent) => (
-            <article className="public-talent-card" key={talent.id}>
-              <Image src={talent.avatar} alt="" width={380} height={260} />
-              <div className="public-talent-card__body">
-                <div>
-                  {talent.vetted && (
-                    <span>
-                      <BadgeCheck /> Oreno vetted
-                    </span>
-                  )}
-                  <small>{talent.seniority}</small>
-                </div>
-                <h2>{talent.name}</h2>
-                <p>{talent.discipline}</p>
-                <ul>
-                  {talent.skills.slice(0, 3).map((skill) => (
-                    <li key={skill}>{skill}</li>
-                  ))}
-                </ul>
-                <dl>
-                  <div>
-                    <dt>Location</dt>
-                    <dd>{talent.location}</dd>
-                  </div>
-                  <div>
-                    <dt>Rate</dt>
-                    <dd>{talent.rate}</dd>
-                  </div>
-                </dl>
-                <Link href={`/talent-catalogue/${talent.id}`}>
-                  View profile <ArrowRight />
-                </Link>
-              </div>
-            </article>
-          ))}
-        </div>
-      </DataStateBoundary>
-    </section>
-  );
-}
-
-function PublicTalentDetail({ id }: { id: string }) {
-  const talent = productService.getPublicTalent(id);
-  return (
-    <PublicShell>
-      <article className="public-detail">
-        <Link className="public-back" href="/talent-catalogue">
-          <ArrowLeft /> Back to talent
-        </Link>
-        <header className="public-profile-hero">
-          <Image src={talent.avatar} alt="" width={280} height={280} />
-          <div>
-            <span className="public-vetted">
-              <BadgeCheck /> Oreno vetted
-            </span>
-            <h1>{talent.name}</h1>
-            <p>
-              {talent.discipline} · {talent.seniority}
-            </p>
-            <ul>
-              {talent.skills.map((skill) => (
-                <li key={skill}>{skill}</li>
-              ))}
-            </ul>
-            <div>
-              <span>
-                <MapPin />
-                {talent.location}
-              </span>
-              <span>
-                <Clock3 />
-                {talent.availability}
-              </span>
-              <strong>{talent.rate}</strong>
-            </div>
-            <Link href="/request-demo">
-              Start a conversation <ArrowRight />
-            </Link>
-          </div>
-        </header>
-        <div className="public-detail-grid">
-          <section>
-            <h2>About</h2>
-            <p>{talent.bio}</p>
-            <h2>Selected highlights</h2>
-            <ul className="public-check-list">
-              {talent.highlights.map((highlight) => (
-                <li key={highlight}>
-                  <CheckCircle2 />
-                  {highlight}
-                </li>
-              ))}
-            </ul>
-          </section>
-          <aside>
-            <div>
-              <strong>{talent.experienceYears} years</strong>
-              <span>Professional experience</span>
-            </div>
-            <h2>Portfolio</h2>
-            {talent.portfolio.map((item) => (
-              <article key={item.title}>
-                <BriefcaseBusiness />
-                <div>
-                  <strong>{item.title}</strong>
-                  <span>{item.category}</span>
-                </div>
-              </article>
-            ))}
-          </aside>
-        </div>
-      </article>
-    </PublicShell>
-  );
-}
 
 export function PublicJobs({ jobId }: { jobId?: string }) {
   const jobs = productService.listPublicJobs();
@@ -782,10 +601,12 @@ export function AuthJourney({
           setSubmitting(false);
           return;
         }
-        if (!termsAccepted)
+        if (!termsAccepted) {
+          focusTermsConsent();
           throw new Error(
             "Accept the terms and privacy policy to create an account.",
           );
+        }
         await productService.createTalentAccount({
           firstName: String(form.get("firstName")),
           lastName: String(form.get("lastName")),
@@ -842,6 +663,7 @@ export function AuthJourney({
   async function startOAuth(provider: "google" | "linkedin") {
     setError("");
     if (flow === "talent-signup" && !termsAccepted) {
+      focusTermsConsent();
       setError(
         "Accept the terms and privacy policy before continuing with a provider.",
       );
@@ -865,6 +687,7 @@ export function AuthJourney({
   async function createWithProvider() {
     if (oauthProvider !== "google" && oauthProvider !== "linkedin") return;
     if (!termsAccepted) {
+      focusTermsConsent();
       setError(
         "Accept the terms and privacy policy before creating your account.",
       );
@@ -1024,17 +847,7 @@ export function AuthJourney({
                 </div>
               )}
               {signup && (
-                <label className="auth-consent">
-                  <input
-                    type="checkbox"
-                    checked={termsAccepted}
-                    onChange={(event) => setTermsAccepted(event.target.checked)}
-                  />
-                  <span>
-                    I agree to the <Link href="/terms">terms</Link> and{" "}
-                    <Link href="/privacy-policy">privacy policy</Link>.
-                  </span>
-                </label>
+                <TermsConsent checked={termsAccepted} onChange={setTermsAccepted} />
               )}
               {error && (
                 <FieldError id="auth-request-error">{error}</FieldError>
@@ -1092,17 +905,7 @@ export function AuthJourney({
               </div>
             ) : (
               <>
-                <label className="auth-consent">
-                  <input
-                    type="checkbox"
-                    checked={termsAccepted}
-                    onChange={(event) => setTermsAccepted(event.target.checked)}
-                  />
-                  <span>
-                    I agree to the <Link href="/terms">terms</Link> and{" "}
-                    <Link href="/privacy-policy">privacy policy</Link>.
-                  </span>
-                </label>
+                <TermsConsent checked={termsAccepted} onChange={setTermsAccepted} />
                 {error && (
                   <FieldError id="oauth-signup-error">{error}</FieldError>
                 )}
@@ -1259,17 +1062,7 @@ export function AuthJourney({
                   </label>
                 )}
               {flow === "talent-signup" && (
-                <label className="auth-consent">
-                  <input
-                    type="checkbox"
-                    checked={termsAccepted}
-                    onChange={(event) => setTermsAccepted(event.target.checked)}
-                  />
-                  <span>
-                    I agree to the <Link href="/terms">terms</Link> and{" "}
-                    <Link href="/privacy-policy">privacy policy</Link>.
-                  </span>
-                </label>
+                <TermsConsent checked={termsAccepted} onChange={setTermsAccepted} />
               )}
               {needsCode && (
                 <label>

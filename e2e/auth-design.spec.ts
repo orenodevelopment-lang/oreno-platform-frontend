@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 test.setTimeout(90_000);
-for (const width of [390, 1440])
+for (const width of [390, 1366, 1440])
   for (const route of [
     "/company/login",
     "/company/signup",
@@ -8,12 +8,16 @@ for (const width of [390, 1440])
     "/auth/talent-signup",
   ]) {
     test(`Figma authentication ${route} at ${width}px`, async ({ page }) => {
-      await page.setViewportSize({ width, height: 1024 });
+      await page.setViewportSize({ width, height: width === 1366 ? 768 : 1024 });
       await page.goto(route);
       await expect(page.locator(".auth-screen--figma")).toBeVisible();
       await expect(
         page.getByLabel("Email address", { exact: true }),
       ).toBeVisible();
+      if (width === 1366) {
+        await page.evaluate(() => document.fonts.ready);
+        await expect.poll(() => page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThanOrEqual(768);
+      }
       const password = page.getByLabel("Password", { exact: true });
       await password.fill("test-password-only");
       await page

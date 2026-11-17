@@ -151,21 +151,12 @@ test("jobs listing alone exposes talent account navigation", async ({
 }) => {
   await stub(page);
   await page.goto("/jobs");
-  await page.locator('header button[aria-haspopup="menu"]').hover();
-  await expect(
-    page.getByRole("menuitem", { name: /Talent login/ }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("menuitem", { name: /Company sign in/ }),
-  ).toHaveCount(0);
+  await expect(page.locator("header").getByRole("link", { name: "Talent signup", exact: true })).toHaveAttribute("href", "/auth/talent-signup?next=%2Fjobs");
+  await expect(page.locator("header").getByRole("link", { name: "Find talent", exact: true })).toHaveCount(0);
   await page.goto("/");
-  await page.locator(".navbar__hiring-trigger").hover();
-  await expect(
-    page.getByRole("menuitem", { name: /Company sign in/ }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("menuitem", { name: /Talent login/ }),
-  ).toHaveCount(0);
+  await expect(page.locator(".navbar").getByRole("link", { name: "Start hiring", exact: true })).toHaveAttribute("href", "/company/signup");
+  await expect(page.getByRole("menu")).toHaveCount(0);
+  await expect(page.getByText("Create a talent account", {exact: true})).toHaveCount(0);
 });
 for (const provider of ["Google", "LinkedIn"])
   test(`company signup starts ${provider} with explicit consent`, async ({

@@ -927,3 +927,42 @@
 @keyframes workspace-placeholder-reveal {to {opacity:1;}}
 @media(prefers-reduced-motion:reduce){.workspace-skeleton {opacity:1;animation:none;}}
 .messages-workspace__sidebar > header > button {display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px}
+
+/* Compact viewport-aware authentication layout, retaining the Figma composition. */
+.auth-screen--figma {min-height:100svh;}
+.auth-screen--figma .auth-panel {min-height:100svh;padding:clamp(16px,3vh,36px) clamp(20px,4vw,60px);justify-content:center;}
+.auth-screen--figma .auth-brand {height:44px;}
+.auth-screen--figma .auth-brand .oreno-logo__animated-wordmark {transform:scale(1.05);}
+.auth-screen--figma .auth-form-wrap {min-height:0;max-width:540px;margin:clamp(12px,2.5vh,26px) auto 0;padding:clamp(18px,3vh,30px) clamp(20px,3vw,42px);}
+.auth-screen--figma .auth-form-wrap h1 {font-size:clamp(25px,3vh,32px);}
+.auth-screen--figma .auth-form-wrap > p:first-of-type {font-size:16px;line-height:1.45;margin:5px 0 18px;}
+.auth-screen--figma .auth-socials {gap:12px;}
+.auth-screen--figma .auth-socials button,.auth-screen--figma input:not([type=checkbox]) {height:46px;font-size:16px;}
+.auth-screen--figma .auth-divider {margin:14px 0;}
+.auth-screen--figma form {gap:12px;}
+.auth-screen--figma .auth-submit {height:46px;margin-top:4px;font-size:18px;}
+.auth-screen--figma .password-input button {top:1px;}
+.auth-screen--figma .auth-options {font-size:13px;margin:0;gap:8px;}
+.auth-screen--figma .auth-switch {font-size:14px;line-height:1.5;margin:16px 0 0;}
+.auth-screen--figma .auth-legal {max-width:540px;margin-top:12px;font-size:12px;line-height:1.5;}
+.auth-screen--figma .auth-art {min-height:100%;}
+.auth-screen--figma .auth-art__mask-slot {overflow:hidden;}
+.auth-screen--figma .auth-art__mask {width:100%;height:auto;}
+.auth-screen--figma .auth-art__petal-slot {top:auto;bottom:-150px;left:50%;}
+.auth-consent-field {margin:8px 0;}
+.auth-screen--figma .auth-consent {font-size:12px;line-height:1.5;}
+.auth-consent-prompt {color:#b42318!important;font-size:12px!important;line-height:1.4!important;margin:4px 0 0 28px!important;font-weight:500;}
+.navbar__account-link,.public-product-account-link {white-space:nowrap;}
+.candidate-profile-section {margin-top:24px;overflow-wrap:anywhere;}
+.candidate-profile-section article {padding:12px 0;border-bottom:1px solid #dbe7e3;}
+@media(max-width:768px){
+ .auth-screen--figma .auth-panel {padding:16px;justify-content:flex-start;}
+ .auth-screen--figma .auth-form-wrap {margin-top:12px;padding:20px;}
+ .auth-screen--figma .auth-art {display:none;}
+}
+@media(max-height:740px) and (min-width:769px){
+ .auth-screen--figma .auth-panel {padding-block:14px;}
+ .auth-screen--figma .auth-form-wrap {margin-top:10px;padding-block:16px;}
+ .auth-screen--figma .auth-form-wrap > p:first-of-type {margin-bottom:12px;}
+ .auth-screen--figma .auth-socials {gap:8px;}
+}

@@ -15,7 +15,6 @@ import {
   Plus,
   Settings,
   UserRound,
-  UserRoundPlus,
   UsersRound,
   WalletCards,
   X,
@@ -47,7 +46,6 @@ const companyNavigation: NavItem[] = [
   { href: "/company/teams", label: "Teams", icon: UsersRound },
   { label: "Hiring", heading: true },
   { href: "/company/jobs", label: "Jobs", icon: BriefcaseBusiness },
-  { href: "/company/discover", label: "Discover talent", icon: UserRoundPlus },
   { href: "/company/applications", label: "Applications", icon: ClipboardList },
   { href: "/company/interviews", label: "Interviews", icon: UserRound },
   { href: "/company/offers", label: "Offers", icon: WalletCards },
@@ -97,6 +95,7 @@ export function PlatformShell(props: ShellProps) {
   return mounted ? <>{props.children}</> : <ShellMounted.Provider value={true}><PlatformShellRoot {...props}/></ShellMounted.Provider>;
 }
 export function workspaceTitle(kind: ShellKind, pathname: string) {
+  if (kind === "company" && pathname.startsWith("/company/candidates/")) return "Candidate profile";
   const navigation = kind === "company" ? companyNavigation : talentNavigation;
   const exact = navigation.find(item => item.href === pathname);
   if(exact) return exact.label === "Home" ? "Dashboard" : exact.label;
@@ -195,7 +194,7 @@ function PlatformShellRoot({
           <h1>{title}</h1>
           <div className="platform-topbar__actions">
             {actionLabel && (
-              <Link className="platform-primary" href={kind === "company" ? "/company/discover" : "/talent/jobs"}>
+              <Link className="platform-primary" href={kind === "company" ? "/company/jobs/new" : "/talent/jobs"}>
                 {actionLabel === "Add task" && <Plus aria-hidden="true" />}
                 {actionLabel}
               </Link>

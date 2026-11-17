@@ -426,6 +426,7 @@ export function ShortlistLive({ id }: { id: string }) {
           .map((candidate) => (
             <article key={value(candidate, "id")}>
               <p>{label(asRecord(candidate.talentProfile))}</p>
+              <Link href={`/company/candidates/${value(candidate, "talentProfileId")}?shortlistId=${id}`}>View profile</Link>
               <button
                 type="button"
                 onClick={() =>
